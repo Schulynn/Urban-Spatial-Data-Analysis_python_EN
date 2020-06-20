@@ -3,6 +3,9 @@
 * 1\. setout
     * [1.1 clean code](./markdown/cleanCode.md)
     * [1.2 python interpreter and note](./markdown/pythonInterpreterAndNote.md)
+* 2\. experiment 
+    * 2.1 Baidu Map POI data capture and geospatial point map
+        * [2.1.1 Baidu Map POI data capture-ngle classification implementation with a geospatial point map](./notebook_code/BaiduMapPOI_collection_singleClassification.md)    
 * index
     * [code tool index](./markdown/codeToolIdx.md)
     * [data index](./markdown/dataIdx.md)

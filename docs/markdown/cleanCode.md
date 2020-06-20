@@ -1,46 +1,46 @@
-# 代码的整洁之道
-> 在开始代码之前，如果能够浏览该部分内容；在开始代码之后，能够检查自己的代码是否保持整洁，将其养成一种代码书写的习惯，这本身就是一种智慧。
+# clean code
+> If you can browse this section before starting the code, check if your code is clean after you have started writing. It is wisdom in itself.
 
-每一篇代码都应该是一篇蕴含着作者解决问题思考逻辑的散文，即使不懂代码的读者都应该能够行云流水般的阅读，从而能够有个大概的认知，知道作者想要解决什么问题，和大概是怎么解决的。很多语言书籍中，尤其入门或者大部头的手册如果不提及代码的整洁之道，会使得读者走上一些弯路，这尤其表现于初学者身上，因此梳理一些关键事项，以备参考。
+Every piece of code should be an essay containing the author's problem-solving thinking logic. Even the readers who do not understand the code should be able to read it smoothly, to have a general understanding of what the author wants to solve, and how to solve it. Many language books, primarily introductory or bulky manuals, can take the reader on a detour if they do not mention the neat way to code, especially for beginners, so comb through some key points for reference.
 
-* **变量的命名应能反映变量本身的意义**
+* **The name of variables should reflect the meaning of the variables themselves.**
 
-代码书写时为了图一时方便，往往不注重变量名的命名，而是随意的起名，例如代码行中充斥着x、y、i、j、k等单个变量名，以及jh,ik等不反映变量名意义的字母组合，待多日之后，需要返回来应用代码或者迁移代码于新项目中时，无法快速的理解变量的意义，即代码可读性很差，从而会浪费时间再度理解，以及为他人迁移应用该代码形成阻碍。
+For the sake of convenience, when writing the code often do not pay attention to the naming of the variable name. Still, a random name, such as code line, is filled with 'y'、'i'、'j'、'k,' such a single-character name, and 'jh', 'ik' combination of letters do not reflect the variable meaning. After a few days, when you need to go back to apply the code or transfer the code to a new project, you cannot quickly understand the meaning of the variable. It means that the code is not readable, which will waste time to understand it again and generate obstacles for others to transfer and apply the code.
 
-在变量名命名时，建议的形式包括三种：
+There are three suggested forms for variable name naming：
 
-一是单个词，例如`markers=['.','+','o','^','x','s']`,这是应用matplotlib图表库打印图表时，定义图表的标记类型所定义的类型列表，其名字能够反映所要表述变量的意义。
+So, first, individual words, such as `markers=['.','+','o','^','x','s']`, is a list of types of markers that have been defined in a graph to print from the Matplotlib chart library, so that the name can reflect the meaning of the variable being described.。
 
-二是字母组合，其一为`landmarkPts=[Point(coordi[0],coordi[1]) for coordi in np.stack((landmarks[0], landmarks[1]), axis=-1)]`中的`landmarkPts`，或者不引入缩写为`landmarkPoints`，即直接可以理解该变量名为地标点，其形式为字母组合时后一字母首字母大写；其二是，`landmark_pts`或者`landmark_points`，即多个字母组合时中间以下短划线隔离，后以字母的首字母不需大写。
+The second is the letter combination. One is `landmarkPts` in `landmarkPts=[Point(coordi[0],coordi[1]) for coordi in np.stack((landmarks[0], landmarks[1]), axis=-1)]`, or do not introduce the abbreviation as `landmarkPoints`, which can be understood directly as landmarks, which takes the form of the first letter capitalized after the combination of letter. The second is `landmark_pts` or `landmark_points,` where multiple letters are separated by an underscore in the middle, and the first letter is not necessary to be capitalized.
 
-* **给出关键的注释**
+* **Give keynotes**
 
-“烂笔头”的重要性无需质疑，虽然好的变量名能够一定程度上解释语句的意义，但是解决问题的逻辑通常需要给与注释（使用# 或者\``` note \```），尤其一些关键的思考。例如对函数功能的注释：
+The importance of note-taking should not be questioned. Although proper variable names can explain the meaning of statements to some extent, the logic of problem-solving usually requires notes (# or \``` note \```), especially some critical thinking. For example, notes on functions:
 ```python
 '''
-以文件夹名为键，值为包含该文件夹下所有文件名的列表。文件类型可以自行定义
+With the folder name as a key of a dictionary, the value is a list of all filenames under that folder. File types can be defined by themselves.
 '''
 def filePath(dirpath,fileType):
     fileInfo={}
     ...
 ```
-以及对关键语句的解释：
+And an explanation of critical statements：
 ```python
- idx = tempDf[ tempDf['cluster'] == -1 ].index  #删除字段“cluster”值为-1对应的行，即独立的OSM点数据，未形成聚类
+ idx = tempDf[ tempDf['cluster'] == -1 ].index  #Delete the row corresponding to the field 'cluster' value of -1, namely the independent OSM point data, and no clustering, is formed.
  tempDf.drop(idx,inplace=True)  
 ```
-如果以上示例中不给出注释，那么就不能立刻在头脑中反映出这些语句是做什么的，就不得不花费大精力来前后推断，甚至不得不阅读整段代码。当然，要以函数或变量取合适的名字为先，注释补充为后，而不应该是草草的变量名，和成堆的注释，这就本末倒置了。
+Without notes in the above example, you would not immediately have a mental picture of what the code statements are doing. You would have to spend a lot of time extrapolating and even reading the entire code.  Of course, putting a function or variable with a proper name first, followed by notes, rather than poor variable names, and piles of notes put the cart before the horse.
 
-* **尽量保持定义的一个函数仅作一件事情，以及最小的迁移代价**
+* **Try to keep a function defined to do only one thing, with minimal transfer costs**
 
-每一段函数代码都是解决某一问题的一种方法，很多的时候在同一项目、或不同项目中这种方法会不断重复被使用，因此该函数应该能够以最少的代价来迁移，即无需或者少改动代码就可立即使用。通常的时候我们会不注意到，在单独的函数内部包含了全局变量，迁移后就会提示全局变量未定义的情况，因此建议函数定义时，尽量通过函数参数传递变量；同时，在单独函数命名，以及函数内变量的命名时，尽量保持名称的通用性，避免迁移后名字只能反映当初项目的内容，例如,`def ffill(arr):`函数`ffill()`表示向前填充数组中的空数据，如果函数名以及参数名改为具体的`def landmarks_ffill(landmarks_arr)`，迁移后的变量可能不是`landmarks`，就会容易引起歧义，造成代码阅读上的干扰。
+Each piece of function code is a solution to a problem, and many times this method will be used repeatedly in the same project or different projects, so the function should be portable with minimal or no changes when the code is used immediately. In general, we will not notice that global variables are included in a sing function, and the transfer will prompt the situation that global variables are not defined. Therefore, it is recommended to try to pass variables through function parameters when defining functions. Name, at the same time, in a single function and variable in a function, try to keep the name of the generality and avoid the name only reflect the content of the original project after transfer.  For example, the function `ffill() of `def ffill(arr):` represents the empty data to be filled forward in the array. If the function name and parameter names are changed to the specific `def landmarks_ffill(landmarks_arr),` the transferred variables may not be landmarks, which may cause ambiguity and interference in code reading.
 
-而一个函数最好仅做一件事情的目的，也是保持代码具有更好的易读性和可迁移性。这个并不难以理解，如果该函数可以同时做多件事情，尤其很难划分为一类的事情，而其它项目仅需要该函数的部分功能时，事情就会变得复杂起来。
+The best purpose for a function to do one thing is to keep the code readable and transferable. It is not hard to understand, but it gets more complicated if the function can do more than one thing at a time. It is especially hard to categorize, and things get complicated when other projects only need part of the functionality of the function.
 
-* **复杂的程序要学会使用类和分文件——系统的思维**
+* **Complex programs need to learn to use classes and file-splitting_system thinking**
 
-代码是可以在不知不觉中变得复杂起来，一不小心少则千行，多则万行，那么所有代码位于一个文件中，或者包含有数十个单独的函数，代码的管理就很成问题，因此学会应用类来组织具有相关属性的函数，以及多个分文件来切分代码，在主文件中只是引用，例如`import driverlessCityProject_spatialPointsPattern_association_basic as basic`，将文件引入并取别名为`basic`来使用代码，那么代码的结构就会比较清晰，也避免了处于同一文件中，不容易查找的弊病。
+Unconsciously, the code can be complicated, less than one thousand lines, more than ten thousand lines, then all code in a file, or contains dozens of separate functions, the management of the code is very problematic. So learn to organize function with relevant properties, as well as segment code into multiple files. For example, `import driverlessCityProject_spatialPointsPattern_association_basic as basic,` by importing and aliasing the file as `basic` to use the code, the structure of the code will be more explicit and avoid the disadvantage of not easy to find in the same file. 
 
-类和分文件只是系统思维表现的一种手段，而对于项目的所有代码的组织，确定数据的流动走向，前后关联层级的配置，整体结构的把握，才能够保证代码的稳健性（robustness）。
+Classes and sub-files are only a means of systematic thinking. Robustness is only ensured when it comes to the organization of all code in a project, after determining the flow direction of data, the configuration of the hierarchy before and after the project, and the overall structure.
 
-> 很喜欢《代码的整洁之道》Robert C. Martin.<em>Clean Code: A Handbook of Agile Software Craftsmanship</em>[M].U.S. Prentice Hall.August 11,2008. 这本阐述代码哲理的书，不管是刚刚进入代码领域，还是早已浸淫多年，通读后，再偶尔翻一番，都会对自己的“武道之心”又有所坚持。
+> Robert C. Martin.<em>Clean Code: A Handbook of Agile Software Craftsmanship</em>[M].U.S. Prentice Hall.August 11,2008. this book is well worth reading. It describes the philosophy of code, whether just entered the code field, or have been immersed in code for many years, read through, and then occasionally double, will insist on coding to solve problems.
