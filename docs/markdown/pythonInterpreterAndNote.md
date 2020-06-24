@@ -20,3 +20,10 @@ During the coding process of this book, using [GitHub](https://github.com/richie
 To learn the code and be able to run the verification code interactively and simultaneously record instructions, you can use [JupyterLba or Jupyter](https://jupyter.org/). This method is more suitable for teaching and communication. When the project is complicated and vast, the application of Jupyter tools can significantly reduce efficiency, meanwhile, not ideal for building code structure hierarchy. The code is still written in the spyder under Anaconda. Another tool, [VNote](https://tamlok.github.io/vnote/en_us/), for writing markdown documents in local is recommended for reference only.
 
 Everyone has their habit of taking notes and taking notes of code is different from what we usually do with tools like OneNote. Highlight the code format, it is best to run it and see the results, so you need to choose a note-taking tool base on your situation to make learning the code a lot easier.
+
+<a href="https://www.anaconda.com/"><img src="./imgs/anacondaimg.jpg" height="50" width="auto" title="caDesign">
+<a href="https://www.python.org/downloads/"><img src="./imgs/python-logo@2x.png" height="50" width="auto" title="caDesign">
+<a href="https://code.visualstudio.com/"><img src="./imgs/vsc.jpg" height="35" width="auto" title="caDesign" align="top">
+<a href="https://www.jetbrains.com/pycharm/download/#section=windows"><img src="./imgs/PyCharm_Logo1.png" height="65" width="auto" title="caDesign" align="top">
+<a href="https://notepad-plus-plus.org/"><img src="./imgs/notepadlogo.png" height="50" width="auto" title="caDesign">
+<a href="https://jupyter.org/"><img src="./imgs/logo_svg.png" height="45" width="auto" title="caDesign">
