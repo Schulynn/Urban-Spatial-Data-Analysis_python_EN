@@ -3,10 +3,9 @@
 * 1\. setout
     * [1.1 clean code](./markdown/cleanCode.md)
     * [1.2 python interpreter and note](./markdown/pythonInterpreterAndNote.md)
-* 2\. experiment 
-    * 2.1 Baidu Map POI data crawler and geospatial point map
-        * [2.1.1 Single classification POI data crawling and geospatial point map](./notebook_code/BaiduMapPOI_collection_singleClassification.md)    
-        * [2.1.2 Multiple classification POI data crawling and Descriptive statistics](./notebook_code/BaiduMapPOI_collection_multipleClassification.md) 
+* 2\. Start from POI to understand geospatial data and basic data analysis methods 
+    * [2.1 Single classification POI data crawling and geospatial point map](./notebook_code/BaiduMapPOI_collection_singleClassification.md)
+    * [2.1.2 Multiple classification POI data crawling and Descriptive statistics](./notebook_code/BaiduMapPOI_collection_multipleClassification.md) 
 * index
     * [code tool index](./markdown/codeToolIdx.md)
     * [data index](./markdown/dataIdx.md)
