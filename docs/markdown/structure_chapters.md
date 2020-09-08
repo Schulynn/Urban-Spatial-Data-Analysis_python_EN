@@ -1,8 +1,7 @@
-# 章节结构思考————不定性
-书的章节结构符合人们的学习习惯会让学习的过程变的顺畅，但是在写作过程中，必然不能一步到位，而是一个不断调整、整合的过程，因此增加了这个部分，来思考这个问题。
+# Chapter structure thinking -- uncertainty
+In line with people's learning habits, the book's chapter structure will make the learning process smooth. Still, it must be not one step in place in the writing process, but a process of constant adjustment and integration, so I added this part to think about this problem.
 
-
-### 知识点分布
+### Knowledge point distribution
 
 ```mermaid
 classDiagram
@@ -69,7 +68,7 @@ OSM数据处理 : 读取、转换.osm数据
 
 ```
 
-### 知识关联
+### Knowledge associated
 
 ```mermaid
 erDiagram

@@ -1,6 +1,6 @@
 > Created on Created on Sat Jul  4 10/29/03 2020 @author: Richie Bao-caDesign设计(cadesign.cn) 
 
-## 1. 正态分布与概率密度函数，异常值处理
+## 1. Normal distribution and probability density function, outlier handling
 在上一节中，定义了`frequency_bins(df,bins)`频数分布计算函数，并以直方图（柱状图）的形式打印图表查看数据变化，但是其中在组距确定时是根据经验调整组距来观察数据的分布情况，并计算所有区间价格频数所占的百分比。那么是否有一种方法判断该组数据为正态分布？如果是，是否能够根据正态分布的概率准确计算出某一价格，或者一个价格区间出现的比例？ 
 
 首先调入数据计算组距为5时的频数。将频数分布计算函数放置于公用的`util_poi`文件中，方便调用。

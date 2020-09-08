@@ -1,13 +1,13 @@
 * [preface](./markdown/preface.md)
 * [instruction](./markdown/instruction.md)
-* [章节结构思考](./markdown/structure_chapters.md)
+* [chapter structure thinking](./markdown/structure_chapters.md)
 * 1\. setout
     * [1.1 clean code](./markdown/cleanCode.md)
     * [1.2 python interpreter and note](./markdown/pythonInterpreterAndNote.md)
 * 2\. Start from POI to understand geospatial data and basic data analysis methods 
     * [2.1 Single classification POI data crawling and geospatial point map](./notebook_code/BaiduMapPOI_collection_singleClassification.md)
     * [2.2 Multiple classification POI data crawling and Descriptive statistics](./notebook_code/BaiduMapPOI_collection_multipleClassification.md) 
-    * [2.3 正态分布与概率密度函数，及异常值处理](./notebook_code/normalDis_PDF_outliers.md)
+    * [2.3 Normal distribution and probability density function, outlier handling](./notebook_code/normalDis_PDF_outliers.md)
     * [2.4 OpenStreetMap（OSM）数据处理](./notebook_code/OSM_dataProcessing.md)
     * [2.5 核密度估计与地理空间点密度分布](./notebook_code/kde.md)
     * [2.6 标准误，中心极限定理，t分布，统计显著性，效应量，置信区间；公共健康数据的地理空间分布与相关性分析](./notebook_code/correlation.md)
