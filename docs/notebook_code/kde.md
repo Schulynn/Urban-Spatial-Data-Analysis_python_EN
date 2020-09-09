@@ -1,8 +1,8 @@
 > Created on Thu Jul  9 22/10/09 2020  @author: Richie Bao-caDesign设计(cadesign.cn)
 
-## 1 核密度估计与地理空间点密度分布
-### 1.1 核密度估计
-#### 1.1.1 单变量（一维数组）的核密度估计
+## 1 Kernel density estimation and geospatial point density distribution
+### 1.1  Kernel density estimation
+#### 1.1.1 Kernel density estimation for a single variable (a one-dimensional array)
 当直方图的组距无限缩小至极限后，能够拟合出一条曲线，计算这个分布曲线的公式即为概率密度函数（Probability Density Function,PDF），这是在[正态分布](https://richiebao.github.io/Urban-Spatial-Data-Analysis_python/#/./notebook_code/normalDis_PDF_outliers)一节中所阐述的内容，而用于估计概率密度函数的非参数方法就是核密度估计。核密度估计（Kernel density estimation, KDE）是一个基本的数据平滑问题（a fundamental data smoothing problem），例如对不平滑的直方图平滑，给定一个核K, 并指定带宽（bandwidth），其值为正数，核密度估计定义为： $\hat{f} _{n} (x)= \frac{1}{nh}  \sum_{i=1}^n {K( \frac{x- x_{i} }{h} )} $，其中K为核函数，$h$为带宽，核函数有多个，例举其中高斯核为：$\frac{1}{ \sqrt{2 \pi } }  e^{- \frac{1}{2}  x^{2} } $，将其带入核密度估计公式结果为：$\hat{f} _{n} (x)= \frac{1}{ \sqrt{2 \pi } nh}  \sum_{i=1}^n { e^{ -\frac{ (x- x_{i} )^{2} }{2 h^{2} } } } $。
 
 在下述代码中绘制了三条曲线，红色粗线为概率密度函数；两条细线均为核密度估计（高斯核），只是蓝色线是依据核密度公式直接编写代码，并设置带宽h=0.4；绿色线则是使用scipy库下的`stats.gaussian_kde()`方法计算高斯核密度估计。

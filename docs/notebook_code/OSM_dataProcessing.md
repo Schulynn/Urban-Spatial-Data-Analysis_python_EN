@@ -1,16 +1,16 @@
-> Created on Fri Dec 27 14/28/05 2019 @author: Richie Bao-caDesign设计(cadesign.cn) __+updated on Mon Jul  6 19/29/41 2020
+> Created on Fri Dec 27 14/28/05 2019 @author: Richie Bao-caDesign (cadesign.cn) __+updated on Mon Jul  6 19/29/41 2020
 
-## 1.OpenStreetMap（OSM）数据处理
-[OpenStreetMap(OSM)](https://www.openstreetmap.org/#map=13/41.8679/-87.6569),"欢迎访问OpenStreetMap,这是个为全世界创建和分发免费地理数据的项目。我们之所以这么做，是因为人们认为作为免费的地图，在使用方面实际上有法律或者技术上的限制，阻碍了人们以创作性的、多产的、或意想不到的方式使用它们"。OSM提供了世界各地的道路、小径、咖啡馆、火车站等诸多地理信息数据，是我们在城市空间方面研究的宝贵数据财富。OSM数据的下载查看其官网信息，一般来讲有两个途径，一个是直接下载显示窗口范围的数据，或输入坐标自定义范围，但是这种方式下载的数据量有限制，如果范围过大则无法下载；另一种方式是直接从资源库下载，不同的资源下载的方式也有所不同，根据自己的需要来确定。同时OSM提供了多年历史数据，这为城市空间变化的研究提供了数据支持。本次所下载的数据从[Geofabrik](https://download.geofabrik.de/north-america/us.html)库中下载，因为分析的目标区域为芝加哥城，下载了[llinois-latest-free.shp.zip](https://download.geofabrik.de/north-america/us/illinois.html)压缩文件340MB，解压后3.73GB，根据下载后点数据的分布情况，为了保持点连续的区域，增加下载[wisconsin-latest.osm.bz2](https://download.geofabrik.de/north-america/us/wisconsin.html)数据文件324MB，解压后3.73GB。可以使用QGIS初步查看数据。其包含的数据层有：lines，multilinestrings，multipolygons，other_relations 和points。
+## 1.OpenStreetMap（OSM）data processing
+[OpenStreetMap(OSM)](https://www.openstreetmap.org/#map=13/41.8679/-87.6569)," Welcome to OpenStreetMap, the project that creates and distributes free geographic data for the world. We started it because most maps you think of as free actually have legal or technical restrictions on their use, holding back people from using them in creative, productive, or unexpected ways. OSM provides the world's roads, paths, cafes, train stations, and other geographic information data, which is a valuable data wealth in the study of urban space.  There are generally two ways to download OSM data by looking at its official website. One is to directly download the display window range of data or input coordinate custom range, but the amount of data downloaded in this way is limited; if the content is too extensive, it can not be downloaded;  The other way is to download directly from the repository. Different resources may be downloaded in different ways according to your own need. Simultaneously, OSM provides many years of historical data, which provides data support for the study of urban spatial changes.The downloaded data downloaded from [Geofabrik](https://download.geofabrik.de/north-america/us.html) repository. Since the analysis's target area is the City of Chicago, the [llinois-latest-free.shp.zip](https://download.geofabrik.de/north-america/us/illinois.html) was downloaded 340MB, and extracted 3.73GB. According to the distribution fo point data, to maintain the continuous area, increase the download [wisconsin-latest.osm.bz2](https://download.geofabrik.de/north-america/us/wisconsin.html) data file is 324MB, 3.72GB after decompression. You can use QGIS to view the data initially. The data layers it contains are 'lines', 'multilinestrings', 'multipolygons', 'other_relations ', and points.
 
-> 下图同时打开了了Ilinois和wisconsin的点数据，内部红色半透明区域为[芝加哥城行政范围](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-City/ewy2-6yfk)，数据来源于[Chicago Data Portal](https://data.cityofchicago.org/). 外部红色虚线为实验数据提取的实际边界。最小的黑色矩形是用于代码调试提取小规模数据。
+> Below at the same time opens Ilinois and Wisconsin point data, internal red translucent area to [Chicago city administrative scope](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-City/ewy2-6yfk), data from [Chicago Data Portal](https://data.cityofchicago.org/). The outer red dotted line is the actual boundary of experimental data extraction. The smallest black rectangle is used for code debugging to extract small-scale data.
 
 <a href=""><img src="./imgs/4_6.jpg" height="auto" width="500" title="caDesign"></a>
 
-### 1.1 OSM原始数据处理
-.osm数据处理包括合并两个区域数据，以及裁切，或者先分别裁切再合并，可以根据电脑内存需求和处理速度确定前后顺序。裁切.osm数据。这里选用的裁切方法是使用[osmosis](https://wiki.openstreetmap.org/wiki/Osmosis)命令行工具，非常适合处理大数据文件，裁切和更新数据。同时可以参考[Manipulating Data with Osmosis](https://learnosm.org/en/osm-data/osmosis/)。查询osmosis给出的案例，寻找应用polygon提取数据的代码为：`osmosis --read-xml file="planet-latest.osm" --bounding-polygon file="country2pts.txt" --write-xml file="germany.osm"`，共涉及到三个参数，原始.osm数据；裁切边界polygon（.txt数据格式），需要注意该处的polygon为osmosis格式的polygon格式数据，需要编写转换代码；以及输出路径。
+### 1.1 OSM raw data processing
+.osm data processing involves merging two areas of data and cutting or cutting separately before joining. It can be based on computer requirements and processing speed, determine the sequence. Here, for cutting .osm data, choosing the cutting method is to use the [osmosis](https://wiki.openstreetmap.org/wiki/Osmosis) command-line tools very suitable for processing large data files, cutting and update data. At the same time, it can refer to [Manipulating Data with Osmosis](https://learnosm.org/en/osm-data/osmosis/). By checking an 'osmosis' case, look for a code using a polygon to extract data: `osmosis --read-xml file="planet-latest.osm" --bounding-polygon file="country2pts.txt" --write-xml file="germany.osm"`. A total of three parameters involved, raw .osm data; the cutting polygon border(.txt data format), to be aware that the polygon that you need to program a transformation code is used for 'osmosis' in polygon format; And the output path.
 
-目视粗略判断点集聚的范围，在QGIS中绘制常规的polygon边界，如上图外红色虚线。首先编写polygon到osmosis格式的polygon代码，查询其数据格式为：
+Visually approximate the range of point aggregation, draw a conventional polygon boundary in QGIS, such as the red dotted line above. First, code a polygon to osmosis format, query the data format as follows:
 ```
 australia_v
 first_area
@@ -40,42 +40,42 @@ END
 END
 ```
 
-定义转换格式函数时，调用了osgeo类，该类包含于[GDAL](https://pypi.org/project/GDAL/)库中,GDAL是一个用于栅格（raster）和矢量（vector）地理空间数据格式的开源转换库，包含大量格式驱动，大多数python的地理空间数据处理库通常基于GDAL为底层编写，是最为基础的库。geopandas库基于fiona库，方便用户对地理空间数据的处理，而fiona包含链接到GDAL的扩展模块。通常在使用python地理空间数据库时，并没有使用哪个库的限制，目前最快处理地理空间数据的库是geopandas，但是有时这些库满足不了所有要求，因此需要调用GDAL来处理。查看GDAL帮助信息，可以浏览[GDAL/OGR Cookbook!](http://pcjericks.github.io/py-gdalogr-cookbook/index.html)，以及[GDAL documentation](https://gdal.org/)
+Format conversion function, call the 'osgeo' class, the class is included in [GDAL](https://pypi.org/project/GDAL/) library, the GDAL is one for the raster and vector open source geospatial data format conversion library, contains a large number of format drive, most of the python geospatial data processing library based on GDAL compiled for the underlying, usually is the most basic library. Geopandas library is based on Fiona and GDAl libraries, making it easy for users to work with geospatial data, and Fiona contains extension modules linked to GDAL. Naturally, there is no restriction on which libraries to use when working with the python geospatial database. The most convenient library for handling geospatial data is Geopandas, but sometimes these libraries do not meet all the requirements, and you need to call GDAL for processing. For GDAL help information, browse the [GDAL/OGR Cookbook!](http://pcjericks.github.io/py-gdalogr-cookbook/index.html), as well as [GDAL documentation](https://gdal.org/).
 
 
 ```python
 def shpPolygon2OsmosisTxt(shape_polygon_fp,osmosis_txt_fp): 
-    from osgeo import ogr #osgeo包含在GDAL库中
+    from osgeo import ogr #Osgeo is included in the GDAL library.
     '''
-    function-转换shape的polygon为osmium的polygon数据格式（.txt），用于.osm地图数据的裁切
+    function-Convert the polygon of the shape to the polygon data format of osmium (.txt) for cropping the .osm map data.
     
     Params:
-    shape_polygon_fp - 输入shape地理数据格式的polygon
-    osmosis_txt_fp - 输出为osmosis格式的polygon数据格式.txt
+    shape_polygon_fp - Enter polygon for Shape geographic data format
+    osmosis_txt_fp - Output for polygon data format of osmosis .txt
     '''
-    driver=ogr.GetDriverByName('ESRI Shapefile') #GDAL能够处理众多地理数据格式，此时调入了ESRI Shapefile数据格式驱动
-    infile=driver.Open(shape_polygon_fp) #打开.shp文件
-    layer=infile.GetLayer() #读取层
+    driver=ogr.GetDriverByName('ESRI Shapefile') #GDAL is capable of handling many geographic data formats, with the ESRI Shapefile data format driver in place
+    infile=driver.Open(shape_polygon_fp) #Open the .shp file
+    layer=infile.GetLayer() #Read the layer
     f=open(osmosis_txt_fp,"w") 
     f.write("osmosis polygon\nfirst_area\n")
     
     for feature in layer: 
         feature_shape_polygon=feature.GetGeometryRef() 
-        print(feature_shape_polygon) #为polygon
-        firsts_area_linearring=feature_shape_polygon.GetGeometryRef(0) #polygon不包含嵌套，为单独的形状
-        print(firsts_area_linearring) #为linearRing
-        area_vertices=firsts_area_linearring.GetPointCount() #提取linearRing对象的点数量
-        for vertex in range(area_vertices): #循环点，并向文件中写入点坐标
+        print(feature_shape_polygon) # For the polygon
+        firsts_area_linearring=feature_shape_polygon.GetGeometryRef(0) #Polygon contains no nesting but is a separate shape.
+        print(firsts_area_linearring) #For the linearRing
+        area_vertices=firsts_area_linearring.GetPointCount() #Extract the number of points on the linearRing object
+        for vertex in range(area_vertices): #Loop through the point and write the point coordinates to the file
             lon, lat, z=firsts_area_linearring.GetPoint(vertex)  
             f.write("%s  %s\n"%(lon,lat))
     f.write("END\nEND")  
     f.close()   
-#转换实际实验边界
+#Transform the actual experimental boundary
 shape_polygon_fp=r'.\data\geoData\OSMBoundary.shp'
 osmosis_txt_fp=r'.\data\geoData\OSMBoundary.txt'
 shpPolygon2OsmosisTxt(shape_polygon_fp,osmosis_txt_fp)
 
-#转换代码调试小批量数据边界
+#Transform code to debug small batch data boundaries
 shape_polygon_small_fp=r'.\data\geoData\OSMBoundary_small.shp'
 osmosis_txt_small_fp=r'.\data\geoData\OSMBoundary_small.txt'
 shpPolygon2OsmosisTxt(shape_polygon_small_fp,osmosis_txt_small_fp)
@@ -87,7 +87,7 @@ shpPolygon2OsmosisTxt(shape_polygon_small_fp,osmosis_txt_small_fp)
     LINEARRING (-87.6807286451907 41.8373927809521,-87.6807286451907 41.9214101975252,-87.5941157249019 41.9214101975252,-87.5941157249019 41.8373927809521,-87.6807286451907 41.8373927809521)
     
 
-执行转换后，写入.txt格式文件的实际实验边界polygon如下：
+After performing the conversion, write the .txt format file to the real experimental edge polygon as follows:
 ```
 osmosis polygon
 first_area
@@ -100,7 +100,7 @@ END
 END
 ```
 
-用于调试小批量数据提取的.txt边界：
+For debugging small batch data extraction .txt boundary:
 ```
 osmosis polygon
 first_area
@@ -113,15 +113,15 @@ END
 END
 ```
 
-osmosis也提供多个.osm地理空间数据的合并，其合并示例代码为`osmosis --rx 1.osm --rx 2.osm --rx 3.osm --merge --wx merged.osm`. 首先执行合并操作，针对该实验的osmosis合并代码`osmosis --rx "F:/GitHubBigData/illinois-latest.osm" --rx "F:/GitHubBigData/wisconsin-latest.osm"--merge --wx "F:/GitHubBigData/illinois-wisconsin.osm"`，合并后的文件大小为7.57GB。再执行裁切命令`osmosis --read-xml file="F:\GitHubBigData\illinois-wisconsin.osm" --bounding-polygon file="C:\Users\richi\omen-richiebao\omen_github\Urban-Spatial-Data-Analysis_python\notebook\BaiduMapPOIcollection_ipynb\data\geoData\OSMBoundary.txt" --write-xml file="F:\GitHubBigData\osm_clip.osm"`，裁切后的文件大小为3.80GB。可以再通过QGIS查看数据是否已经按照预期合并裁切完毕。用于代码调试的小规模数据提取直接裁切`osmosis --read-xml file="F:\GitHubBigData\illinois-wisconsin.osm" --bounding-polygon file="C:\Users\richi\omen-richiebao\omen_github\Urban-Spatial-Data-Analysis_python\notebook\BaiduMapPOIcollection_ipynb\data\geoData\OSMBoundary_small.txt" --write-xml file="F:\GitHubBigData\osm_small_clip.osm"`。
+Osmosis also provides a plurality of .osm geospatial data merging tools, with a sample merging code of `osmosis --rx 1.osm --rx 2.osm --rx 3.osm --merge --wx merged.osm`. First, perform the merging; osmosis combined code for this test is `osmosis --rx "F:/GitHubBigData/illinois-latest.osm" --rx "F:/GitHubBigData/wisconsin-latest.osm"--merge --wx "F:/GitHubBigData/illinois-wisconsin.osm"`，The integrated file size is 7.57GB. Then execute the cut order as `osmosis --read-xml file="F:\GitHubBigData\illinois-wisconsin.osm" --bounding-polygon file="C:\Users\richi\omen-richiebao\omen_github\Urban-Spatial-Data-Analysis_python\notebook\BaiduMapPOIcollection_ipynb\data\geoData\OSMBoundary.txt" --write-xml file="F:\GitHubBigData\osm_clip.osm"`，The cropped file size is 3.80GB. QGIS can be used to check whether the data has been combined and cut as expected. The small data extraction and cutting tool for code debugging is `osmosis --read-xml file="F:\GitHubBigData\illinois-wisconsin.osm" --bounding-polygon file="C:\Users\richi\omen-richiebao\omen_github\Urban-Spatial-Data-Analysis_python\notebook\BaiduMapPOIcollection_ipynb\data\geoData\OSMBoundary_small.txt" --write-xml file="F:\GitHubBigData\osm_small_clip.osm"`.
 
-> osmosis命令行，于windows系统的命令行终端中执行，建议在[Windows PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7)终端中执行代码。
+> Osmosis command line, executed in Windows system command line terminal, recommended running in [Windows PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview?view=powershell-7) terminal.
 
 <a href=""><img src="./imgs/4_5.jpg" height="auto" width="auto" title="caDesign"></a>
 
-OSM使用附加在基本数据结构上的标签（tag）来表示地面上的物理特征（feature），例如道路或者建筑物等。在QGIS中打开属性表，可以查看各要素所属于的标签。对于具体标签的内容可以查看[Map Features](https://wiki.openstreetmap.org/wiki/Map_Features)，下面仅列出主要标签的分类：
+OSM uses tags attached to fundamental data structures to represent physical features on the ground, such as roads or buildings. Open the attribute table to see to which tags each element belongs. For the specific tag, you can view [Map Features](https://wiki.openstreetmap.org/wiki/Map_Features); the following list only the classification of the main tags:
 
-| 序号   |      一级标签      |  二级标签 |
+| idex   |      Level 1 tag      |  Level 2 tag |
 |----------|:-------------|------:|
 | 1 |   Aerialway |  |
 | 2 |     Aeroway   |   |
@@ -159,21 +159,22 @@ OSM使用附加在基本数据结构上的标签（tag）来表示地面上的�
 | 6 | Restrictions  |   |
 
 
-> osmosis 工具是由OSM及其开源社区成员所建立的[osmcode.org](https://osmcode.org/)开发的工具。
+> Osmosis tool is developed by OSM and members of its open source community based on [osmcode.org](https://osmcode.org/).
 
-### 1.2 读取、转换.osm数据
-用python读取.osm数据仍然使用[osmcode.org](https://osmcode.org/)提供的工具[pyosmium](https://docs.osmcode.org/pyosmium/latest/), pyosmium是处理不同格式的OSM文件，内核为c++的osmium库，能够有效快速的处理OSM数据。上述处理后的.osm数据文件osm_clip.osm为3.80GB，如果一开始就使用较大的数据来编写程序，花费的时间成本可能较高，可以给更少的数据编写、调试，达到预期效果后再使用待要分析的大文件数据。
+### 1.2 Read and convert .osm data
+Read .osm data in python still use the tools [pyosmium](https://docs.osmcode.org/pyosmium/latest/) provided by [osmcode.org](https://osmcode.org/), pyosmium is processing the OSM files in different formats, the kernel for c++ library of osmium can effectively deal with OSM data rapidly. The above processed .osm data file osm_clip.osm is 3.80GB. If the code is written with more massive data initially, the time cost may be higher. It can be written and debugged with less data, and the large file data to be analyzed can be used after the desired effect is achieved.
 
-编写读取.osm数据，需要对OSM的数据结构有所了解，从而能够清晰的提取所需要的值。[元素（elements）](https://wiki.openstreetmap.org/wiki/Elements)是OSM物理世界概念数据模型的基本组成部分，包括节点nodes、路径或区域ways、关系relations，以及其标签tag。
+To read and write .osm data, you need to understand the OSM data structure so that you can extract the required values. [elements](https://wiki.openstreetmap.org/wiki/Elements) is the OSM in the physical world, an essential part of the conceptual data model, including nodes, paths or ways, relationship, as well as the tags.
 
-| 元素（elements）   |      图标     |  解释 |对位shape地理空间数据（vector矢量）|
+| elements   |     icon     |  explanation |Shape, geospatial data（vector）|
 |----------|:-------------|------:|------:|
-| node |   <a href=""><img src="./imgs/30px-Osm_element_node.svg.png" height="auto" width="auto" title="caDesign"></a> |由经纬度坐标定义的地理空间点  |point|
-| way |    <a href=""><img src="./imgs/30px-Osm_element_way.svg.png" height="auto" width="auto" title="caDesign"></a><a href=""><img src="./imgs/30px-Osm_element_closedway.svg.png" height="auto" width="auto" title="caDesign"></a><a href=""><img src="./imgs/30px-Osm_element_area.svg.png" height="auto" width="auto" title="caDesign"></a>   | 由点(20-2000个)构成的路径以及闭合的区域，包含open way, closed way和area  |polyline,polygon|
-| relation |     <a href=""><img src="./imgs/30px-Osm_element_relation.svg.png" height="auto" width="auto" title="caDesign"></a>   | 记录两个或多个元素之间关系的多用途数据结构，关系可以有不同的含义，其意义由对应的标签定义  ||
-| tag|  <a href=""><img src="./imgs/30px-Osm_element_tag.svg.png" height="auto" width="auto" title="caDesign"></a>   | nodes、ways和relations都可以由描述其意义的标签，一个标签由键key:值value组成，Key必须是唯一的  |字段 field|
+| node |   <a href=""><img src="./imgs/30px-Osm_element_node.svg.png" height="auto" width="auto" title="caDesign"></a> |A geospatial point defined by latitude and longitude coordinates  |point|
+| way |    <a href=""><img src="./imgs/30px-Osm_element_way.svg.png" height="auto" width="auto" title="caDesign"></a><a href=""><img src="./imgs/30px-Osm_element_closedway.svg.png" height="auto" width="auto" title="caDesign"></a><a href=""><img src="./imgs/30px-Osm_element_area.svg.png" height="auto" width="auto" title="caDesign"></a>   | A path  and a closed region consisting of (20-2000) points, containing 
+ open way, closed way, and area  |polyline,polygon|
+| relation |     <a href=""><img src="./imgs/30px-Osm_element_relation.svg.png" height="auto" width="auto" title="caDesign"></a>   | A multi-purpose data structure that records relationships between two or more elements, which can have different meanings defined by the corresponding tags ||
+| tag|  <a href=""><img src="./imgs/30px-Osm_element_tag.svg.png" height="auto" width="auto" title="caDesign"></a>   | nodes, ways, and relations can all be represented by tags that describe their meaning. A tag consist of a key: value, and the key must be unique  | field|
 
-* 示例
+* example
 
 **node**
 ```html
@@ -184,7 +185,7 @@ OSM使用附加在基本数据结构上的标签（tag）来表示地面上的�
 
 **way**
 
-简单的路径或区域 simple way
+simple way
 ```html
   <way id="5090250" visible="true" timestamp="2009-01-19T19:07:25Z" version="8" changeset="816806" user="Blumpsy" uid="64226">
     <nd ref="822403"/>
@@ -203,7 +204,7 @@ OSM使用附加在基本数据结构上的标签（tag）来表示地面上的�
   </way>
 ```
 
-多边形区域集合 multipolygon area
+multipolygon area
 
 <img src="./imgs/300px-Multipolygon_Illustration_2.svg.png" height="auto" width="auto" title="caDesign"><img src="./imgs/300px-Multipolygon_Illustration_1b.svg.png" height="auto" width="auto" title="caDesign">
 
@@ -225,19 +226,19 @@ OSM使用附加在基本数据结构上的标签（tag）来表示地面上的�
 
 
 
-* 元素的属性
+* Attributes of elements
 
-| 名称   | 值类型          |  解释 |
+| name   | value type         |  explanation |
 |----------|:-------------|------:|
-| id |integer (64-bit)   | 用于表示元素 |
-| user |character string   | 最后修改对象的用户名 |
-| uid | integer | 最后修改对象的用户ID |
-| timestamp | W3C standard date and time  | 最后修改时间 |
-|visible  | "true" or "false"  | 数据库中的对象是否被删除 |
-|version  | integer  | 版本控制 |
-|changeset  | integer  |创建或更新对象时使用的变更集编号  |
+| id |integer (64-bit)   | Used to represent elements |
+| user |character string   | The user name of the object is last modified|
+| uid | integer | The user ID of the object is last modified|
+| timestamp | W3C standard date and time  | Last modified time |
+|visible  | "true" or "false"  |Whether an object in the database has been deleted |
+|version  | integer  | Version control |
+|changeset  | integer  |The changeset number used when an object is created or updated |
 
-了解了OSM基本的数据类型、结构和属性，通过继承osmium的类.SimpleHandler，用.apply_file方法传入.osm文件，并定义所要提取的元素类型，并给出该元素类型的属性提取对应的属性值。在地理空间数据分析中，通常比较关键的属性包括：,元素修改的最后时间（.timestamp），标签（tags,<tag.k,tag.v>）,生成的几何对象（geometry<point,linestring,multipolygon>）。下述函数分别提取了node, way(area)对象的属性和几何对象，同时将其转换为GeoDataFrame的数据格式，并存储为`GPKG`的格式数据，方便日后调用，尤其大批量数据。因为涉及到大批量数据，因此调入datatime时间模块，观察所用时间，帮助调试代码。
+Learn the basic data types, structures, and properties of OSM, inheriting the osmium's class_SimpleHandler, passing in the .osm file using .apply_file method, and define the type of element to be extracted, and give the attributes of the element type to extract the corresponding attribute values. In geospatial data analysis, commonly, key features include:  last time of element modification(.timestamp), tags(tags,<tag.k,tag.v>), generated geometry objects(geometry<point,linestring,multipolygon>). The following functions extract the properties and geometric objects of node, way(area) respectively, convert them into the data format of GeoDataFrame, and save them as `GPKG' data format for future calls, especially for large quantities of data. Since a large amount of data is involved, you can call in the 'datatime' module, observe the time being spent, and help debug the code.
 
 
 ```python
@@ -249,7 +250,7 @@ wkbfab=osm.geom.WKBFactory()
 
 class osmHandler(osm.SimpleHandler):    
     '''
-    class-通过继承osmium类 class osmium.SimpleHandler读取.osm数据. 
+    class-Read the .osm data by inheriting the osmium class osmium.SimpleHandler
     '''
     
     def __init__(self):
@@ -317,11 +318,11 @@ class osmHandler(osm.SimpleHandler):
         
 a_T=datetime.datetime.now()
 print("start time:",a_T)
-#osm_Chicago_fp=r"F:\GitHubBigData\osm_small_clip.osm" #待读取的.osm数据路径, 用提取的小范围数据调试代码
-osm_Chicago_fp=r"F:\GitHubBigData\osm_clip.osm" #用小批量数据调试完之后，计算实际的实验数据
+#osm_Chicago_fp=r"F:\GitHubBigData\osm_small_clip.osm" #The .osm data path to read, debug the code with the small range of extracted data
+osm_Chicago_fp=r"F:\GitHubBigData\osm_clip.osm" #After debugging with small-batch data, calculate the actual experimental data
 
-osm_handler=osmHandler() #实例化类osmHandler()
-osm_handler.apply_file(osm_Chicago_fp,locations=True) #调用 class osmium.SimpleHandler的apply_file方法
+osm_handler=osmHandler() #Instantiate the class osmHandler()
+osm_handler.apply_file(osm_Chicago_fp,locations=True) #Call the apply_file method of the class osmium.SimpleHandler
 b_T=datetime.datetime.now()
 print("end time:",b_T)
 duration=(b_T-a_T).seconds/60
@@ -333,7 +334,7 @@ print("Total time spend:%.2f minutes"%duration)
     Total time spend:34.37 minutes
     
 
-当读取全部OSM元素数据后，定义保存函数，如果是小批量数据，通常可以一起保存，但是本次实验数据有3.80GB，将读取后的数据转换为GeoDataFrame数据格式，并保存较为花费时间。因此将OSM元素逐个转换保存。同时，注意到在小批量调试时，保存node为GeoJSON格式文件其大小为104MB，而保存为GPKG仅有52.3MB，因此对于实验数据的保存，这里选择后者。
+When all OSM element data is read, the save function is defined. If the data is a small batch, it can usually be saved together. However, this experiment has 3.80GB of data, so it takes more time to convert data into the GeoDataFrame data format and then save it. So save OSM elements one by one. Plus, note that when debugging in small batches, the size of the node file saved as GeoJSON is 104MB, while the size of the file saved as GPKG is only 52.3MB, so the latter is selected here for the experimental data.
 
 
 ```python
@@ -344,13 +345,13 @@ def save_osm(osm_handler,osm_type,save_path=r"./data/",fileType="GPKG"):
     import os
     import datetime
     '''
-    function-根据条件逐个保存读取的osm数据（node, way and area）
+    function-Save the OSM data one by one, depending on the condition.（node, way and area）
     
     Paras:
-    osm_handler - osm返回的node,way和area数据
-    osm_type - 要保存的osm元素类型
-    save_path - 保存路径
-    fileType - 保存的数据类型，shp, GeoJSON, GPKG
+    osm_handler -  OSM returns node, way, and area data
+    osm_type - Type of OSM element to save
+    save_path - Saved path
+    fileType - Type of data saved，shp, GeoJSON, GPKG
     '''
     def duration(a_T):
         b_T=datetime.datetime.now()
@@ -366,7 +367,7 @@ def save_osm(osm_handler,osm_type,save_path=r"./data/",fileType="GPKG"):
         elif fileType=="shp":
             osm_node_gdf.to_file(os.path.join(save_path,"osm_%s.shp"%osm_type))
 
-    crs={'init': 'epsg:4326'} #配置坐标系统，参考：https://spatialreference.org/        
+    crs={'init': 'epsg:4326'} #Coordinate system configuration, reference：https://spatialreference.org/        
     osm_columns=['type','geometry','id','version','visible','ts','uid','user','changeet','tagLen','tags']
     if osm_type=="node":
         osm_node_gdf=gpd.GeoDataFrame(osm_handler.osm_node,columns=osm_columns,crs=crs)
@@ -417,14 +418,14 @@ area_gdf=save_osm(osm_handler,osm_type="area",save_path=r"./data/",fileType="GPK
     Total time spend:10.18 minutes
     
 
-在存储过程中，该部分实验数据，node元素存储时间约87分钟，存储的GPKG文件大小为3.10GB，way和area元素则相对存储时间较短，存储文件较小。因为已经转换为GeoDataFrame格式地理空间数据格式，因此可以直接.plot()查看数据分布情况，初步判断是否读取和转换正确。下述代码用来测试读取的时间，其中way和area读取时间较短，而node元素读取时间较长。
+In the stored procedure, for this part of the experimental data, the node element's storage time is about 87 minutes, and the GPKG file size is 3.10GB, while the way and areal elements have relatively short storage time and small storage file size. Since the GeoDataFrame geospatial data format has been converted, you can go directly to .plot() to see the data distribution and make a preliminary decision as to whether the data has been read and converted correctly. The following code is used to test the read duration, with the way and area taking a shorter time and the node element taking a longer time. 
 
 
 ```python
 def start_time():
     import datetime
     '''
-    function-计算当前时间
+    function-Calculate the current time
     '''
     start_time=datetime.datetime.now()
     print("start time:",start_time)
@@ -433,10 +434,10 @@ def start_time():
 def duration(start_time):
     import datetime
     '''
-    function-计算持续时间
+    function-Calculate the duration
     
     Paras:
-    start_time - 开始时间
+    start_time - The start time
     '''
     end_time=datetime.datetime.now()
     print("end time:",end_time)
@@ -472,7 +473,7 @@ read_way_gdf.plot()
 <img src="./imgs/4_1.png" height="auto" width="500" title="caDesign">
 
 ```python
-del read_way_gdf #如果内存有限，可以使用del 删除不再使用的变量，从而节约内存
+del read_way_gdf #If memory is limited, del can be used to remove variables that are no longer used, thereby saving memory.
 ```
 
 
@@ -531,34 +532,34 @@ read_node_gdf.plot()
 <img src="./imgs/4_3.png" height="auto" width="500" title="caDesign">
 
 
-### 1.3 要点
-#### 1.3.1 数据处理技术
+### 1.3 key point
+#### 1.3.1 data processing technique
 
-* .osm数据处理库，由[osmcode.org](https://osmcode.org/)提供的[osmosis](https://wiki.openstreetmap.org/wiki/Osmosis)命令行工具处理原始数据，以及支持python语言处理的[pyosmium](https://docs.osmcode.org/pyosmium/latest/)库。
+* .osm data processing library，The [osmosis](https://wiki.openstreetmap.org/wiki/Osmosis) command-line tool provided by [osmcode.org](https://osmcode.org/) handles raw data, as well as the [pyosmium](https://docs.osmcode.org/pyosmium/latest/) library, which supports processing in the python language.
 
-* python处理地理空间数据最基础的库GDAL
+* GDAL, python's most basic library for handling geospatial data
 
-* 用datatime库获取时间，计算程序运行时间花费
+* The datatime library is used to get the time and calculate the running time of the program
 
-* 用del variable的方法删除不使用的变量，节约内存空间
+* The method of del variable is used to delete the variables not used to save the memory space.
 
-#### 1.3.2 新建立的函数
+#### 1.3.2 The newly created function tool
 
-* function-转换shape的polygon为osmium的polygon数据格式（.txt），用于.osm地图数据的裁切，`shpPolygon2OsmosisTxt(shape_polygon_fp,osmosis_txt_fp)`
+* function-Convert the polygon of the shape to the polygon data format of osmium (.txt) for cropping the .osm map data.`shpPolygon2OsmosisTxt(shape_polygon_fp,osmosis_txt_fp)`
 
-* class-通过继承osmium类 class osmium.SimpleHandler读取.osm数据, `osmHandler(osm.SimpleHandler)`
+* class-Read the .osm data by inheriting the osmium class osmium.SimpleHandler, `osmHandler(osm.SimpleHandler)`
 
-* function-根据条件逐个保存读取的osm数据（node, way and area）,`save_osm(osm_handler,osm_type,save_path=r"./data/",fileType="GPKG")`
+* function-Save the OSM data one by one, depending on the condition.（node, way and area）,`save_osm(osm_handler,osm_type,save_path=r"./data/",fileType="GPKG")`
 
-* function-计算当前时间，`start_time()`
+* function-Calculate the current time, `start_time()`
 
-* function-计算持续时间, `duration(start_time)`
+* function-Calculate the duration, `duration(start_time)`
 
-#### 1.3.3 所调用的python库
+#### 1.3.3 The python libraries that are being imported
 
 
 ```python
-from osgeo import ogr #osgeo包含在GDAL库中
+from osgeo import ogr
 import osmium as osm
 import pandas as pd
 import datetime
