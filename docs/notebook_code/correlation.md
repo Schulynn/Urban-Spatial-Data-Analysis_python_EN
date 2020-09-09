@@ -1,6 +1,6 @@
-> Created on Tue May 26 21/07/04 2020  @author: Richie Bao-caDesign设计(cadesign.cn) __+updated on Mon Jul 13 10/10/44 2020 by Richie Bao
+> Created on Tue May 26 21/07/04 2020  @author: Richie Bao-caDesign (cadesign.cn) __+updated on Mon Jul 13 10/10/44 2020 by Richie Bao
 
-## 1. 标准误，中心极限定理，t分布，统计显著性，效应量，置信区间；公共健康数据的地理空间分布与相关性分析
+## 1. Standard error, central limit theorem, Student's t-distribution, statistical significance, effect size, confidence interval; Geospatial distribution and correlation analysis of public health data
 ### 1.1 标准误，中心极限定理，t分布，统计显著性，效应量，置信区间 
 #### 1.1.1 标准误
 
