@@ -11,7 +11,7 @@
     * [2.4 OpenStreetMap（OSM）data processing](./notebook_code/OSM_dataProcessing.md)
     * [2.5 Kernel density estimation and geospatial point density distribution](./notebook_code/kde.md)
     * [2.6 Standard error, central limit theorem, Student's t-distribution, statistical significance, effect size, confidence interval; Geospatial distribution and correlation analysis of public health data](./notebook_code/correlation.md)
-    * [2.7 简单回归，多元回归](./notebook_code/regression.md)
+    * [2.7 Simple regression, multiple regression](./notebook_code/regression.md)
     * [2.8 回归公共健康数据，与梯度下降法](./notebook_code/regression_publicHeath_grad.md)
     * [2.9 线性代数基础的代码表述](./notebook_code/linear_algebra.md)
     * [2.10 Landsat遥感影像处理，数字高程，主成成分分析](./notebook_code/landsat_pca.md)
