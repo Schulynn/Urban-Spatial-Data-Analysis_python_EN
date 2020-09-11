@@ -1,19 +1,19 @@
-> Created on Mon Dec 18 11/43/44 2017  @author: Richie Bao-caDesign设计(cadesign.cn) __+updated on Sun Jul 19 15/12/45 2020 by Richie Bao
+> Created on Mon Dec 18 11/43/44 2017  @author: Richie Bao-caDesign(cadesign.cn) __+updated on Sun Jul 19 15/12/45 2020 by Richie Bao
 
 ## 1. Simple regression, multiple regression
-在相关性分析一章计算了两两之间的相关系数，但在相关系数计算中并没有区分自变量（independent variable）或预测变量（predictor variable）亦或解释变量，与因变量(dependent variable)或结果变量（outcome variable）亦或效标变量（criterion variable），而回归分析除了可以反映变量间关系的性质和强度，更主要的目的是可以根据自变量预测因变量，其预测的准确程度取决于相关的程度，相关性越强，预测就越准确。根据自变量的数量可以将回归分为简单回归和多元回归，多元回归包括两个或两个以上的自变量及一个因变量，那么这多个自变量作为一个整体与因变量有多大关系，做为个体，各个自变量与因变量的关系强度如何，同时，自变量之间的相对强度又如何，以及自变量之间是否存在交互效应等，回答上述问题后，基本就解释了自变量和因变量之间的关系。
+In the chapter of correlation coefficient analysis, the correlation coefficients between pairs are calculated. Still, it does not distinguish the independent variable, predictor variable, explanatory variable, and the dependent variable, outcome variable, or criterion variable in calculating correlation coefficients. Besides, reflecting the nature and strength of the relationship between variables, regression analysis aims to predict dependent variables based on independent variables. The accuracy of the prediction depends on the degree of correlation; the stronger the correlation is, the more accurate the prediction will be. According to the number of independent variables, a regression can be divided into simple regression and multivariate(multiple) regression. Multivariate regression includes two or more independent variables and one dependent variable. So how much do these independent variables as a whole relate to the dependent variables? As an individual, what is the strength of the relationship between independent variables and dependent variables? At the same time, what is the relative strength between independent variables, and whether there is an interaction effect between independent variables? After answering the above questions, the relationship between independent variables and dependent variables is explained.
 
-回归涉及的内容异常丰富，回归的类型丰富多彩，在实际应用回归来预测因变量时，并不会从最基础的开始一步步计算，而是直接使用python中集成的库，这时就涉及到了著名的机器学习库[scikit-learn](https://scikit-learn.org/stable/index.html)，该库包含了数据的预处理、降维、分类模型、聚类模型和回归模型，以及模型选择等内容，能够帮助我们处理众多城市空间数据分析问题。同时也可以使用[statsmodels](https://www.statsmodels.org/stable/index.html)库等。当然，一开始就使用集成的模型，对于我们理解回归，乃至任何统计学的知识点或者数据分析的算法都是不利的，往往造成囫囵吞枣、一知半解的弊病，因此亦然一步步，从最为基础的部分，借助python语言来把这个脉络梳理清楚。
+The content involved in regression is extremely rich, and the types of regression are rich and colorful. In the practical application of regression to predict the dependent variable does not start from the most basic calculation step by step but directly use an integrated python library,  then goes to the famous machine learning library [scikit-learn](https://scikit-learn.org/stable/index.html), the library contains data preprocessing, dimension reduction, classification model, clustering model, and regression model, and model selection can help us deal with much urban spatial data analysis. At the same time, we can also use [statsmodels](https://www.statsmodels.org/stable/index.html) library, etc. Of course,  starting with an integrated model is detrimental to our understanding of regression, or even any statistical knowledge or data analysis algorithms. It tends to be poorly understood. So step by step,  starting with the basics and using python to sort out the context.
 
-> 该部分参考文献：
-> 1. [日]高桥 信著作,Inoue Iroha,株式会社 TREND-PRO漫画制作,张仲恒译.漫画统计学之回归分析[M].科学出版社.北京.2009.08；
-> 2. Timothy C.Urdan.Statistics in Plain English(白话统计学)[M].中国人民大学出版社.2013,12.第3版.
-> 3. Douglas C.Montgomery,Elizabeth A.Peck,G.Geoffrey Vining著.王辰勇译.线性回归分析导论(Introduction to linear regression analysis).机械工业出版社.2016.04(第5版)
+> References for this part:
+> 1.Shin Takahashi,Iroha Inoue.The Manga Guide to Regression Analysis.No Starch Press; 1st Edition (May 1, 2016) 
+> 2. Timothy C.Urdan.Statistics in Plain English. Routledge; 3rd Edition (May 27, 2010)
+> 3. Douglas C.Montgomery,Elizabeth A.Peck,G.Geoffrey Vining. Introduction to linear regression analysis). Wiley; 5th Edition (April 9, 2012)
 
-### 1.1 预备的知识——反函数
+### 1.1 Preliminary knowledge -- inverse function
 
-#### 1.1.1 反函数（inverse function）
-如果函数$f(x)$有$y=f(x)$，$f$是y关于自变量x的函数；如果存在一个函数$g$，使得，$g(y)=g(f(x))=x$，则$g$是x关于自变量y的函数，称$g$为$f$的反函数。若一函数有反函数，此函数变为可逆的。可记作函数$f$和它的反函数$f^{-1} $。假设函数$f=2*x+1$，则$x=(f/2-1/2)$，替换$x$为$f^{-1}$，$f$为$x$，则结果为反函数$f^{-1}=x/2-1/2$。在下述代码表述假设函数及其反函数时，使用了[sympy](https://docs.sympy.org/latest/index.html)代数计算库，轻量型的SymPy的语法方式保持了python语言本身的形式，使得数学公示的表述和计算上清晰简便。打印图表$f$和它的反函数$f^{-1} $，可以看到，二者的相对横纵坐标发生了置换。求一个函数的反函数，当前有很多在线自动转换的平台，可以搜索输入公式获得其反函数的公式。例如[Symbolab](https://www.symbolab.com/)，如果$f(x)= \frac{ x^{2} +x+1}{x} $,则其反函数为$g(x)= \frac{-1+x+ \sqrt{ x^{2}-2x-3 } }{2} $，及$g(x)= \frac{-1+x- \sqrt{ x^{2}-2x-3 } }{2} $
+#### 1.1.1 Inverse function
+If the function $f(x)$ has $y=f(x)$, $f$ is a function of y with respect to x;   If there is function $g$ such that $g(y)=g(f(x))=x$, then $g$ is a function of x with respect to the independent variable y, and $g$ is called the inverse function of $f$. If a function has an inverse function, the function becomes invertible. Call it the function $f$ and its inverse function $f^{-1} $. Hypothesis function $f=2*x+1$, then $x=(f/2-1/2)$, replacing $x$ with $f^{-1}$, and $f$ with $x$, the result is the inverse funciton$f^{-1}=x/2-1/2$. Expressed in the following code assumes that the function and its inverse function, using the algebraic calculation library[sympy](https://docs.sympy.org/latest/index.html), a lightweight 'Sympy' grammar way to maintain the form of the python itself, makes clear, simple math expressions and calculation. When you print the chart $f$ and its inverse function$f^{-1} $, you can see that their relative horizontal and vertical coordinates have been transposed. There are many online automatic conversion platforms to find the inverse function of a function; you can search the input formula to get the formula of its inverse function,for example, [Symbolab](https://www.symbolab.com/). If $f(x)= \frac{ x^{2} +x+1}{x} $, its inverse function is $g(x)= \frac{-1+x+ \sqrt{ x^{2}-2x-3 } }{2} $, and $g(x)= \frac{-1+x- \sqrt{ x^{2}-2x-3 } }{2} $.
 
 
 ```python
@@ -23,22 +23,22 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-init_printing() #sympy提供有多种公式打印模式
+init_printing() #Sympy delivers a variety of formula print patterns.
 
-#示例-A
-# 定义字符
+#Example-A
+# Define the symbol
 x=sympy.Symbol('x')
 
-# 定义表达式
-f=2*x+1 #函数fx
-g=x/2-1/2 #fx的反函数
+# Define expression
+f=2*x+1 #function fx
+g=x/2-1/2 #The inverse of the fx
 
-#转换表达式为等价的numpy函数实现数值计算
+#The transformation expression is equivalent to the Numpy function to realize numerical calculation.
 x_array=np.arange(-5,10)
 f_=sympy.lambdify(x,f,"numpy")
 g_=sympy.lambdify(x,g,"numpy")
 
-#求解函数并绘制图表
+#Solve the function and plot a diagram 
 fig, axs=plt.subplots(1,2,figsize=(16,8))
 axs[0].plot(x_array,f_(x_array),'+--',color='tab:blue',label='$f=2*x+1$')
 axs[0].plot(f_(x_array),g_(f_(x_array)),'o--',color='tab:red',label='$f^{-1}=x/2-1/2$')
@@ -49,10 +49,10 @@ axs[0].hlines(y=0,xmin=-5,xmax=5,lw=2,color='gray')
 axs[0].vlines(x=0,ymin=-5,ymax=5,lw=2,color='gray')
 
 
-#示例-B
+#Example-B
 f_B=(x**2+x+1)/x
-print("使用pprint方式打印公式：")
-pprint(f_B,use_unicode=True) #使用pprint方式打印公式
+print("Use 'pprint' to print formula:")
+pprint(f_B,use_unicode=True) #Use 'pprint' to print formula:
 g_B_negative=(-1+x+sqrt(x**2-2*x-3))/2
 g_B_positive=(-1+x-sqrt(x**2-2*x-3))/2
 
@@ -75,11 +75,11 @@ axs[1].legend(loc='upper left', frameon=False)
 axs[1].set_title('$fx=(x**2+x+1)/x$')
 
 plt.show()
-print("JupyterLab直接输出公式:g_B_negative=")
-g_B_negative #用JupyterLab直接输出公式
+print("JupyterLab direct output formula:g_B_negative=")
+g_B_negative #Direct output formula with JupyterLab
 ```
 
-    使用pprint方式打印公式：
+    Use 'pprint' to print formula:
      2        
     x  + x + 1
     ──────────
@@ -90,7 +90,7 @@ g_B_negative #用JupyterLab直接输出公式
 <a href=""><img src="./imgs/7_1.png" height="auto" width="auto" title="caDesign"></a>
 
 
-    JupyterLab直接输出公式:g_B_negative=
+    JupyterLab direct output formula:g_B_negative=
     
 
 
@@ -100,14 +100,14 @@ $\displaystyle \frac{x}{2} + \frac{\sqrt{x^{2} - 2 x - 3}}{2} - \frac{1}{2}$
 
 
 
-#### 1.1.2 指数函数与自然对数函数
-指数函数(Exponential function)是形式为$b^{x} $的数学函数，其中$b$是底数（或称基数，base）,而$x$是指数（index/exponent）。
+#### 1.1.2 Exponential function and Natural logarithm function
+An Exponential function is a mathematical function with the form $b^{x} $, $b$ is the base,  $b$ is index(exponent).
 
-对数（logarithm）是幂运算的逆运算，假如$x=b^{y} $，则有$y=log_{b}x $，其中$b$是对数的底（或称基数），而$y$就是$x$对于底数$b$，$x$的对数。典型的底数有$e$、10或2
+The logarithm is the inverse of the power operation, so if $x=b^{y} $, then $y=log_{b}x $, $b$ is the base of the logarithm, $y$ is the logarithm of $x$, $x$ for the base $b$. Typical bases are $e$、10 or 2.
 
-自然对数（Natural logarithm）为以数学常数$e$为底数的对数函数，标记为$lnx$或$log_{e}x $，其反函数为指数函数$e^{x}$。
+Natural logarithm is the logarithm function base of the mathematical constant $e$, marked as $lnx$ or $log_{e}x $, and its inverse function is the exponential function $e^{x}$.
 
-* 指数函数与对数函数的性质：
+* Properties of exponential function and logarithm function:
 
 1. $( e^{a} )^{b} = e^{ab} $
 2. $\frac{ e^{a} }{ e^{b} } = e^{a-b} $
@@ -154,7 +154,7 @@ plt.show()
 <a href=""><img src="./imgs/7_2.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.1.3 微分
+#### 1.1.3 Differential
 微分是对函数的局部变化率的一种线性描述。其可以近似的描述当函数自变量的取值足够小时的改变时，函数的值是怎样变化的。首先根据‘漫画统计学之回归分析’中美羽的年龄和身高数据建立数据集，实现计算年龄和身高的相关系数，结果p_value<0.05，即pearson's r=0.942的相关系数能够说明年龄和身高直接存在强相关关系。既然二者之间存在相关性，就可以建立回归方程，在下述代码中给出了三种回归模型（方程），一种是‘漫画统计学之回归分析’给出的$f(x)=- \frac{326.6}{x}+173.3 $方程，另外两种是直接使用sklearn库Linear Models线性模型中的LinearRegression线性回归，和基于LinearRegression的Polynomial regression多项式回归。关于Sklearn的语法规则，可以参考官方网站scikit-learn给出的指南，Sklearn的语法结构秉承了python自身的特点，具有很强的易读性，代码编写流畅自然。三种回归模型中，以多项式回归拟合的最好，‘漫画统计学之回归分析’中给出的公式次之，而简单粗暴的简单线性回归因为呈现线性，与真实值近似对数函数曲线的形状相异。
 
 $y=- \frac{326.6}{x}+173.3 $关于x求微分，即是求$x$岁到$x$岁之后极短时间内，身高的年平均增长量（自变量以年为单位），$\frac{(- \frac{326.6}{x+ \triangle }+173.3 )-(- \frac{326.6}{x} +173.3)}{ \triangle } = \frac{326.6}{ x^{2} } $，对于微分的计算，可以直接使用sympy提供的`diff`工具计算，计算结果记作$\frac{dy}{dx}= \frac{df}{dx}  = y'= f' = \frac{326.6}{ x^{2} }  $。
