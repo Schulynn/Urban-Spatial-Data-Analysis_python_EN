@@ -1,6 +1,6 @@
 > Created on Sat Jul 25 11/41/43 2020  @author: Richie Bao-caDesign设计(cadesign.cn)
 
-## 1.回归公共健康数据，与梯度下降法
+## 1.Regression of public health data, with gradient descent method
 公共健康数据可以分为三类，分别为地理信息数据、疾病数据和经济条件数据。在公共健康数据中，其经济条件数据视为自变量，而疾病数据视为因变量，通常自变量为因，因变量为果，自变量是可以改变的因素，而因变量为不能改变的因素。
 公共健康数据中英对照表（字段映射表）：
 ```python

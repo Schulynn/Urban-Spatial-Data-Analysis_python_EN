@@ -1501,31 +1501,32 @@ ANOVA_multivarialbe(storeInfo_df.monthly_turnover.to_list(),storeInfo_df.pre.to_
     
 
 #### 1.3.6 Population regression $A_{1}  X_{1} + A_{2}  X_{2}+ \ldots + A_{n}  X_{n}+B$ estimation——confidence interval
-多元线性回归模型的预测值置信区间估计使用了两种计算方式，一是，自定义函数逐步计算，其计算公式为：$\sqrt{F(1,n_s-n_v-1;0.05) \times ( \frac{1}{n_s}+ \frac{ D ^{2} }{ n_s-1 }  ) \times   \frac{SS_{res}}{n_s-n_v-1}  } $，其中$n_s$为样本个数，$n_v$为自变量个位数，$D ^{2}$为马氏距离（Mahalanobis distance）的平方，$SS_{res}$为残差平方和；$D ^{2}$马氏距离的平方计算公式为：先求$S=\begin{bmatrix} S_{11} &S_{12} & \ldots &S_{1p}  \\S_{21}  &S_{22}& \ldots &S_{2p}\\ \vdots & \vdots & \ddots & \vdots \\ S_{p1} &S_{p2}& \ldots &S_{pp}   \end{bmatrix} $的逆矩阵$S^{-1} $，其中，$S_{22}$代表第2个自变量的离差平方和，$S_{25}$代表第2个自变量和第5个自变量的离差积和，$S_{25}$与$S_{52}$是相等的，以此类推；然后根据$S^{-1}$，求取马氏距离的平方公式为：$D^{2} =[( x_{1}- \overline{ x_{1} }  )( x_{1}- \overline{ x_{1} }) S^{11} +( x_{1}- \overline{ x_{1} }  )( x_{2}- \overline{ x_{2} }) S^{12}]+ \ldots +( x_{1}- \overline{ x_{1} }  )( x_{p}- \overline{ x_{p} }) S^{1p}\\+( x_{2}- \overline{ x_{2} }  )( x_{1}- \overline{ x_{1} }) S^{21} +( x_{2}- \overline{ x_{2} }  )( x_{2}- \overline{ x_{2} }) S^{12}]+ \ldots +( x_{2}- \overline{ x_{2} }  )( x_{p}- \overline{ x_{p} }) S^{2p}\\ \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots \\+( x_{p}- \overline{ x_{p} }  )( x_{1}- \overline{ x_{1} }) S^{p1} +( x_{p}- \overline{ x_{p} }  )( x_{2}- \overline{ x_{2} }) S^{12}]+ \ldots +( x_{p}- \overline{ x_{p} }  )( x_{p}- \overline{ x_{p} }) S^{pp}(n_s-1)$，其中$n_s$为样本个数。
+Two calculation methods estimate the predicted values' confidence interval of the multiple linear regression model. First, to calculate step by step using a custom function, and its calculation formula is:$\sqrt{F(1,n_s-n_v-1;0.05) \times ( \frac{1}{n_s}+ \frac{ D ^{2} }{ n_s-1 }  ) \times   \frac{SS_{res}}{n_s-n_v-1}  } $，$n_s$ is the number of samples, $n_v$ is the number of independent variables, $D ^{2}$ is the square of Mahalanobis distance, $SS_{res}$ is the residual sum of squares; $D ^{2}$, Mahalanobis distance's calculation formula is: first calculate $S=\begin{bmatrix} S_{11} &S_{12} & \ldots &S_{1p}  \\S_{21}  &S_{22}& \ldots &S_{2p}\\ \vdots & \vdots & \ddots & \vdots \\ S_{p1} &S_{p2}& \ldots &S_{pp}   \end{bmatrix} $ inverse matrix $S^{-1} $，where $S_{22}$ represents the deviation sum of squares of the second variable, $S_{25}$ represents the deviation product sum of the second and the fifth independent variable,  $S_{25}$ and $S_{52}$ are equal, and so on; Then according to $S^{-1}$, the square formula of Mahalanobis distance is : $D^{2} =[( x_{1}- \overline{ x_{1} }  )( x_{1}- \overline{ x_{1} }) S^{11} +( x_{1}- \overline{ x_{1} }  )( x_{2}- \overline{ x_{2} }) S^{12}]+ \ldots +( x_{1}- \overline{ x_{1} }  )( x_{p}- \overline{ x_{p} }) S^{1p}\\+( x_{2}- \overline{ x_{2} }  )( x_{1}- \overline{ x_{1} }) S^{21} +( x_{2}- \overline{ x_{2} }  )( x_{2}- \overline{ x_{2} }) S^{12}]+ \ldots +( x_{2}- \overline{ x_{2} }  )( x_{p}- \overline{ x_{p} }) S^{2p}\\ \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots \\+( x_{p}- \overline{ x_{p} }  )( x_{1}- \overline{ x_{1} }) S^{p1} +( x_{p}- \overline{ x_{p} }  )( x_{2}- \overline{ x_{2} }) S^{12}]+ \ldots +( x_{p}- \overline{ x_{p} }  )( x_{p}- \overline{ x_{p} }) S^{pp}(n_s-1)$，where $n_s$ is the number of samples. 
 
-二是，使用[statsmodels](https://www.statsmodels.org/stable/index.html)的`statsmodels.regression.linear_model.OLS`普通最小二乘法（Ordinary Least Squares，OLS）求得多元线性回归方程，其语法结构与Sklearn基本相同。所求的的回归模型包含有置信区间的属性，可以通过`dt=res.get_prediction(X).summary_frame(alpha=0.05)`的方式提取。可以打印statsmodels计算所得回归模型的概要（summary），比较求解回归方程的偏回归系数和截距（coef_const/area/distance_to_nearestStation ），以及确认多元回归方程的精度R-squared（$R^2$）和修正自由度的判定系数Adj. R-squared，和回归显著性检验全面讨论偏回归系数的检验F-分布统计量F-statistic，对应P值Prob (F-statistic)，全部相等，互相印证了所使用的方法是否保持一致。
-
-对于两种方法在预测变量置信区间比较上，分别打印了各自的三维分布图，其结果显示二者的图形保持一致，即通过statsmodels求解多元回归方程与逐步计算所得结果保持一致。
-
-> [statsmodels](https://www.statsmodels.org/stable/index.html) 提供了一些类和函数，用于估计许多不同的统计模型，以及执行统计测试和统计数据研究。每个估计器都有一个广泛的结果统计信息列表，可以用以查看相关信息，以确保所求得的估计器（模型）的准确性、正确性。
+Second, use `statsmodels.regression.linear_model.OLS`(Ordinary Least Squares，OLS) provided by [statsmodels](https://www.statsmodels.org/stable/index.html) to solve multiple linear regression equation, its syntax grammar is almost the same as Sklearn. The regression model obtained contains the properties of the confidence interval, which can be extracted from the `dt=res.get_prediction(X).summary_frame(alpha=0.05)`. A summary of the regression model calculated by StatsModels can be printed to compare the partial regression coefficients, and the interception of the regression equation solved(coef_const/area/distance_to_nearestStation), and confirm the accuracy R-squared($R^2$) of the multiple regression equation, as well as the modified the degree of freedom determination coefficient Adj. R-squared, and the test F-distribution statistics F-statistic of partial regression coefficients using the whole discussion method in regression significance, corresponding p-value Prob (F-statistic), they were all equal, verifying each other whether the methods used were consistent. 
 
 
-* 马氏距离（Mahalanobis distance）
+Three-dimensional diagrams were printed respectively, to compare the predicted values' confidence interval between the two methods. The results showed that the two methods' graphs were consistent; that is, the multiple regression equation solved by Statsmodels was consistent with the results obtained by stepwise calculation.
 
-马氏距离表示数据的协方差矩阵，有效计算两个未知样本集相似度的方法。与欧式距离（Euclidean distance）不同的是它考虑到各种特性之间的联系（例如身高和体重是由关联的），并且是尺度无关的（scale-invariant，例如去掉单位）,独立于测量尺度。计算公式如上所述，也可以简化表示为，对于一个均值为$ \vec{ \mu }= (  \mu _{1}, \mu _{2}, \mu _{3}, \ldots , \mu _{N} )^{T} $（即为各个自变量的均值）的多变量（多个自变量）的矩阵，$ \vec{ x }= (  x_{1}, x _{2}, x _{3}, \ldots , x _{N} )^{T}$，其马氏距离为$D_{M} (\vec{ x })= \sqrt{ (\vec{ x }-\vec{ \mu })^{T} S^{-1}  (\vec{ x }-\vec{ \mu })} $。
+> [statsmodels](https://www.statsmodels.org/stable/index.html) provides classes and functions for estimating many different statistical models and performing statistical tests and statistical data studies. Each estimator has an extensive list of resulting statistics that can be viewed to ensure the estimator's accuracy and correctness (model) obtained.
+
+
+* Mahalanobis distance
+
+Mahalanobis distance represents the covariance matrix of the data. It is an effective method to calculate the similarity of two unknown sample sets. Unlike Euclidean distance, it considers the relationships between various properties(such as height and weight are associated) and is scale-invariant(e.g., removing units),  independent of the measurement scale. The calculation formula. As described above, the calculation formula can also be simplified as a mean is $ \vec{ \mu }= (  \mu _{1}, \mu _{2}, \mu _{3}, \ldots , \mu _{N} )^{T} $ (that is, the mean of each independent variable), the matrix of multiple independent variables. $ \vec{ x }= (  x_{1}, x _{2}, x _{3}, \ldots , x _{N} )^{T}$，Mahalanobis distance is $D_{M} (\vec{ x })= \sqrt{ (\vec{ x }-\vec{ \mu })^{T} S^{-1}  (\vec{ x }-\vec{ \mu })} $。
 
 
 ```python
 import numpy as np
 import statsmodels.api as sm
 
-#使用statsmodels库求解回归方程，与获得预测值的置信区间
+#The statsmodels library was used to solve the regression equation and obtain the predicted values' confidence interval.
 storeInfo_df_sort=storeInfo_df.sort_values(by=['area'])
 X=storeInfo_df_sort[['area','distance_to_nearestStation']]
-X=sm.add_constant(X) #因为在上述逐步计算或者使用Sklearn求解回归方程过程中，多元回归方程均增加了常量截距的参数，因此此处增加一个常量 adding a constant
+X=sm.add_constant(X) #Because in the above stepwise calculation or the use of Sklearn to solve the regression equation, the constant intercept is added in the multiple regression equation, so a constant is added here.
 y=storeInfo_df_sort['monthly_turnover']
-mod=sm.OLS(y,X) #构建最小二乘模型 Describe model
-res=mod.fit() #拟合模型 Fit model
+mod=sm.OLS(y,X) #Construct the least-squares model Describe model
+res=mod.fit() #Fit model
 print(res.summary())   # Summarize model
 
 dt=res.get_prediction(X).summary_frame(alpha=0.05)
@@ -1535,34 +1536,34 @@ yprd_ci_upper = dt['obs_ci_upper']
 ym_ci_lower = dt['mean_ci_lower'] 
 ym_ci_upper = dt['mean_ci_upper']
 
-#逐步计算
+#Step by step calculation
 def confidenceInterval_estimator_LR_multivariable(X,y,model,confidence=0.05):
     import pandas as pd
     from sympy import Matrix,pprint
     import numpy as np
     '''
-    function - 多元线性回归置信区间估计，以及预测区间
+    function - Multiple linear regression confidence interval estimation, and predicted interval
     
     Paras:
-    X - 样本自变量 DataFrame数据格式
-    y - 样本因变量
-    model - 多元回归模型
-    confidence - 置信度
+    X - Sample independent variable DataFrame format data
+    y - Samaple dependent variable
+    model - Multiple regression model
+    confidence - Confidence coefficient
     
     return:
-    CI- 预测值的置信区间
+    CI- Confidence interval of the predicted value
     '''
-    #根据指定数目，划分列表的函数
+    #A function that divides a list according to a specified number
     def chunks(lst, n):
         for i in range(0, len(lst), n):
             yield lst[i:i + n]
     
-    X_deepCopy=X.copy(deep=True) #如果不进行深度拷贝，如果传入的参数变量X发生了改变，则该函数外部的变量值也会发生改变
+    X_deepCopy=X.copy(deep=True) #Without a deep copy, if the parameter variable X passed in is changed, then the variable value outside the function will change.
     columns=X_deepCopy.columns
     n_v=len(columns)
     n_s=len(y)
     
-    #求S，用于马氏距离的计算
+    #Find S for Mahalanobis distance
     SD=[]
     SD_name=[]
     for col_i in columns:
@@ -1579,17 +1580,17 @@ def confidenceInterval_estimator_LR_multivariable(X,y,model,confidence=0.05):
             i+=1
     M=Matrix(list(chunks(SD,n_v)))
     
-    #求S的逆矩阵
+    #Find the inverse matrix of S
     M_invert=M**-1
     #pprint(M_invert)
     M_invert_list=[M_invert.row(row).col(col)[0] for row in range(n_v) for col in range(n_v)]
     X_mu=[X_deepCopy[col].mean() for col in columns]
     
-    #求马氏距离的平方
+    #Find the square of the Mahalanobis distance.
     SD_array=X_deepCopy[SD_name].to_numpy()    
     D_square_list=[sum([x*y for x,y in zip(SD_selection,M_invert_list)])*(n_s-1) for SD_selection in SD_array]    
     
-    #计算CI-预测值的置信区间
+    #Calculate  CI - the predicted values' confidence interval 
     print(columns)
     ss_res=(y-model.predict(X_deepCopy[columns]))**2
     SS_res=ss_res.sum()
@@ -1603,12 +1604,12 @@ X_=storeInfo_df_sort[['area','distance_to_nearestStation']]
 y_=storeInfo_df_sort['monthly_turnover']
 CI=confidenceInterval_estimator_LR_multivariable(X_,y_,LR_multivariate,confidence=0.05)
 
-#打印图表
+#Plot
 fig, axs=plt.subplots(1,2,figsize=(25,11))
 x_=X.area
 y_=X.distance_to_nearestStation
 
-#由自定义函数，逐步计算获得的置信区间
+#The confidence interval obtained by the custom function is calculated step by step.
 axs[0]=fig.add_subplot(1,2,1, projection='3d')
 axs[0].plot(x_,y_, y, linestyle = "None", marker = "o",markerfacecolor = "None", color = "black",label = "actual")
 X_array=X_.to_numpy()
@@ -1617,7 +1618,7 @@ axs[0].plot(x_, y_,LR_pre, color = "red",label = "prediction")
 axs[0].plot(x_,y_, LR_pre+CI, color = "darkgreen", linestyle = "--", label = "Confidence Interval")
 axs[0].plot(x_,y_, LR_pre-CI, color = "darkgreen", linestyle = "--")
 
-#由statsmodels库计算所得的置信区间
+#The confidence interval is calculated from the statsmodels library.
 axs[1]=fig.add_subplot(1,2,2, projection='3d')
 axs[1].plot(x_,y_, y, linestyle = "None", marker = "o",markerfacecolor = "None", color = "black",label = "actual")
 axs[1].plot(x_, y_,y_prd, color = "red",label = "OLS")
@@ -1627,15 +1628,15 @@ axs[1].plot(x_, y_,yprd_ci_upper, color = "blue", linestyle = "--")
 axs[1].plot(x_,y_, ym_ci_lower, color = "darkgreen", linestyle = "--", label = "Confidence Interval")
 axs[1].plot(x_,y_, ym_ci_upper, color = "darkgreen", linestyle = "--")
 
-axs[1].view_init(210,250) #可以旋转图形的角度，方便观察
+axs[1].view_init(210,250) #The angle of the graph can be rotated for easy observation.
 axs[1].set_xlabel('area')
 axs[1].set_ylabel('distance_to_nearestStation')
 axs[1].set_zlabel('confidence interval')
 
 axs[0].legend()
 axs[1].legend()
-axs[0].view_init(210,250) #可以旋转图形的角度，方便观察
-axs[1].view_init(210,250) #可以旋转图形的角度，方便观察
+axs[0].view_init(210,250) 
+axs[1].view_init(210,250)
 plt.show()
 ```
 
@@ -1681,34 +1682,34 @@ plt.show()
 <a href=""><img src="./imgs/7_10.png" height="auto" width="auto" title="caDesign"></a>
 
 
-### 1.4 要点
-#### 1.4.1 数据处理技术
+### 1.4 key point
+#### 1.4.1 data processing technique
 
-* 使用sympy库建立方程，求解方程组，以及微分、矩阵计算；使用sympy的pprint打印方程及变量
+* Use the Sympy library to establish equations, solve equations, and perform differential and matrix calculations. Use Sympy 'pprint' to print equations and variables.
 
-* 用机器学习库[Sklearn](https://scikit-learn.org/stable/)，以及[statsmodels](https://www.statsmodels.org/stable/index.html)求解回归方程，以及计算模型精度（判定系数）、回归模型的显著性检验。
+* Use machine learning library [Sklearn](https://scikit-learn.org/stable/)，and [statsmodels](https://www.statsmodels.org/stable/index.html) to solve the regression equation，and to calculate the model accuracy(determination coefficient), regression model significance test.
 
-* 用plotly库的`px.scatter_ternary`，或者matplotlib库的`projection='3d'`方式，表述有三个变量的关系
+* `px.scatter_ternary` provided by Plotly library, or `projection='3d'` provided by Matplotlib library, are used to express the three variables' relationships.
 
-#### 1.4.2 新建立的函数
+#### 1.4.2 The newly created function tool
 
-* function - 在matplotlib的子图中绘制连接线，`demo_con_style(a_coordi,b_coordi,ax,connectionstyle)`
+* function - Draw the connection line in the subgraph of the Matplotlib, `demo_con_style(a_coordi,b_coordi,ax,connectionstyle)`
 
-* function - 回归方程的判定系数， `coefficient_of_determination(observed_vals,predicted_vals)`
+* function - The determination coefficient of the regression equation, `coefficient_of_determination(observed_vals,predicted_vals)`
 
-* function - 简单线性回归方程-回归显著性检验（回归系数检验）， `ANOVA(observed_vals,predicted_vals,df_reg,df_res)`
+* function - Simple linear regression equation - regression significance test(regression coefficient test), `ANOVA(observed_vals,predicted_vals,df_reg,df_res)`
 
-* function - 简单线性回归置信区间估计，以及预测区间， `confidenceInterval_estimator_LR(x,sample_num,X,y,model,confidence=0.05)`
+* function - The simple linear regression confidence interval estimation, and the predicted interval, `confidenceInterval_estimator_LR(x,sample_num,X,y,model,confidence=0.05)`
 
-* function - DataFrame数据格式，成组计算pearsonr相关系数，`correlationAnalysis_multivarialbe(df)`
+* function - DataFrame format data, group calculated the Pearson correlation coefficient,`correlationAnalysis_multivarialbe(df)`
 
-* function - 回归方程的修正自由度的判定系数， `coefficient_of_determination_correction(observed_vals,predicted_vals,independent_variable_n)`
+* function - The non-modified degree determination coefficient of the regression equation, `coefficient_of_determination_correction(observed_vals,predicted_vals,independent_variable_n)`
 
-* function - 多元线性回归方程-回归显著性检验（回归系数检验），全部回归系数的总体检验，以及单个回归系数的检验， `ANOVA_multivarialbe(observed_vals,predicted_vals,independent_variable_n,a_i,X)`
+* function - Multiple linear regression equation - regression significance test(regression coefficient test), the population test of all regression coefficient, and single regression coefficient tests, `ANOVA_multivarialbe(observed_vals,predicted_vals,independent_variable_n,a_i,X)`
 
-* function - 多元线性回归置信区间估计，以及预测区间， `confidenceInterval_estimator_LR_multivariable(X,y,model,confidence=0.05)`
+* function - Multiple linear regression confidence interval estimation, and predicted interval, `confidenceInterval_estimator_LR_multivariable(X,y,model,confidence=0.05)`
 
-#### 1.4.3 所调用的库
+#### 1.4.3 The python libraries that are being imported
 
 
 ```python
@@ -1745,7 +1746,7 @@ from sklearn.metrics import r2_score
 import statsmodels.api as sm
 ```
 
-#### 1.4.4 参考文献
-1. [日]高桥 信著作,Inoue Iroha,株式会社 TREND-PRO漫画制作,张仲恒译.漫画统计学之回归分析[M].科学出版社.北京.2009.08；
-2. Timothy C.Urdan.Statistics in Plain English(白话统计学)[M].中国人民大学出版社.2013,12.第3版.
-3. Douglas C.Montgomery,Elizabeth A.Peck,G.Geoffrey Vining著.王辰勇译.线性回归分析导论(Introduction to linear regression analysis).机械工业出版社.2016.04(第5版)
+#### 1.4.4 Reference
+ 1. Shin Takahashi,Iroha Inoue.The Manga Guide to Regression Analysis.No Starch Press; 1st Edition (May 1, 2016) 
+ 2. Timothy C.Urdan.Statistics in Plain English. Routledge; 3rd Edition (May 27, 2010) 
+ 3. Douglas C.Montgomery,Elizabeth A.Peck,G.Geoffrey Vining. Introduction to linear regression analysis). Wiley; 5th Edition (April 9, 2012)
