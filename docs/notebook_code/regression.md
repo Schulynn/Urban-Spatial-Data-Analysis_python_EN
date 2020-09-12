@@ -155,24 +155,24 @@ plt.show()
 
 
 #### 1.1.3 Differential
-微分是对函数的局部变化率的一种线性描述。其可以近似的描述当函数自变量的取值足够小时的改变时，函数的值是怎样变化的。首先根据‘漫画统计学之回归分析’中美羽的年龄和身高数据建立数据集，实现计算年龄和身高的相关系数，结果p_value<0.05，即pearson's r=0.942的相关系数能够说明年龄和身高直接存在强相关关系。既然二者之间存在相关性，就可以建立回归方程，在下述代码中给出了三种回归模型（方程），一种是‘漫画统计学之回归分析’给出的$f(x)=- \frac{326.6}{x}+173.3 $方程，另外两种是直接使用sklearn库Linear Models线性模型中的LinearRegression线性回归，和基于LinearRegression的Polynomial regression多项式回归。关于Sklearn的语法规则，可以参考官方网站scikit-learn给出的指南，Sklearn的语法结构秉承了python自身的特点，具有很强的易读性，代码编写流畅自然。三种回归模型中，以多项式回归拟合的最好，‘漫画统计学之回归分析’中给出的公式次之，而简单粗暴的简单线性回归因为呈现线性，与真实值近似对数函数曲线的形状相异。
+The differential is a linear description of the local change rate of a function. It is an approximate description of how a function value changes when the value of its independent variable change is sufficiently small. Firstly, a dataset was established based on Meiyu's age and height data in the book *The Manga Guide to Regression Analysis* to calculate the correlation coefficient between age and height. The results p_value<0.05, the correlation coefficient Pearson's r=0.942 indicated a strong direct correlation between age and height. Since the correlation between them can build the regression equation, three kinds of the regression model are given in the following code(equations): one kind is $f(x)=- \frac{326.6}{x}+173.3 $ given by *The Manga Guide to Regression Analysis*, the other two are used Linear Models, LinearRegression, and Polynomial regression based on LinearRegression directly provided by Scikit-learn(Sklearn) library. As for the grammar rules of Sklearn, you can refer to the guidance given by the Scikit-learn official website. The grammar structure of Sklearn adheres to the characteristics of python, with strong readability and natural code writing. Of the three regression models, polynomial regression is the best fit, followed by the formula given in  *The Manga Guide to Regression Analysis*. The simple and crude linear regression is different from the shape of the curve of approximate logarithm function due to its linearity.
 
-$y=- \frac{326.6}{x}+173.3 $关于x求微分，即是求$x$岁到$x$岁之后极短时间内，身高的年平均增长量（自变量以年为单位），$\frac{(- \frac{326.6}{x+ \triangle }+173.3 )-(- \frac{326.6}{x} +173.3)}{ \triangle } = \frac{326.6}{ x^{2} } $，对于微分的计算，可以直接使用sympy提供的`diff`工具计算，计算结果记作$\frac{dy}{dx}= \frac{df}{dx}  = y'= f' = \frac{326.6}{ x^{2} }  $。
+$y=- \frac{326.6}{x}+173.3 $Differentiating for x, that is, finding the average annual increase in height from $x$ year to $x$ year (independent variable in the year) within a very short period, $\frac{(- \frac{326.6}{x+ \triangle }+173.3 )-(- \frac{326.6}{x} +173.3)}{ \triangle } = \frac{326.6}{ x^{2} } $，Differentials are computed directly using the `diff` tools supplied by Sympy library, and the results are recorded: $\frac{dy}{dx}= \frac{df}{dx}  = y'= f' = \frac{326.6}{ x^{2} }  $。
 
-* 常用公式求微分：
+* Common differential formula:
 
-1. $y=x$，关于$x$进行微分， $\frac{dy}{dx}=1$
-2. $y= x^{2} $，关于$x$进行微分，$\frac{dy}{dx}=2x$
-3. $y= \frac{1}{x} $，关于$x$进行微分，$\frac{dy}{dx}=- x^{-2} $
-4. $y= \frac{1}{ x^{2} } $，关于$x$进行微分，$\frac{dy}{dx}=- 2x^{-3} $
-5. $y= (5x-7)^{2} $，关于$x$进行微分，$\frac{dy}{dx}=2(5x-7)\times 5 $
-6. $y= (ax+b)^{n} $，关于$x$进行微分，$\frac{dy}{dx}=n (ax+b)^{n-1} \times a  $
-7. $y= e^{x} $，关于$x$进行微分，$\frac{dy}{dx}=e^{x}$
-8. $y=logx$，关于$x$进行微分，$\frac{dy}{dx}=\frac{1}{x} $
-9. $y=log(ax+b)$，关于$x$进行微分，$\frac{dy}{dx}=\frac{1}{ax+b}  \times a $ 
-10. $y=log(1+ ea^{x+b} )$，关于$x$进行微分，$\frac{dy}{dx}=\frac{1}{1+ e^{ax+b} }  \times a e^{ax+b}  $
+1. $y=x$，differentiating to $x$, $\frac{dy}{dx}=1$
+2. $y= x^{2} $，differentiating to $x$,$\frac{dy}{dx}=2x$
+3. $y= \frac{1}{x} $，differentiating to $x$,$\frac{dy}{dx}=- x^{-2} $
+4. $y= \frac{1}{ x^{2} } $，differentiating to $x$,$\frac{dy}{dx}=- 2x^{-3} $
+5. $y= (5x-7)^{2} $，differentiating to $x$,$\frac{dy}{dx}=2(5x-7)\times 5 $
+6. $y= (ax+b)^{n} $，differentiating to $x$,$\frac{dy}{dx}=n (ax+b)^{n-1} \times a  $
+7. $y= e^{x} $，differentiating to $x$,$\frac{dy}{dx}=e^{x}$
+8. $y=logx$，differentiating to $x$,$\frac{dy}{dx}=\frac{1}{x} $
+9. $y=log(ax+b)$，differentiating to $x$,$\frac{dy}{dx}=\frac{1}{ax+b}  \times a $ 
+10. $y=log(1+ ea^{x+b} )$，differentiating to $x$,$\frac{dy}{dx}=\frac{1}{1+ e^{ax+b} }  \times a e^{ax+b}  $
 
-在代码的领域里直接用sympy的diff方法，或其它库提供的方法计算。
+In the code field, calculations are performed directly by the 'diff' method in Sympy or other libraries' methods.
 
 
 ```python
@@ -187,26 +187,26 @@ print(
     "p_value:",r_[1]
      )
 
-#原始数据散点图
+#Raw data scatter diagram.
 fig, axs=plt.subplots(1,3,figsize=(25,8))
 axs[0].plot(emma_statureAge_df.age,emma_statureAge_df.stature,'o',label='ground truth',color='r')
 
-#A - 使用sklearn库sklearn.linear_model.LinearRegression()，Ordinary least squares Linear Regression-普通最小二乘线性回归，获取回归方程
+#A - Use sklearn.linear_model.LinearRegression()，Ordinary least squares Linear Regression in Sklearn-Obtain the regression equation by ordinary least squares linear regression
 from sklearn.linear_model import LinearRegression
 X=emma_statureAge_df.age.to_numpy().reshape(-1,1)
 y=emma_statureAge_df.stature.to_numpy()
 
-#拟合模型
+#Fitting model
 LR=LinearRegression().fit(X,y)
 
-#模型参数
+#Model parameters
 print("slop:%.2f,intercept:%.2f"%(LR.coef_, LR.intercept_))
 print(LR.get_params())
 
-#模型预测
+#Model prediction
 axs[0].plot(emma_statureAge_df.age,LR.predict(X),'o-',label='linear regression')
 
-#B - 多项式回归 Polynomial regression
+#B -  Polynomial regression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
@@ -215,7 +215,7 @@ model=Pipeline([('poly', PolynomialFeatures(degree=2)),
 reg=model.fit(X,y)
 axs[0].plot(emma_statureAge_df.age,reg.predict(X),'+-',label='polynomial regression')
 
-#C - 使用'漫画统计学之回归分析'给出的公式
+#C - Using the formula given by 'The Manga Guide to Regression Analysis'
 from sympy import Symbol
 x=Symbol('x')
 f_emma=-326.6/x+173.3
@@ -229,14 +229,14 @@ axs[1].plot(emma_statureAge_df.age,f_emma_(emma_statureAge_df.age),'o-',label='$
 
 def demo_con_style(a_coordi,b_coordi,ax,connectionstyle):
     '''
-    function - 在matplotlib的子图中绘制连接线
-    reference - matplotlib官网Connectionstyle Demo
+    function - Draw the connection line in the subgraph of the Matplotlib.
+    reference - matplotlib official website Connectionstyle Demo
     
     Paras:
-    a_coordi - a点的x，y坐标
-    b_coordi - b点的x，y坐标
-    ax - 子图
-    connectionstyle - 连接线的形式
+    a_coordi - The x, and y coordinate of a
+    b_coordi - The x, and y coordinate of b
+    ax - subgraph
+    connectionstyle - Form of the connection line
     '''
     x1, y1=a_coordi[0],a_coordi[1]
     x2, y2=b_coordi[0],b_coordi[1]
@@ -260,9 +260,9 @@ demo_con_style((6,f_emma.evalf(subs={x:6})),(6+dx,f_emma.evalf(subs={x:6+dx})),a
 axs[1].text(7, f_emma.evalf(subs={x:6})-3, "△ x", family="monospace",size=20)
 axs[1].text(9.3, f_emma.evalf(subs={x:9.3})-10, "△ y", family="monospace",size=20)
 
-#用sympy提供的diff方法求微分
+#The 'diff' method supplied by Sympy was used for differentiation.
 from sympy import diff
-print("f_emma=-326.6/x+173.3关于x求微分：")
+print("f_emma=-326.6/x+173.3 differentiating to x:")
 pprint(diff(f_emma),use_unicode=True) 
 diff_f_emma_=sympy.lambdify(x,diff(f_emma),"numpy")
 axs[2].plot(emma_statureAge_df.age,diff_f_emma_(emma_statureAge_df.age),'+--',label='annual growth',color='r')
@@ -277,7 +277,7 @@ plt.show()
      p_value: 4.943118398567093e-08
     slop:3.78,intercept:94.82
     {'copy_X': True, 'fit_intercept': True, 'n_jobs': None, 'normalize': False}
-    f_emma=-326.6/x+173.3关于x求微分：
+    f_emma=-326.6/x+173.3 differentiating to x:
     326.6
     ─────
        2 
@@ -288,10 +288,10 @@ plt.show()
 <a href=""><img src="./imgs/7_3.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.1.4 矩阵
-一个$m \times n$的矩阵是一个由$m$行（row）$n$列（column）元素排列成的矩形阵列。矩阵里的元素可以是数字、符号或数学式。例如：$\begin{bmatrix}1 & 9&-13 \\20 & 5 &-6\end{bmatrix} $，如果$\begin{cases} x_{1}+2 x_{2}=-1  \\3 x_{1}+ 4x_{2}=5  \end{cases} $可以写作：$\begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}  \begin{bmatrix} x_{1}  \\ x_{2} \end{bmatrix} = \begin{bmatrix}-1 \\5 \end{bmatrix} $，而如果$\begin{cases} x_{1}+2 x_{2} \\3 x_{1}+ 4x_{2} \end{cases}$，可以写作：$\begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}  \begin{bmatrix} x_{1}  \\ x_{2} \end{bmatrix} $ 。
+#### 1.1.4 Matrix
+A $m \times n$ matrix is a rectangular array of $m$ rows and $n$ columns elements. The elements of a matrix can be numbers, symbols, or mathematical expressions. Such as:$\begin{bmatrix}1 & 9&-13 \\20 & 5 &-6\end{bmatrix} $，if $\begin{cases} x_{1}+2 x_{2}=-1  \\3 x_{1}+ 4x_{2}=5  \end{cases} $can be written: $\begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}  \begin{bmatrix} x_{1}  \\ x_{2} \end{bmatrix} = \begin{bmatrix}-1 \\5 \end{bmatrix} $，ANd if $\begin{cases} x_{1}+2 x_{2} \\3 x_{1}+ 4x_{2} \end{cases}$，we can write:$\begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}  \begin{bmatrix} x_{1}  \\ x_{2} \end{bmatrix} $ 。
 
-矩阵的操作和运算可以直接应用sympy库的Matrices部分方法，或者其它库。更多的内容需要参考官方教程，此处不再赘述。
+Matrix operations may be performed directly using the Matrices section of the Sympy library or other libraries. For more information, refer to the official tutorial, or the corresponding section, which will not be covered here.
 
 
 ```python
@@ -308,20 +308,21 @@ pprint(M_a)
     ⎣0  2 ⎦
     
 
-### 1.2 简单线性回归
-在统计学中，线性回归（linear regression）是利用称为线性回归方程的最小平方函数对一个或多个自变量和因变量之间关系进行建模的一种回归分析。这种函数是一个或多个称为回归系数的模型参数的线性组合。只有一个自变量的情况称为简单（线性）回归（simple linear regression），大于一个自变量情况的叫多元回归（multivariable linear regression）。
+### 1.2 Simple linear regression
+In statistics, linear regression is a kind of regression analysis. The relationship between one or more independent variables and dependent variables is modeled using a linear regression equation's least-squares function.  Such a function is a linear combination of one or more model parameters called regression coefficients. A condition with only one independent variable is known as simple linear regression, while a condition with a more independent variable is known as multivariable linear regression.
 
-* 回归分析的流程:
+* The flow of regression analysis:
 
-1. 为了讨论十分具有求解回归方程的意义，画出自变量和因变量的散点图；
-2. 求解回归方程；
-3. 确认回归方程的精度；
-4. 进行回归系数的检验；
-5. 总体回归$Ax+b$的估计；
-6. 进行预测
+1. To discuss the significance of solving regression equations, scatter plots of independent and dependent variables are drawn;
+2. Solve the regression equation;
+3. Confirm the accuracy of the regression equation;
+4. To test the regression coefficient;
+5. Estimation of population regression$Ax+b$;
+6. To make predictions.
 
-#### 1.2.1 建立数据集
-使用'漫画统计学之回归分析'中最高温度（$^{\circ}C$）与冰红茶销售量(杯)的数据，首先建立基于DataFrame格式的数据集，该数据集使用了时间戳（timestamp）作为索引。
+#### 1.2.1 Set up dataset
+Using the highest temperature ($^{\circ}C$) and iced black tea sales(cups) data from *The Manga Guide to Regression Analysis*, a DataFrame format dataset was first established, indexed by timestamp.
+
 
 
 ```python
@@ -427,16 +428,17 @@ util.print_html(iceTea_df,14)
 
 
 
-#### 1.2.2求解回归方程
-求解回归方程使用了两种方法，一种是逐步计算的方式；另一种是直接使用sklearn库的LinearRegression模型。逐步计算的方式可以更为深入的理解回归模型，而熟悉基本计算过程之后，直接应用sklearn机器学习库中的模型也会对各种参数的配置有个比较清晰的了解。首先计算温度与销量之间的相关系数，确定二者之间存在关联，其p_value=7.661412804450245e-06，小于0.05的显著性水平，确定pearson's r=0.90能够表明二者之间是强相关性。 
+#### 1.2.2 Solving the regression equation
+Two methods are used to solve the regression equation; one is a step by step calculation; the other uses the 'LinearRegression' model directly supplied by the Sklearn library. The step by step calculation allows for a deeper understanding of the regression model. After familiarity with the basic calculation process, the Sklearn machine learning library model's direct application will also provide a clearer understanding of various parameters' configuration. Firstly, the correlation coefficient between temperature and sales volume is calculated to confirm a correlation between the two, with its p_value=7.661412804450245e-06, which is less than the significance level of 0.05, the result Pearson's r=0.90 can indicate that the correlation between the two is strong.
 
-求解回归方程即是使所有真实值与预测值之差的和为最小，求出a和b，就是所有变量残差`residual`的平方`s_residual`的和`S_residual`为最小。因为温度与销量为线性相关，因此使用一元一次方程式：$y=ax+b$，$x$为自变量温度，$y$为因变量销量，$a$和$b$为回归系数（参数），分别称为斜率（slop）和截距(intercept)，求解a和b的过程，可以使用最小二乘法（least squares method），又称最小平方法，通过最小化误差的平方（残差平方和）寻找数据的最佳函数匹配。为残差平方和：$(−34𝑎−𝑏+93)^{2} +(−33𝑎−𝑏+91)^{2}+(−32𝑎−𝑏+80)^{2}+(−31𝑎−𝑏+73)^{2}+(−31𝑎−𝑏+75)^{2}+(−31𝑎−𝑏+84)^{2}+(−30𝑎−𝑏+84)^{2}+(−29𝑎−𝑏+64)^{2}+(−29𝑎−𝑏+77)^{2}+(−28𝑎−𝑏+62)^{2}+(−26𝑎−𝑏+65)^{2}+(−25𝑎−𝑏+51)^{2}+(−25𝑎−𝑏+59)^{2}+(−24𝑎−𝑏+58)^{2}$， 
+It is to make the sum of the difference between all the real and predicted values the smallest to solve the regression equation and find a and b, that is, the sum `S_residual` of the square of all variables' residual `s_residual`  is the smallest. Because temperature is linearly dependent on the sales, using a simple equation: $y=ax+b$, $x$ is the independent variable temperature, $y$ is the dependent variable sale, $a$ and $b$ are the regression coefficients (parameters), respectively called slope and intercept. The solution of a and b can be achieved using the least-squares method, which minimizes the squares of errors(sum of squares of residuals) to find the best functional match for the data. The sum of residual squares is:$(−34𝑎−𝑏+93)^{2} +(−33𝑎−𝑏+91)^{2}+(−32𝑎−𝑏+80)^{2}+(−31𝑎−𝑏+73)^{2}+(−31𝑎−𝑏+75)^{2}+(−31𝑎−𝑏+84)^{2}+(−30𝑎−𝑏+84)^{2}+(−29𝑎−𝑏+64)^{2}+(−29𝑎−𝑏+77)^{2}+(−28𝑎−𝑏+62)^{2}+(−26𝑎−𝑏+65)^{2}+(−25𝑎−𝑏+51)^{2}+(−25𝑎−𝑏+59)^{2}+(−24𝑎−𝑏+58)^{2}$， 
 
-先对$a$和$b$分别求微分$\frac{df}{da} $和$\frac{df}{db} $，是$\triangle a$即$a$在横轴上的增量，及$\triangle b$即$b$在横轴上的增量趋近于无穷小，无限接近$a$和$b$时，因变量的变化量，这个因变量就是残差平方和的值。残差平方和的值是由$a$和$b$确定的，当$a$和$b$取不同的值时，残差平方和的值随之变化，当残差平方和的值为0时，说明由自变量温度所有值通过回归方程预测的销量，与真实值的差值之和为0；单个温度值通过回归模型预测的销量与真实值之差则趋于0。在实际计算中，手工推算时，对残差平方和关于$a$和$b$求微分，是对公式进行整理，最终获得求解回归方程回归系数的公式为：$a= \frac{ S_{xy} }{ S_{xx} } $其中$S_{xy}$即变量`SS_xy`是$x$和$y$的离差积，$S_{xx}$即变量`SS_x`是$x$的离差平方和。求得$a$后，可以根据推导公式：$b= \overline{y} - \overline{x} a$计算$b$。
+Differentiating to $a$ and $b$ respectively, $\frac{df}{da} $ and $\frac{df}{db} $, is the change quantity of the dependent variable when $\triangle a$(the increment of $a$) and $\triangle b$(the increment of $b$) on the horizontal axis tends to infinitesimal,  that is, infinitely close to $a$ and $b$. The dependent variable is the residual sum of squares that is determined by $a$ and $b$. When $a$and $b$take different values, the residual sum of squares varies accordingly. And suppose the residual sum of squares is 0. In that case, it means that the sum of the difference between the sales predicted by the regression equation of all values of the independent variable temperature and the real value is 0. The difference between the sales predicted by the regression model of single temperature value and the real value tends to 0. In the actual manual calculation, the differential of the residual sum of squares to $a$ and $b$ is to sort out the formula. Finally, the formula for solving the regression equation is: $a= \frac{ S_{xy} }{ S_{xx} } $. $S_{xy}$ is variable `SS_xy`, that is,  the deviation product of $x$ and $y$; $S_{xx}$ is variable `SS_x`, that is, the sum of deviation square of $x$.  After finding $a$, you can derive the formula: $b= \overline{y} - \overline{x} a$, to calculate $b$.
 
-在python语言中，使用相关库则可以避免上述繁琐的手工推导过程，在逐步计算中，使用sympy库约简残差平方和公式为：$12020⋅a^{2}   + 816⋅a⋅b - 60188⋅a + 14⋅b^{2}  - 2032⋅b + 75936$， 并直接分别对$a$和$b$微分，获得结果为：$ \frac{df}{da} =24040⋅a + 816⋅b - 60188$和$ \frac{df}{db} =816⋅a + 28⋅b - 2032$，另二者分别为0，使用sympy库的solve求解二元一次方程组，计算获取$a$和$b$值。
 
-最后使用sklearn库的LinearRegression模型求解决回归模型，仅需要几行代码，所得结果与上述同。可以用sklearn返回的参数，建立回归方程公式，但是在实际的应用中并不会这么做，而是直接应用以变量形式代表的回归模型直接预测值。
+In the python language, the use of related libraries avoids this tedious manual derivation. During the step-by-step calculation, reducing the residual sum of squares in the Sympy library is used as follows:$12020⋅a^{2} + 816⋅a⋅b - 60188⋅a + 14⋅b^{2} - 2032⋅b + 75936$, with direct differentiating of $a$ and $b$ respectively, the results are as follows: $ \frac{df}{da} =24040⋅a + 816⋅b - 60188$ and $ \frac{df}{db} =816⋅a + 28⋅b - 2032$, making these formulas 0, use the 'solve' in Sympy for  binary linear equation group to achieve $a$ and $b$ values.
+
+Finally, using the Sklearn library's LinearRegression model to solve the regression model, you only need a few code lines, and the result is the same as above. You can use the parameters returned by Sklearn to establish the regression equation formula, but this is not done in a practical application. Instead, you apply the regression model in the form of variables to directly predict the value.
 
 
 ```python
@@ -455,14 +457,14 @@ print(
      )
 print("_"*50)
 
-#原始数据散点图
+#Raw data scatter diagram
 fig, axs=plt.subplots(1,3,figsize=(25,8))
 axs[0].plot(iceTea_df.temperature,iceTea_df.iceTeaSales,'o',label='ground truth',color='r')
 axs[0].set(xlabel='temperature',ylabel='ice tea sales')
 
 
-#A - 使用‘最小二乘法’逐步计算
-#1 - 求出x和y的离差及离差平方和
+#A - Use the 'least square method' to calculate step by step.
+#1 - Find the deviation of x and y and the sum of the squares of the deviation
 iceTea_df["x_deviation"]=iceTea_df.temperature.apply(lambda row: row-iceTea_df.temperature.mean())
 iceTea_df["y_deviation"]=iceTea_df.iceTeaSales.apply(lambda row: row-iceTea_df.iceTeaSales.mean())
 iceTea_df["S_x_deviation"]=iceTea_df.temperature.apply(lambda row: math.pow(row-iceTea_df.temperature.mean(),2))
@@ -470,11 +472,11 @@ iceTea_df["S_y_deviation"]=iceTea_df.iceTeaSales.apply(lambda row: math.pow(row-
 SS_x=iceTea_df["S_x_deviation"].sum()
 SS_y=iceTea_df["S_y_deviation"].sum()
 
-#2 - 求出x和y的离差积及其其和
+#2 - Find the deviation product of x and y and the sum thereof.
 iceTea_df["S_xy_deviation"]=iceTea_df.apply(lambda row: (row["temperature"]-iceTea_df.temperature.mean())*(row["iceTeaSales"]-iceTea_df.iceTeaSales.mean()),axis=1)
 SS_xy=iceTea_df["S_xy_deviation"].sum()
 
-#3 - 运算过程
+#3 - The operation process
 a,b=sympy.symbols('a b')
 iceTea_df["prediciton"]=iceTea_df.temperature.apply(lambda row: a*row+b)
 iceTea_df["residual"]=iceTea_df.apply(lambda row: row.iceTeaSales-(a*row.temperature+b),axis=1)
@@ -482,10 +484,10 @@ iceTea_df["s_residual"]=iceTea_df.apply(lambda row: (row.iceTeaSales-(a*row.temp
 S_residual=iceTea_df["s_residual"].sum()
 S_residual_simplify=simplify(S_residual)
 print("S_residual simplification(Binary quadratic equation):")
-pprint(S_residual_simplify) #残差平方和为一个二元二次函数
+pprint(S_residual_simplify) #The residual sum of squares is a binary quadratic function.
 print("_"*50)
 
-#打印残差平方和图形
+#Print the  residual sum of squares graph
 S_residual_simplif_=sympy.lambdify([a,b],S_residual_simplify,"numpy")
 a_=np.arange(-100,100,5)
 a_3d=np.repeat(a_[:,np.newaxis],a_.shape[0],axis=1).T
@@ -493,7 +495,7 @@ b_=np.arange(-100,100,5)
 b_3d=np.repeat(b_[:,np.newaxis],b_.shape[0],axis=1)
 z=S_residual_simplif_(a_3d,b_3d)
 from sklearn import preprocessing
-z_scaled=preprocessing.scale(z) #标准化z值，同 from scipy.stats import zscore方法
+z_scaled=preprocessing.scale(z) #Standardize the z value, same as 'from scipy.stats import zscore' method
 
 axs[1]=fig.add_subplot(1,3,2, projection='3d')
 axs[1].plot_wireframe(a_3d,b_3d,z_scaled)
@@ -501,7 +503,7 @@ axs[1].contour(a_3d,b_3d,z_scaled, zdir='z', offset=-2, cmap=cm.coolwarm)
 axs[1].contour(a_3d,b_3d,z_scaled, zdir='x', offset=-100, cmap=cm.coolwarm)
 axs[1].contour(a_3d,b_3d,z_scaled, zdir='y', offset=100, cmap=cm.coolwarm)
 
-#4 - 对残差平方和S_residual关于a和b求微分，并使其为0
+#4 - Differentiate the residual sum of squares 'S_residual' to a and b, and make it equal to 0.
 diff_S_residual_a=diff(S_residual,a)
 diff_S_residual_b=diff(S_residual,b)
 print("diff_S_residual_a=",)
@@ -510,16 +512,16 @@ print("\n")
 print("diff_S_residual_b=",)
 pprint(diff_S_residual_b)
 
-Eq_residual_a=Eq(diff_S_residual_a,0) #设所求a微分为0
-Eq_residual_b=Eq(diff_S_residual_b,0) #设所求b微分为0
-slop_intercept=solve((Eq_residual_a,Eq_residual_b),(a,b)) #计算二元一次方程组
+Eq_residual_a=Eq(diff_S_residual_a,0) #Let the differentiation of a be equal to 0.
+Eq_residual_b=Eq(diff_S_residual_b,0) #Let the differentiation of b be equal to 0.
+slop_intercept=solve((Eq_residual_a,Eq_residual_b),(a,b)) #Calculate the binary linear equation group
 print("_"*50)
 print("slop and intercept:\n")
 pprint(slop_intercept)
 slop=slop_intercept[a]
 intercept=slop_intercept[b]
 
-#用求解回归方程回归系数的推导公式之间计算斜率slop和截距intercept
+#Slope and intercept are calculated directly using the formula for solving the regression coefficient of the regression equation.
 print("_"*50)
 slop_=SS_xy/SS_x
 print("derivation formula to calculate the slop=",slop_)
@@ -527,37 +529,37 @@ intercept_=iceTea_df.iceTeaSales.mean()-iceTea_df.temperature.mean()*slop_
 print("derivation formula to calculate the intercept=",intercept_)
 print("_"*50)
 
-#5 - 建立简单线性回归方程
+#5 - A simple linear regression equation is established.
 x=sympy.Symbol('x')
 fx=slop*x+intercept
 print("linear regression_fx=:\n")
 pprint(fx)
 fx_=sympy.lambdify(x,fx,"numpy")
 
-#在残差平方和图形上标出a,b的位置
+#Mark the position of a and b on the residual sum of squares.
 axs[1].text(slop,intercept,-1.7,"a/b",color="red",size=20)
 axs[1].scatter(slop,intercept,-2,color="red",s=80)
-axs[1].view_init(60,340) #可以旋转图形的角度，方便观察
+axs[1].view_init(60,340) #The angle of the graph can be rotated for easy observation.
 
-#6 - 绘制简单线性回归方程的图形
+#6 - Draw a simple linear regression equation.
 axs[0].plot(iceTea_df.temperature,fx_(iceTea_df.temperature),'o-',label='prediction',color='blue')
 
-#绘制真实值与预测值之间的连线
+#Draws lines between the true values and the predicted values
 i=0
 for t in iceTea_df.temperature:
     axs[0].arrow(t, iceTea_df.iceTeaSales[i], t-t, fx_(t)-iceTea_df.iceTeaSales[i], head_width=0.1, head_length=0.1,color="gray",linestyle="--" )
     i+=1
 
-#B - 使用sklearn库sklearn.linear_model.LinearRegression()，Ordinary least squares Linear Regression-普通最小二乘线性回归，获取回归方程
+#B - Use sklearn library, sklearn.linear_model.LinearRegression()，Ordinary least squares Linear Regression-Obtain the regression equation by ordinary least squares linear regression
 from sklearn.linear_model import LinearRegression
 X,y=iceTea_df.temperature.to_numpy().reshape(-1,1),iceTea_df.iceTeaSales.to_numpy()
 
-#拟合模型
+#Fitting model
 LR=LinearRegression().fit(X,y)
-#模型参数
+#Model parameters
 print("_"*50)
 print("Sklearn slop:%.2f,intercept:%.2f"%(LR.coef_, LR.intercept_))
-#模型预测
+#Model prediction
 axs[2].plot(iceTea_df.temperature,iceTea_df.iceTeaSales,'o',label='ground truth',color='r')
 axs[2].plot(X,LR.predict(X),'o-',label='linear regression prediction')
 axs[2].set(xlabel='temperature',ylabel='ice tea sales')
@@ -829,10 +831,11 @@ util.print_html(iceTea_df,14)
 
 
 
-#### 1.2.3 确认回归方程的精度
-确认回归方程（模型）的精度是计算判断系数（决定系数，coefficient of determination），记为$R^{2} $或$r^{2} $，用于表示实测值（图表中的点）与回归方程拟合程度的指标。其复(重)相关系数计算公式为：$R=   \frac{\sum_{i=1}^n  ( y_{i} - \overline{y} )^{2} ( \widehat{y}_{i} - \overline{ \widehat{y} }  )^{2}  }{ \sqrt{(\sum_{i=1}^n (y_{i}- \overline{y} )^{2} )(\sum_{i=1}^n ( \widehat{y}_{i} - \overline{ \widehat{y} })^{2} )} } $，其中$y$为观测值，$\overline{y}$为观测值的均值，$\widehat{y}$为预测值，$\overline{ \widehat{y} } $为预测值的均值。而判定系数$R^{2} $则为重相关系数的平方。判定系数的取值在0到1，其值越接近于1，回归方程的精度越高。第二种计算公式为：$R^{2} =1- \frac{ SS_{res} }{ SS_{tot} }=1- \frac{ \sum_{i=1}^n   e_{i} ^{2}  }{SS_{tot}}  =1- \frac{  \sum_{i=1}^n  (y_{i} -   \widehat{y} _{i} )^{2}  }{ \sum_{i=1}^n  ( y_{i} - \overline{y} )^{2}  } $，其中$SS_{res}$为残差平方和，$SS_{tot}$为观测值离差平方和（(总平方和，或总的离差平方和)），$e_{i}$为残差，$y_{i}$为观测值，$\widehat{y}$为预测值，$\overline{y}$为观测值均值。第三种是直接使用sklearn库提供的`r2_score`方法直接计算。
+#### 1.2.3 Confirm the accuracy of the regression equation
+The accuracy of the regression equation(model) is calculated as the coefficient of determination, denoted as $R^{2} $或$r^{2} $, which is used to represent the degree of fitting between the measured value(points in the chart) and the regression equation. Its multiple correlation coefficient is calculated as follows: $R= \frac{\sum_{i=1}^n ( y_{i} - \overline{y} )^{2} ( \widehat{y}_{i} - \overline{ \widehat{y} } )^{2} }{ \sqrt{(\sum_{i=1}^n (y_{i}- \overline{y} )^{2} )(\sum_{i=1}^n ( \widehat{y}_{i} - \overline{ \widehat{y} })^{2} )} } $, $y$ is the observed value, $\overline{y}$ is the mean of the observed value, $\widehat{y}$ is the predicted value, $\overline{ \widehat{y} } $ is the mean of the predicted value. The coefficient of determination $R^{2} $ is the square of the multiple correlation coefficient . The value of the determination coefficient is between 0 and 1. The closer the value is to 1, the higher the accuracy of the regression equation will be. The second calculation formula is: $R^{2} =1- \frac{ SS_{res} }{ SS_{tot} }=1- \frac{ \sum_{i=1}^n e_{i} ^{2} }{SS_{tot}} =1- \frac{ \sum_{i=1}^n (y_{i} - \widehat{y} _{i} )^{2} }{ \sum_{i=1}^n ( y_{i} - \overline{y} )^{2} } $, $SS_{res}$ is the residual sum of squares, $SS_{tot}$ is the sum of the observed values deviation squares(total sum of squares, or total sum of deviation squares), $SS_{tot}$ is residual, $y_{i}$ is the observed value, $\widehat{y}$ is the predicted value, $\overline{y}$ is the mean of observed value. The third is to calcualte directly using the `r2_score` provided by the Sklearn library.
 
-根据计算结果第1，2，3种方法结果一致。在后续的实验中，直接使用sklearn提供的方法进行计算。
+According to the calculation results, the results of the first, second, and third methods are consistent. In subsequent experiments, the calculations are performed directly using the method provided by Sklearn.
+
 
 
 ```python
@@ -841,26 +844,26 @@ def coefficient_of_determination(observed_vals,predicted_vals):
     import numpy as np
     import math
     '''
-    function - 回归方程的判定系数
+    function - The determination coefficient of the regression equation
     
     Paras:
-    observed_vals - 观测值（实测值）
-    predicted_vals - 预测值
+    observed_vals - Observed value(measured value)
+    predicted_vals - Predicted value
     '''
     vals_df=pd.DataFrame({'obs':observed_vals,'pre':predicted_vals})
-    #观测值的离差平方和(总平方和，或总的离差平方和)
+    #The sum of the observed value deviation squares(the total sum of squares, or the total sum of deviation squares)
     obs_mean=vals_df.obs.mean()
     SS_tot=vals_df.obs.apply(lambda row:(row-obs_mean)**2).sum()
-    #预测值的离差平方和
+    #The sum of deviation squares of the predicted value
     pre_mean=vals_df.pre.mean()
     SS_reg=vals_df.pre.apply(lambda row:(row-pre_mean)**2).sum()
-    #观测值和预测值的离差积和
+    #The sum of the deviation products of the observed value and the predicted value
     SS_obs_pre=vals_df.apply(lambda row:(row.obs-obs_mean)*(row.pre-pre_mean), axis=1).sum()
     
-    #残差平方和
+    #The residual sum of squares
     SS_res=vals_df.apply(lambda row:(row.obs-row.pre)**2,axis=1).sum()
     
-    #判断系数
+    #The coefficient of determination
     R_square_a=(SS_obs_pre/math.sqrt(SS_tot*SS_reg))**2
     R_square_b=1-SS_res/SS_tot
             
@@ -878,9 +881,9 @@ print("using sklearn libray to calculate r2_score=",R_square_)
     using sklearn libray to calculate r2_score= 0.8225092881166944
     
 
-#### 1.2.4 回归系数的检验（回归显著性检验） | F分布与方差分析
+#### 1.2.4 Test of the regression coefficients(regression significance test) | F distribution and the analysis of variance
 
-之前相关章节分别阐述了正态分布和t分布，而F-分布（F-distribution）是一种连续概率分布，广泛应用于似然比率检验，特别是方差分析（Analysis of variance, ANOVA，或变异数分析）中，对于F-分布的阐释使用scipy.stats.f的官方案例。函数方法基本同正态分布和t分布。
+In the previous chapters, normal distribution and t-distribution are respectively described. At the same time, F-distribution is a continuous probability distribution widely used in the likelihood ratio test, especially in the analysis of variance(ANOVA), 'scipy.stats.f' is the official case interpretation of F-distribution. The function method is the same as the normal distribution and the t-distribution.
 
 
 ```python
@@ -892,18 +895,18 @@ dfn, dfd=29, 18
 mean, var, skew, kurt=f.stats(dfn, dfd, moments='mvsk')
 print("mean=%f, var=%f, skew=%f, kurt=%f"%(mean, var, skew, kurt))
 
-# 打印概率密度函数(probability density function,pdf)
-x=np.linspace(f.ppf(0.01, dfn, dfd),f.ppf(0.99, dfn, dfd), 100) #取服从自由度dfn和dfd，位于1%到99%的100个取值
+# Plot probability density function,pdf
+x=np.linspace(f.ppf(0.01, dfn, dfd),f.ppf(0.99, dfn, dfd), 100) #Take 100 values subject to the degree of freedom dfn and dfd, between 1% and 99%. 
 ax.plot(x, f.pdf(x, dfn, dfd),'-', lw=5, alpha=0.6, label='f pdf')
 
-# 固定分布形状，即固定自由度
+# Fixed distribution shape, namely fixed degrees of freedom.
 rv = f(dfn, dfd)
 ax.plot(x, rv.pdf(x), 'k-', lw=2, label='frozen pdf')
 
 vals = f.ppf([0.001, 0.5, 0.999], dfn, dfd)
-print("验证累计分布函数CDF返回值与其PPF返回值是否相等或近似：",np.allclose([0.001, 0.5, 0.999], f.cdf(vals, dfn, dfd)))
+print("Verify whether the cumulative distribution function (CDF) return value is equal to or approximate to the PPF return value:",np.allclose([0.001, 0.5, 0.999], f.cdf(vals, dfn, dfd)))
 
-#生成服从F-分布的随机数，并打印直方图
+#Generate random numbers subject to F-distribution, and plot the histogram.
 r=f.rvs(dfn, dfd, size=1000)
 ax.hist(r, density=True, histtype='stepfilled', alpha=0.2)
 ax.legend(loc='best', frameon=False)
@@ -911,38 +914,39 @@ plt.show()
 ```
 
     mean=1.125000, var=0.280557, skew=1.806568, kurt=7.074636
-    验证累计分布函数CDF返回值与其PPF返回值是否相等或近似： True
+    Verify whether the cumulative distribution function (CDF) return value is equal to or approximate to the PPF return value: True
     
 
 
 <a href=""><img src="./imgs/7_5.png" height="auto" width="auto" title="caDesign"></a>
 
 
-* 总平方和=回归平方和+残差平方和
+* The total sum of squares=regression sum of squares+residual sum of squares
 
-公式为：$SS_{tot}=\sum_{i=1}^n  ( y_{i} - \overline{y} )^{2}=SS_{reg}+SS_{res}= \sum_{i=1}^n  (\widehat{y} _{i} -    \overline{y} )^{2} + \sum_{i=1}^n  (y_{i} -   \widehat{y} _{i} )^{2} $，式中$SS_{reg}$回归平方和，其它同上。回归平方和是预测值（回归值）与观测值（真实值、实测值）均值之差的平方和，该统计量反映了自变量$x_{1}, x_{2}, \ldots ,x_{m},  $的变化引起的$y$($y_{k} (k=1,2, \ldots ,n)$)的波动，其自由度为$df_{reg}=m $，其中$m$为自变量的个数，温度与销量求解的一元一次线性方程只有一个自变量，因此其自由度为1，即只有这一个因素可以自由变化；残差平方和是观测值与预测值之差的平方和，残差的存在是由实验误差及其它因素引起的，其自由度为$df_{res}=n-m-1 $，其中$n$为样本数量，即对应的$y$的取值数量。总的离差平方和$SS_{tot}$的自由度为$n-1$。
+Formula is: $SS_{tot}=\sum_{i=1}^n  ( y_{i} - \overline{y} )^{2}=SS_{reg}+SS_{res}= \sum_{i=1}^n  (\widehat{y} _{i} -    \overline{y} )^{2} + \sum_{i=1}^n  (y_{i} -   \widehat{y} _{i} )^{2} $，In the formula, $SS_{reg}$ is the regression sum of squares;  others are the same as above. The regression sum of squares is the sum of the squares of the difference between the mean of the predicted value(the regression value) and the mean of the observed value(the true value, or the measured value). This statistic reflects the fluctuation of $y$($y_{k} (k=1,2, \ldots ,n)$) caused by the change of the independent variable $x_{1}, x_{2}, \ldots ,x_{m}, $, whose freedom is $df_{reg}=m $, $m$ is the number of independent variable. The unary linear equation of temperature and sales has only one independent variable, so its degree of freedom is 1, that is, only one factor can change freely. The residual sum of squares is the sum of the squares of the difference between the observed value and the predicted value. The existence of residual is caused by experimental error and other factors. The degree of freedom is $df_{res}=n-m-1 $, $n$ is the number of samples, the value of the corresponding $y$. The total deviation sum of squares $y$ has a degree of freedom of $n-1$.
 
-观测值（样本）通常是给定的，因此总的离差平方和是固定的，构成总的离差平方和的因素为回归平方和和残差平方和，分布代表所求得的回归方程，或实验误差和其它因素引起$y$值得变化，当残差平方和越小（就是实验误差和其它因素影响小），则回归平方和越大，则说明所求得的回归方程的预测值越准确。
-
-
-> 自由度的再讨论（参考Wikipedia）
-在统计学中，自由度（defree of freedom, df）是指当以样本的统计量估计总体的参数时，样本中独立或能自由变化的数据的个数，称为该统计量的自由度。范例：
-> 1. 若存在两个自变量$x$和$y$，如果$y=x+c$，其中$c$为常量，则其自由度为1，因为实际上只有$x$才能真正的自由变化，$y$会被$x$取值的不同所限制；
-2. 估计总体的平均数$\mu$时，由于样本中$n$个数都是相互独立的，任一个尚未抽出的数都不受已抽出任何数值的影响，所以自由度为$n$;
-3. 估计总体的方差$ \sigma ^{2} $时所使用的统计量是样本的方差$s^{2} $，而$s^{2} $必须用到样本平均数$\overline{x} $来计算，$\overline{x} $在抽样完成后已确定，所以大小为$n$的样本中只要$n-1$个数确定，第$n$个数就只有一个能使样本符合$\overline{x} $的数值。也就是说，样本中只有$n-1$个数可以自由变化，只要确定了这$n-1$个数，方差也就确定了。这里，平均数$\overline{x} $就相当于一个限制条件，由于加了这个限制条件，样本方差$s^{2} $的自由度为$n-1$；
-4. 统计模型的自由度等于可自由取值的自变量的个数。如在回归方程中，如果共有$p$个参数需要估计，则其中包括了$p-1$个自变量（与截距对应的自变量是常量），因此该回归方程的自由度为$p-1$。
-
-> 无偏估计（unbiased estimator）在统计学中，一个总体的标准差通常是由总体中随机抽取的样本的估计，样本标准差的定义为：$s= \sqrt{ \frac{ \sum_{i=1}^n  ( x_{i }- \overline{x} ) ^{2} }{n-1} } $，其中 $x_{1},  x_{2} , \ldots , x_{n} $为样本，样本容量为$n$，$\overline{x}$为样本均值。使用$n-1$替代$n$，被称为Bessel's correction（贝塞尔矫正），纠正了总体方差估计中的偏差（总体方差估计是使用随机抽取的样本的估计，不等于总体方差），以及总体标准差估计中的部分偏差，但不是全部偏差。因为偏差取决于特定的分布，不可能找到对所有总体分布无偏的标准偏差的估计。
+The observed values(samples) are usually given, so the total sum of squared deviations is fixed. The factors that the total sum of squared deviations are the regression sum of squares and the residual sum of squares, respectively, representing the regression equation obtained, or the variation of the value $y$ caused by experimental error and other factors. When the residual sum of squares is smaller(that is, the experimental and other factors have less influence), the greater the squares' sum, the more accurate the regression equation's predicted value is.
 
 
-* 方差分析（Analysis of variance, ANOVA，或变异数分析）
+> Rediscussion of degrees of freedom (see Wikipedia)
+In statistics, the degree of freedom( df) refers to the number of independent or freely changing data in the sample when estimating the population's parameters with the sample's statistics, which is called the degree of freedom of the statistics. Example:
+> 1. If there are two dependent variables, $x$ and $y$, if $y=x+c$, $c$ is constant, then its degree of freedom is 1. Because only $x$ can truly change freely, $y$ will be limited by the difference value of $x$;
+2. When the average of the population $\mu$ is estimated, since the $n$ values in the sample are independent of each other, any unextracted value is not affected by any extracted value, so the degree of freedom is $n$;
+3. The statistic used to estimate the variance of the population $ \sigma ^{2} $ is the variance of the sample $s^{2} $, and $s^{2} $ must be calculated using the average of the sample $\overline{x} $, $\overline{x} $ is determined after the sampling is completed, so as long as $n-1$ is determined in the sample size of $n$, there is only one value of the $n$ that can make the sample conform to $\overline{x} $. So, in other words, only the number of $n-1$ elements in the sample is free to vary, and once the number of $n-1$ is determined, the variance will be determined. Here, the average $\overline{x} $ is equivalent to a constraint. Because of this constraint, the freedom of sample variance $ s^{2} $ is $n-1$;
+4. The degree of freedom of the statistical model is equal to the number of independent variables that can be freely evaluated.  For example, suppose a total of $p$ parameters need to be estimated in the regression equation. In that case, $p-1$ independent variables are included(the independent variables corresponding to the intercept are constant), so this regression's freedom is $p-1$.
 
-上述`总平方和=回归平方和+残差平方和`分析实际上是在分析因变量（总平方和，即总的离差平方和）与影响因变量变化的两个因素（或称为两个类别），即回归平方和及残差平方和的关系探索，这个过程既称之为方差分析。在求解上述回归方程之前，温度与销量的关系不一定是线性的，可能存在两种情况，一种是不管温度（$x$）取什么值，销量（$y$）都在一条水平线上下波动；二是，温度和销量存在除线性外其它类型的关系，例如非线性等。
-
-对于上述所求得回归方程$ f_{x} =ax+b= \frac{1697}{ 454} x- \frac{8254}{227 } $（样本回归模型），对于总体而言，$F_{x} =Ax+B$（总体回归模型），斜率A约为a($A \sim a$)，截距B约为b($B \sim b$)， $\sigma ^{2} = \frac{SS_{res} }{n-2}$（无偏估计量，残差平方和有$n-2$个自由度，这是因为两个自由度与得到预测值的估计值$A$和$B$相关），$\sigma ^{2} $的平方根有时称为回归标准误差。(由残差平方和求得$\sigma ^{2} $的推导过程，可以参考'线性回归分析导论(Introduction to linear regression analysis)'，简单线性回归部分)。
+> In statistics, the unbiased estimator: the standard deviation of a population is usually estimated by a random sample of the population, and its definition is as follows: $s= \sqrt{ \frac{ \sum_{i=1}^n ( x_{i }- \overline{x} ) ^{2} }{n-1} } $, $x_{1}, x_{2} , \ldots , x_{n} $ are samples, $n$ is the sample size, $\overline{x}$ is the mean of the sample. Using $n-1$ instead of $n$, which is called Bessel's correction, corrects the bias in the population variance estimation(which is an estimation using a random sample and is not equal to the population variance), as well as , but not all, of the bias in the population standard deviation estimation. Because the bias depends on a particular distribution, it is not possible to find estimates of the standard deviation for all population distribution that are unbiased. 
 
 
-总体回归方程$F_{x} =Ax+B$非常重要的特例是，$H_{0} :A=0,  H_{1} :A \neq 0$，原假设意味$x$和$y$之间不存在线性关系，$x$对解释$y$的方差几乎是无用的；如果拒绝原假设，而接受备择假设，意味$x$对解释$y$的方差是有用的，可能意味线性模型是合适的，但是也可能存在需要用高阶多项式拟合的非线性模型。对于回归显著性检验可以使用t统计量，也可以使用方差分析。回归系数检验的F统计量为：$F_{0} = \frac{ SS_{reg}/ df_{reg}  }{ SS_{res}/ df_{res}  }$ ;其中$SS_{reg}$为回归平方和，自由度$df_{reg} =m$为1，$SS_{res}$为残差平方和，其自由度$df_{res}=n-m-1$为$14-1-1=12$，（推导过程参考参考'线性回归分析导论(Introduction to linear regression analysis)'）。如果原假设成立，那么检验统计量就服从第1自由度$m=1$，第2自由度$n-m-1=12$的F分布。p-value=0.000008，小于显著性水平0.05，拒绝原假设，备择假设成立。
+* Analysis of variance, ANOVA
+
+The above `the total sum of squares=regression sum of squares+residual sum of squares` is exploring the relationship between the dependent variable(total sum of squares, namely the total sum of squares deviation) and the two factors (or two categories) that affect the change of the dependent variable, namely exploring the relationship between the regression sum of squares and the residual sum of squares, this process is called variance analysis. Before solving the above regression equation, the relationship between temperature and sales volume is not necessarily linear. There may be two situations. One is that the sales volume($y$) fluctuates along a horizontal line regardless of the value of temperature ($x$); Second, temperature and sales has other types of relationship in addition to linear, such as nonlinear.
+
+
+For the above-obtained regression equation $ f_{x} =ax+b= \frac{1697}{ 454} x- \frac{8254}{227 } $(sample regression model), for the population, $F_{x} =Ax+B$(population regression model), the slop A is about a($A \sim a$), the intercept B is about b($B \sim b$), $\sigma ^{2} = \frac{SS_{res} }{n-2}$(unbiasable estimator, the residual sum of squares has $n-2$ degrees of freedom because the two degrees of freedom are related to the estimated values of the prediced values), The square root of $\sigma ^{2} $ is called the regression standard error sometimes. (The derivation process of $\sigma ^{2} $ obtained from the residual sum of squares can be referred to *Introduction to linear regression analysis*- simple linear regression part).
+
+
+A very important special case of the population regression equation is $H_{0} :A=0, H_{1} :A \neq 0$, the null hypothesis means that there is no linear relationship between $x$ and $y$, and $x$ is almost useless for explaining the variance of $y$; If the null hypothesis is rejected and the alternative hypothesis is accepted, it means that $x$ is useful for explaining the variance of $y$, it may mean that the linear model is appropriate, but there may also be a nonlinear model that needs to be fitted with a higher-order polynomial. For regression significance tests, either t statistics or a variance analysis can be used. The test of regression coefficients F statistic is: $F_{0} = \frac{ SS_{reg}/ df_{reg} }{ SS_{res}/ df_{res} }$ , $SS_{reg}$ is the regression sum of squares, the degree of freedom $df_{reg} =m$ is 1, $SS_{res}$ is the residual sum of squares, the degree of freedom $df_{res}=n-m-1$ is $14-1-1=12$ (refer to *Introduction to linear regression analysis* for derivation process). If the null hypothesis is true, then the test statistic follows the F-distribution of $m=1$ for the 1st degree of freedom and $n-m-1=12$ for the 2nd degree of freedom. p-value=0.000008, less than the significance level of 0.05, reject the null hypothesis, the alternative hypothesis is true.
 
 
 ```python
@@ -952,48 +956,48 @@ def ANOVA(observed_vals,predicted_vals,df_reg,df_res):
     import math
     from scipy.stats import f
     '''
-    function - 简单线性回归方程-回归显著性检验（回归系数检验）
+    function - Simple linear regression equation - regression significance test(regression coefficient test)
     
     Paras:
-    observed_vals - 观测值（实测值）
-    predicted_vals - 预测值
+    observed_vals - Observed value(measured value)
+    predicted_vals - Predicted value
     '''
     vals_df=pd.DataFrame({'obs':observed_vals,'pre':predicted_vals})
-    #观测值的离差平方和(总平方和，或总的离差平方和)
+    #The deviation sum of squares of the observed values (the total sum of squares, or the total sum of squares of deviations) 
     obs_mean=vals_df.obs.mean()
     SS_tot=vals_df.obs.apply(lambda row:(row-obs_mean)**2).sum()
     
-    #残差平方和
+    #The residual sum of squares
     SS_res=vals_df.apply(lambda row:(row.obs-row.pre)**2,axis=1).sum()
    
-    #回归平方和
+    #The regression sum of squares
     SS_reg=vals_df.pre.apply(lambda row:(row-obs_mean)**2).sum()
     
-    print("总平方和=%.6f,回归平方和=%.6f,残差平方和=%.6f"%(SS_tot,SS_reg,SS_res))
-    print("总平方和=回归平方和+残差平方和：SS_tot=SS_reg+SS_res=%.6f+%.6f=%.6f"%(SS_reg,SS_res,SS_reg+SS_res))
+    print("The total sum of squares=%.6f,The regression sum of squares=%.6f,The residual sum of squares=%.6f"%(SS_tot,SS_reg,SS_res))
+    print("The total sum of squares=The regression sum of squares+The residual sum of squares：SS_tot=SS_reg+SS_res=%.6f+%.6f=%.6f"%(SS_reg,SS_res,SS_reg+SS_res))
     
     Fz=(SS_reg/df_reg)/(SS_res/df_res)
-    print("F-分布统计量=%.6f;p-value=%.6f"%(Fz,f.sf(Fz,df_reg,df_res)))
+    print("F-distribution statistic=%.6f;p-value=%.6f"%(Fz,f.sf(Fz,df_reg,df_res)))
 
 ANOVA(iceTea_df.iceTeaSales.to_list(),fx_(iceTea_df.temperature).to_list(),df_reg=1,df_res=12) 
 ```
 
-    总平方和=2203.428571,回归平方和=1812.340466,残差平方和=391.088106
-    总平方和=回归平方和+残差平方和：SS_tot=SS_reg+SS_res=1812.340466+391.088106=2203.428571
-    F-分布统计量=55.609172;p-value=0.000008
+    The total sum of squares=2203.428571,The regression sum of squares=1812.340466,The residual sum of squares=391.088106
+    The total sum of squares=The regression sum of squares+The residual sum of squares：SS_tot=SS_reg+SS_res=1812.340466+391.088106=2203.428571
+    F-distribution statistic=55.609172;p-value=0.000008
     
 
-利用F检验对回归方程进行显著性检验的方法就是方程分析，将上述过程可以归结为一个方程分析表，从而更容易缕清脉络。
+The significance test method of the regression equation using the F test is equation analysis. The above process can be reduced to an equation analysis table so that it is easier to trace and clear the vein.
 
-| 统计量        | 平方和           | 自由度  |方差 |方差比|
+| Statistics       | sum of squares         | degree of freedom  |variance  |variance ratio|
 | ------------- |:-------------:| -----:| -----:| -----:|
-| 回归      | $SS_{reg}= \sum_{i=1}^n  (\widehat{y} _{i} -    \overline{y} )^{2}$ | $df_{reg}=m $|$SS_{reg}/df_{reg}$|  $F_{0} = \frac{ SS_{reg}/ df_{reg}  }{ SS_{res}/ df_{res}  }$    |
-| 残差      |$SS_{res}= \sum_{i=1}^n  (y_{i} -   \widehat{y} _{i} )^{2}   $   |  $df_{res}= n-m-1$ |$SS_{res}/df_{res}$||
-| 总体 | $SS_{tot}=\sum_{i=1}^n  ( y_{i} - \overline{y} )^{2}$     |  $df_{tot}= n-1$  |||
+| regression   | $SS_{reg}= \sum_{i=1}^n  (\widehat{y} _{i} -    \overline{y} )^{2}$ | $df_{reg}=m $|$SS_{reg}/df_{reg}$|  $F_{0} = \frac{ SS_{reg}/ df_{reg}  }{ SS_{res}/ df_{res}  }$    |
+| residual      |$SS_{res}= \sum_{i=1}^n  (y_{i} -   \widehat{y} _{i} )^{2}   $   |  $df_{res}= n-m-1$ |$SS_{res}/df_{res}$||
+| population| $SS_{tot}=\sum_{i=1}^n  ( y_{i} - \overline{y} )^{2}$     |  $df_{tot}= n-1$  |||
 
 
-#### 1.2.5 总体回归$Ax+b$的估计——置信区间估计
-对于温度与销量的回归模型，温度为任意值时，所对应的销量不是一个固定的值，而是服从平均值为$Ax+B$（总体回归），标准差为$\sigma$的正态分布，因此在给定置信度（95%，99%等），总体回归$Ax+B$(即预测值)一定会在某个值以上，某个值以下的区间中，计算任意温度所对应销量的置信区间，是由预测值加减一个区间，该区间的计算公式为：$\sqrt{F(1,n-2;0.05) \times ( \frac{1}{n}+ \frac{ ( x_{i}- \overline{x}  )^{2} }{ S_{xx} }  ) \times   \frac{SS_{res}}{n-2}  } $，其中$n$为样本个数，$ x_{i}$为自变量（温度）样本取值，$\overline{x}$为样本均值，$S_{xx}$为自变量$x$（温度）样本的离差平方和，$SS_{res}$为残差平方和。
+#### 1.2.5 Estimation of the population regression of $Ax+b$---confidence interval estimation
+For the regression model of temperature and sales volume, when the temperature is an arbitrary value, the corresponding sales volume is not a fixed value. Still, it follows a normal distribution with an average of $Ax+B$(population regression) and a standard deviation of $\sigma$. Therefore, given the confidence interval (95%，99%, etc.), the population regression of $Ax+B$(that is, the predicted value) is bound to be above a certain value and below a certain value. The confidence interval of the sales corresponding to any temperature is calculated by adding or subtractive an interval from the predicted value. The calculation formula of this interval is: $\sqrt{F(1,n-2;0.05) \times ( \frac{1}{n}+ \frac{ ( x_{i}- \overline{x} )^{2} }{ S_{xx} } ) \times \frac{SS_{res}}{n-2} } $, $n$ is he number of samples, $ x_{i}$ is the sample value of independent variabel(temperature), $\overline{x}$ is the sample mean, $S_{xx}$is the deviation sum of squares of the independence variabel $x$(temperature), $SS_{res}$ is the residual sum of squares.
 
 
 ```python
@@ -1003,15 +1007,15 @@ def confidenceInterval_estimator_LR(x,sample_num,X,y,model,confidence=0.05):
     from scipy.stats import f
     import matplotlib.pyplot as plt
     '''
-    function - 简单线性回归置信区间估计，以及预测区间
+    function - The simple linear regression confidence interval estimation, and the predicted interval
     
     Paras:
-    x - 自变量取值
-    sample_num - 样本数量
-    X - 样本数据集-自变量
-    y - 样本数据集-因变量
-    model -使用sklearn获取的线性回归模型
-    confidence -  置信度
+    x - Independent variable value
+    sample_num - Sample size
+    X - Sample dataset-independent variables
+    y - Sample dataset-dependent variables
+    model -The linear regression models obtained using Sklearn
+    confidence -  the confidence coefficient
     '''
     X_=X.reshape(-1)
     X_mu=X_.mean()
@@ -1030,7 +1034,7 @@ def confidenceInterval_estimator_LR(x,sample_num,X,y,model,confidence=0.05):
     ax.plot(X_,y_pre+CI,'--',label='y_upper')
     ax.fill_between(X_, y_pre-CI, y_pre+CI, alpha=0.2,label='95% confidence interval')    
       
-    #给定值的预测区间
+    #The predicted interval for a given value
     x_ci=math.sqrt(probability_val*(1/sample_num+(x-X_mu)**2/S_xx)*SS_res/(sample_num-2))
     x_pre=LR.predict(np.array([x]).reshape(-1,1))[0]
     x_lower=x_pre-x_ci
@@ -1059,14 +1063,15 @@ CI=confidenceInterval_estimator_LR(27,sample_num,X,y,LR,confidence)
 <a href=""><img src="./imgs/7_6.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.2.6 预测区间
-给定特定值例如温度为31，则预测值为79.51，但是实际值不一定为该值，而是在置信度（置信水平，置信系数）为95%，对应的置信区间$[66.060470,92.965962]$内浮动，这个区间称为预测区间，
+#### 1.2.6 Predicted interval
+Given a specific value such as temperature is 31, the predicted value is 79.51; however, the actual value is not set as this value, but floats within the confidence interval $[66.060470,92.965962]$ corresponding to the confidence coefficient of 95%, this interval is called the predicted interval.
 
-### 1.3 多元线性回归
-包含多于一个回归变量的回归模型称为多元回归模型，如果为线性则为多元线性回归（multivariable linear regression）。在很是实际问题处理上，尤其大数据，会涉及到很多自变量，例如Sklearn机器学习库经典的鸢尾花(Iris)数据集包含的自变量有花萼长度、花萼宽度，花瓣长度和花瓣宽度(Sepal Length, Sepal Width, Petal Length and Petal Width)，总共4个，其因变量为鸢尾花的种类，如果要根据自变量与因变量建立回归模型，则需要5个参数。
+### 1.3 Multiple linear regression
+A regression model with more than one regression variable is called a multivariable(multiple) regression model. If it is a linear model, the latter can be taken as a multivariable linear regression. On many practical problems processing, especially the large data, it will involve a lot of variables, such as the classic Iris dataset in the Sklearn machine learning library contains the independent four variables of the Sepal Length, Sepal Width, Petal Length, and Petal Width. Its dependent variable is the type of iris. Five parameters are needed if a regression model is to be established according to the independent variables and the dependent variable.
 
-#### 1.3.1 建立数据集
-在应用python语言解析该部分内容时，仍然使用比较简单的数据集，用'漫画统计学之回归分析'中店铺的数据集，自变量包括店铺的面积($m^{2} $)、 最近的车站距离（m），因变量为月营业额（万元）。
+
+#### 1.3.1 Set up dataset
+When the python analyzes this part of the content, the relatively simple dataset is still used. The store dataset set in *The Manga Guide to Regression Analysis* is used. The independent variables include the store area($m^{2} $), the nearest station distance(m), and the dependent variable is the monthly turnover(ten thousand yen).
 
 
 ```python
@@ -1168,8 +1173,8 @@ util.print_html(storeInfo_df,10)
 
 
 
-#### 1.3.2 相关性分析
-为了判断依据上述数据是否具有建立多元线性回归模型的意义，同样需要进行相关性分析。因为所涉及的变量增加，需要计算两两之间的相关系数，以及对应的P值，为了方便日后对此种类型数据的相关性分析，建立`correlationAnalysis_multivarialbe`函数。自变量与因变量之间的相关系数反映了自变量所能解释因变量的程度，其相关系数分别为0.8924,-0.7751，两个自变量均与因变量具有较强的相关关系，能够解释因变量，可以建立回归模型；同时，自变量之间的相关关系，可以初步判断自变量之间是否存在多重共线性，即自变量之间存在精确相关关系或高度相关关系，而使得模型估计失真，或者难以估计准确，根据计算结果两个自变量之间的相关系数为-0.4922，但是对应P值为0.1485，即拒绝原假设，说明两个自变量之间不存在线性相关关系，因此同时使用这两个自变量解释因变量，初步判断不会使回归模型失真。
+#### 1.3.2 Correlation analysis
+Correlation analysis is also needed to judge whether the above dataset has the significance of establishing a multiple linear regression model. Because of the increase in variables involved, the correlation coefficient between pairs and the corresponding P-value needs to be calculated. The `correlationAnalysis_multivarialbe` function was established to facilitate correlation analysis for this kind of data type latter. The correlation coefficient between the independent and dependent variables reflects the extent to which the independent variable can explain the dependent variable, and its correlation coefficient is 0.8924,-0.7751. Both independent variables strongly correlate with the dependent variable, which can explain dependent variables and establish a regression model. Simultaneously, the correlation between independent variables can preliminarily judge whether there is multicollinearity between independent variables, that is, there is an accurate correlation or a high correlation between independent variables, which makes the model estimation distorted or difficult to estimate accurately. According to the calculation results, the correlation coefficient between the two independent variables is -0.4922. Still, the corresponding P-value is 0.1485, which means the null hypothesis is rejected, indicating no linear correlation between the two independent variables. Therefore, using the two independent variables to explain the dependent variables at the same time will not distort the regression model.
 
 
 ```python
@@ -1182,10 +1187,10 @@ def correlationAnalysis_multivarialbe(df):
     from scipy.stats import pearsonr
     import pandas as pd
     '''
-    function - DataFrame数据格式，成组计算pearsonr相关系数
+    function - DataFrame format data, group calculated the Pearson correlation coefficient
     
     Paras:
-    df - DataFrame格式数据集
+    df - DataFrame format dataset
     '''
     df=df.dropna()._get_numeric_data()
     df_cols=pd.DataFrame(columns=df.columns)
@@ -1224,7 +1229,7 @@ print(correlation)
     monthly_turnover            0.8924                    -0.7751                1
     
 
-因为总共涉及到了3个变量，可以使用plotly库提供的三元图（Ternary Plot）,查看两个自变量与一个因变量之间的分布关系。可能变量之间数值的取值范围相差较大，在三元图打印时某些变量的值可能全部贴近图形边缘，无法清晰表述变量间的关系，因此使用：$\frac{ x_{i} - \overline{x} }{ x_{max}-  x_{min} } $方法分别标准化各个变量。从图示可得店铺面积（颜色表示面积）逐渐增加，月营业额逐渐增加（点的大小表示月营业额数值大小）；而最近的车站距离逐步减小时，月营业额逐渐增加。
+Because there are three variables involved, you can use the Ternary Plot provided by the Plotly library to see the distribution between the two independent variables and the one dependent variable. The value range of variables may vary greatly. When a ternary graph is plotted, some variables' value may be close to the graph's edge, and the relationship between variables cannot be clearly expressed. So using: $\frac{ x_{i} - \overline{x} }{ x_{max}- x_{min} } $ method to standardize each variables respectively. It can be seen from the diagram that the shop area(the color represents the area) gradually increases, and the monthly turnover gradually increases(the size of the points represent the monthly turnover). And the nearest station distance gradually decreased, the monthly turnover gradually increased.
 
 
 ```python
@@ -1245,64 +1250,64 @@ fig.show()
 
 <a href=""><img src="./imgs/7_8.png" height="auto" width="auto" title="caDesign"></a>
 
-#### 1.3.3 求解多元回归方程
-求解多元回归方程的方法基本等同于简单线性回归求解方式，使用最小二乘法对偏回归系数进行求解。求解过程中，使用了三种方法，一是，使用sympy分别对残差平方和$SS_res$的$a1$、$a2$和$b$求微分，当各自微分的值等于0时，所反映的残差平方和为0，即观测值和预测值差值的平方和为0，而单个观测值与对应的预测值之间的差值趋于0；二是，使用矩阵计算的方式求解参数，其计算公式为：$\widehat{ \beta } = ( X^{'} X)^{-1} X^{'}y$，其中$X=\left[\begin{matrix}1 & 10 & 80\\1 & 8 & 0\\1 & 8 & 200\\1 & 5 & 200\\1 & 7 & 300\\1 & 8 & 230\\1 & 7 & 40\\1 & 9 & 0\\1 & 6 & 330\\1 & 9 & 180\end{matrix}\right]$，$X^{'}  =\left[\begin{matrix}1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\10 & 8 & 8 & 5 & 7 & 8 & 7 & 9 & 6 & 9\\80 & 0 & 200 & 200 & 300 & 230 & 40 & 0 & 330 & 180\end{matrix}\right]$即$X$的的转置，也可记作$X^{T} ,X^{tr} $等，$y=\left[\begin{matrix}469\\366\\371\\208\\246\\297\\363\\436\\198\\364\end{matrix}\right]$。对于一个矩阵$X$，其逆矩阵（inverse matrix）为$X^{-1} $。使用矩阵的计算方法时，仍然是使用sympy库，该库提供了建立矩阵和矩阵计算的功能。最后一种求解多元线性回归方程的方式是直接使用`sklearn.linear_model.LinearRegression`计算，并获得回归模型。
+#### 1.3.3 Solve multiple regression equation
+The method to solve the multiple regression equation is the same as the simple linear regression method. The least-square method is used to solve the partial regression coefficient. In the solution process, three methods are used. The first is to differentiate $a1$, $a2$ and $b$ in Sympy library for the residual sum of squares $SS_res$ respectively. When the respective differential value is equal to 0, the reflected residual sum of squares is 0, that is, the sum of squares of the difference between the observed value and the predicted value is 0. In contrast, the difference between the single observed value and the corresponding predicted value tends to 0; Secondly, the parameters are solved by matrix calculation. The calculation formula is as follows:$\widehat{ \beta } = ( X^{'} X)^{-1} X^{'}y$，where,$X=\left[\begin{matrix}1 & 10 & 80\\1 & 8 & 0\\1 & 8 & 200\\1 & 5 & 200\\1 & 7 & 300\\1 & 8 & 230\\1 & 7 & 40\\1 & 9 & 0\\1 & 6 & 330\\1 & 9 & 180\end{matrix}\right]$，$X^{'}  =\left[\begin{matrix}1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\10 & 8 & 8 & 5 & 7 & 8 & 7 & 9 & 6 & 9\\80 & 0 & 200 & 200 & 300 & 230 & 40 & 0 & 330 & 180\end{matrix}\right]$ is the transpose of $X$, also called $X^{T} ,X^{tr} $,etc.,$y=\left[\begin{matrix}469\\366\\371\\208\\246\\297\\363\\436\\198\\364\end{matrix}\right]$。For a matrix $X$, the inverse matrix is $X^{-1} $. Using matrix evaluation methods, it is still available using the Sympy library, which provides a matrix building and matrix evaluation function. The final way to solve a multiple regression equation is to use the `sklearn.linear_model.LinearRegression` calculation directly and to obtain a regression model.
 
-> 偏回归系数（partial regression coefficient），是多元回归问题出现的一个特殊性质。设自变量$x_{1}, x_{2}, \ldots ,x_{m},  $，与因变量$y$具有线性关系，有$y= a_{1}  x_{1} + a_{2}  x_{2}+ \ldots + a_{n}  x_{n}+b$，则$a_{1} , a_{2} , \ldots , a_{n}  $为相对于各自变量的偏回归系数，表示当其他的各自变量都保持一定时，指定的某一自变量每变动一个单位，因变量y增加或减少的数值。 
+> The partial regression coefficient is a special property of multiple regression problems. Set up the independent variables $x_{1}, x_{2}, \ldots ,x_{m}, $, which has a linear relationship with the dependent variable $y$. there are $y= a_{1} x_{1} + a_{2} x_{2}+ \ldots + a_{n} x_{n}+b$，then $a_{1} , a_{2} , \ldots , a_{n} $ partial coefficients relative to each independent variables, represents the increase or decrease of the dependent variable y for each unit change in a given independent variable when all other variables remain constant.
 
-* 对矩阵表示的求解参数公式$\widehat{ \beta } = ( X^{'} X)^{-1} X^{'}Y$再理解：
+* The matrix representation of the parameters solution formula $\widehat{ \beta } = ( X^{'} X)^{-1} X^{'}Y$ to understand:
 
-多元线性回归模型公式：$y=  \alpha  + \beta _{1} x_{1} + \beta _{2} x_{2}+  \ldots + \beta _{n} x_{n} $，可简单表示为：$Y=X \beta $，其矩阵的表示方式为：$\begin{bmatrix} Y_{1}   \\Y_{2}\\ \vdots\\Y_{n}  \end{bmatrix} = \begin{bmatrix} \alpha + \beta  X_{1}   \\\alpha + \beta  X_{2}\\ \vdots \\\alpha + \beta  X_{n}  \end{bmatrix} = \begin{bmatrix}1 &  X_{1}  \\1 &  X_{2} \\ \vdots & \vdots \\1 &  X_{n}  \end{bmatrix}  \times  \begin{bmatrix} \alpha  \\ \beta  \end{bmatrix} $，因为矩阵不能相除，因此不能直接对$Y=X \beta $两边同时除以$X$，以求取$\beta$，但是可以两边同时乘以$X$的逆矩阵避免除法（矩阵乘以自身的逆矩阵结果为1）。同时只有方阵才可能可逆，而样本的数量是无法控制的，因此用$X$乘以其转置产生一个可以求逆的方阵。
+Multiple linear regression model formula: $y=  \alpha  + \beta _{1} x_{1} + \beta _{2} x_{2}+  \ldots + \beta _{n} x_{n} $，can be simply expressed as:$Y=X \beta $，Its matrix is expressed as follows:：$\begin{bmatrix} Y_{1}   \\Y_{2}\\ \vdots\\Y_{n}  \end{bmatrix} = \begin{bmatrix} \alpha + \beta  X_{1}   \\\alpha + \beta  X_{2}\\ \vdots \\\alpha + \beta  X_{n}  \end{bmatrix} = \begin{bmatrix}1 &  X_{1}  \\1 &  X_{2} \\ \vdots & \vdots \\1 &  X_{n}  \end{bmatrix}  \times  \begin{bmatrix} \alpha  \\ \beta  \end{bmatrix} $，Since the matrix cannot be divided, you cannot directly divide both sides of $Y=X \beta $ by $X$ to find $\beta$. But you can multiply both sides by the inverse of $\beta$ to avoid division(The matrix times its inverse gives 1). And only a square matrix can be invertible, and you cannot control the number of samples, so $X$ times its transpose to get a square matrix that can be invertible.
 
 ```python
 import sympy,math
 from sympy import diff,Eq,solveset,solve,simplify,pprint,Matrix
 
 a1,a2,b=sympy.symbols('a1 a2 b')
-#计算残差平方和
+#Calculate the residual sum of squares
 storeInfo_df["ss_res"]=storeInfo_df.apply(lambda row:(row.monthly_turnover-(row.area*a1+row.distance_to_nearestStation*a2+b))**2,axis=1)
 util.print_html(storeInfo_df,10)
 SS_res=storeInfo_df["ss_res"].sum()
 
-#A- 使用sympy求解多元回归方程
-#对残差平方和SS_res关于a1，a1和b求微分，并使微分值为0
+#A- The Sympy library solved multiple regression equations.
+#Differentiate the residual sum of squares 'SS_res' to a1, a2, and b, and set the differential value as 0.
 diff_SSres_a1=diff(SS_res,a1)
 diff_SSres_a2=diff(SS_res,a2)
 diff_SSres_b=diff(SS_res,b)
 
-#当微分值为0时，解方程组，获得a1，a2和b的值
-Eq_residual_a1=Eq(diff_SSres_a1,0) #设所求a1微分为0
-Eq_residual_a2=Eq(diff_SSres_a2,0) #设所求a2微分为0
-Eq_residual_b=Eq(diff_SSres_b,0) #设所求a2微分为0
-slop_intercept=solve((Eq_residual_a1,Eq_residual_a2,Eq_residual_b),(a1,a2,b)) #计算三元一次方程组
+#When the differential value is 0, solve the equation set and obtain a1, a2, and b.
+Eq_residual_a1=Eq(diff_SSres_a1,0) #Make the differential value a1 as 0
+Eq_residual_a2=Eq(diff_SSres_a2,0) #Make the differential value a2 as 0
+Eq_residual_b=Eq(diff_SSres_b,0) #Make the differential value b as 0
+slop_intercept=solve((Eq_residual_a1,Eq_residual_a2,Eq_residual_b),(a1,a2,b)) #Solve three-variable linear equation
 print("diff_a1,a2 and intercept:\n")
 pprint(slop_intercept)
 print("_"*50)
 
-#B - 使用矩阵（基于sympy）求解多元回归方程
+#B - Multiple regression equations were solved using the matrix (based on Sympy)
 if 'one' not in storeInfo_df.columns:
     X_m=Matrix(storeInfo_df.insert(loc=1,column='one',value=1)[['one','area','distance_to_nearestStation']])
 else:
     X_m=Matrix(storeInfo_df[['one','area','distance_to_nearestStation']])
 y_m=Matrix(storeInfo_df.monthly_turnover)
 
-parameters_reg=(X_m.T*X_m)**-1*X_m.T*y_m #注意在矩阵计算时，矩阵相乘不能任意变化位置
+parameters_reg=(X_m.T*X_m)**-1*X_m.T*y_m #Note that matrix multiplication does not change position arbitrarily when calculating matrices.
 print("matrix_a1,a2 and intercept:\n")
 pprint(parameters_reg)
 
-#C - 使用sklearn求解多元回归方程
-#B - 使用sklearn库sklearn.linear_model.LinearRegression()，Ordinary least squares Linear Regression-普通最小二乘线性回归，获取回归方程
+#C - Use Sklearn to solve multiple regression equations.
+#B - Use sklearn library: sklearn.linear_model.LinearRegression()，Ordinary least squares Linear Regression-Obtain the regression equation by ordinary least squares linear regression
 from sklearn.linear_model import LinearRegression
 X=storeInfo_df[['area','distance_to_nearestStation']].to_numpy()
 y=storeInfo_df['monthly_turnover'].to_numpy()
 
-#拟合模型
+#Fitting model
 LR_multivariate=LinearRegression().fit(X,y)
-#模型参数
+#Mode parameters
 print("_"*50)
 print("Sklearn a1=%.2f,a2=%.2f,intercept=%.2f"%(LR_multivariate.coef_[0],LR_multivariate.coef_[1], LR_multivariate.intercept_))
 
-#建立回归方程
+#Establish the regression equation
 x1,x2=sympy.symbols('x1,x2')
 fx_m=slop_intercept[a1]*x1+slop_intercept[a2]*x2+slop_intercept[b]
 print("linear regression_fx=:\n")
@@ -1340,7 +1345,7 @@ fx_m=sympy.lambdify([x1,x2],fx_m,"numpy")
 
 
 ```python
-#可以将矩阵打印为Latex格式的数学表达式，方便在markdown中表述，不需要自行输入。
+#You can print the matrix as a mathematical expression in Latex format for easy presentation in markdown without typing it yourself.
 from sympy import latex
 print(latex(X_m.T))
 ```
@@ -1348,7 +1353,7 @@ print(latex(X_m.T))
     \left[\begin{matrix}1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1\\10 & 8 & 8 & 5 & 7 & 8 & 7 & 9 & 6 & 9\\80 & 0 & 200 & 200 & 300 & 230 & 40 & 0 & 330 & 180\end{matrix}\right]
     
 
-同样使用三元图打印两个自变量，以及预测值之间的图表，观察变量之间的关系。
+Also, use a ternary diagram to print a chart between the two independent variables and the predicted values to see the variables' relationship.
 
 
 ```python
@@ -1368,12 +1373,12 @@ fig.show()
 ```
 <a href=""><img src="./imgs/7_9.png" height="auto" width="auto" title="caDesign"></a>
 
-#### 1.3.4 确认多元回归方程的精度
-非修正自由度的判定系数计算同简单线性回归，将定义的计算函数`coefficient_of_determination`放置于'util.py'文件中，直接调用计算，同时也使用Sklearn提供的r2_score计算，其计算结果约为0.94，表示实测值与回归方程的预测值拟合程度的指标较高，能够比较好的根据店铺面积和最近车站距离预测月营业额。
+#### 1.3.4 Confirm the accuracy of multiple regression equation
+The determination coefficient with a non-modified degree of freedom is similar to the simple linear regression. Place the defined calculation function `coefficient_of_determination` in the file 'util.py' and call it directly. Meanwhile, 'r2_score' provided by Sklearn was also used for calculation, and the calculation result was about 0.94, indicating that the index of the degree of fitting between the measured value and the predicted value of the regression equation is relatively high, which can better predict the monthly turnover according to the store area and the nearest station distance.
 
 
 ```python
-#计算复相关系数R
+#Calculate the multiple correlation coefficient R
 import util
 R_square_a,R_square_b=util.coefficient_of_determination(storeInfo_df.monthly_turnover.to_list(),storeInfo_df.pre.to_list())   
 print("R_square_a=%.5f,R_square_b=%.5f"%(R_square_a,R_square_b))
@@ -1387,8 +1392,8 @@ print("using sklearn libray to calculate r2_score=",R_square_)
     using sklearn libray to calculate r2_score= 0.945235852681711
     
 
-* 修正自由度的判定系数
-直接使用判定系数时，其自变量的数量越多，判定系数的值越高，但是并不是每一个自变量都是有效的，因此通常使用修正自由度的判定系数，其公式为：$R^{2} =1- \frac{  \frac{SS_{res}}{ n_{s} - n_{v} -1}  }{  \frac{SS_{tot}}{n_{s} -1}  }$，其中$n_{s}$为样本个数，$n_{v}$为自变量个数，$SS_{res}$为残差平方和，$SS_{tot}$为总的离差平方和。
+* The non-modified degree determination coefficient 
+When the determination coefficient is directly used, the more independent variables it has, the higher the determination coefficient's value. However, not every independent variable is effective, so the modified degree determination coefficient is usually used, and its formula is as follows:$R^{2} =1- \frac{  \frac{SS_{res}}{ n_{s} - n_{v} -1}  }{  \frac{SS_{tot}}{n_{s} -1}  }$，$n_{s}$ is the number of samples, $n_{s}$ is the number of the independent variables, $SS_{res}$ is the residual sum of squares, $SS_{tot}$ is the total sum of squared residuals.
 
 
 ```python
@@ -1397,37 +1402,37 @@ def coefficient_of_determination_correction(observed_vals,predicted_vals,indepen
     import numpy as np
     import math
     '''
-    function - 回归方程的修正自由度的判定系数
+    function - The non-modified degree determination coefficient of the regression equation
     
     Paras:
-    observed_vals - 观测值（实测值）
-    predicted_vals - 预测值
-    independent_variable_n - 自变量个数
+    observed_vals - Observed value(measured value)
+    predicted_vals - Predicted value
+    independent_variable_n - the number of the independent variable
     '''
     vals_df=pd.DataFrame({'obs':observed_vals,'pre':predicted_vals})
-    #观测值的离差平方和(总平方和，或总的离差平方和)
+    #The deviation sum of squares of the observed values (the total sum of squares, or the total sum of squares of deviations) 
     obs_mean=vals_df.obs.mean()
     SS_tot=vals_df.obs.apply(lambda row:(row-obs_mean)**2).sum()
     
-    #残差平方和
+    #The residual sum of squares
     SS_res=vals_df.apply(lambda row:(row.obs-row.pre)**2,axis=1).sum()
     
-    #判断系数
+    #Determination coefficient
     sample_n=len(observed_vals)
     R_square_correction=1-(SS_res/(sample_n-independent_variable_n-1))/(SS_tot/(sample_n-1))
             
     return R_square_correction
 R_square_correction=coefficient_of_determination_correction(storeInfo_df.monthly_turnover.to_list(),storeInfo_df.pre.to_list(),2)
-print("修正自由度的判定系数=",R_square_correction)
+print("The modified degree determination coefficient =",R_square_correction)
 ```
 
-    修正自由度的判定系数= 0.929588953447914
+    The modified degree determination coefficient= 0.929588953447914
     
 
-#### 1.3.5 回归显著性检验
-在简单回归模型中的回归系数检验，只需要给定$H_{0} :A=0,  H_{1} :A \neq 0$，但是在多元回归中，就总体而言$F_{x} = A_{1}  x_{1} +A_{2}  x_{2}+B$，其中$A_{1} \sim  a_{1} ,A_{2} \sim  a_{2},B \sim b$，$\sim$为约为。包括$A_{1}$和 $A_{2}$两个偏相关系数，因此可以分为两种情况，一种是全面讨论偏回归系数的检验，原假设：$A_{1} =A_{2}=0$，备择假设:$A_{1} =A_{2}=0$不成立，即以下任意一组关系成立，$A_{1}  \neq 0$且$A_{2}  \neq 0$，$A_{1}  \neq 0$且$A_{2} = 0$，或$A_{1}  =0$且$A_{2}  \neq 0$。另一种是分别讨论偏回归系数的检验，例如原假设：$A_{1}  =0$，备择假设：$A_{1}  \neq 0$。在这两种方式中，检验统计量是不同的，对于全面检验，其统计量为：$F_{0}=  \frac{ SS_{tot}- SS_{res}  }{ n_{v} } / \frac{SS_{res} }{ n_{s}- n_{v}-1} $，其中$SS_{tot}$为总平方和$SS_{res}$为残差平方和，$n_{s}$为样本个数，$n_{v}$为自变量个数，;对于单个回归系数的检验，其统计量为：$F_{0}=  \frac{  a_{1} ^{2} }{ C_{jj} } / \frac{ SS_{res} }{ n_{s}- n_{v} -1 } $，其中$ C_{jj}$为$( X^{'} X)^{-1} $对角线相交位置的值，即$( X^{'} X)^{-1} =\left[\begin{matrix}\frac{511351}{98121} & - \frac{55781}{98121} & - \frac{1539}{327070}\\- \frac{55781}{98121} & \frac{6442}{98121} & \frac{66}{163535}\\- \frac{1539}{327070} & \frac{66}{163535} & \frac{67}{6541400}\end{matrix}\right]$，对角线的值为$\frac{6442}{98121} $。
+#### 1.3.5 Regression significance test
+The regression coefficient test in a simple regression model, only need the given $H_{0} :A=0, H_{1} :A \neq 0$, but in multiple regression in terms of the population is $F_{x} = A_{1} x_{1} +A_{2} x_{2}+B$, $A_{1} \sim a_{1} ,A_{2} \sim a_{2},B \sim b$, $\sim$ is approximate. Including $A_{1}$ and $A_{2}$ two partial correlation coefficient, thus it can be divided into two kinds of circumstances; one is a comprehensive discussion of the partial regression coefficient, the original hypothesis is $A_{1} =A_{2}=0$, the alternative hypothesis is that $A_{1} =A_{2}=0$  is invalid, or any of the following set of relations is valid, $A_{1} \neq 0$ and $A_{2} \neq 0$, $A_{1} \neq 0$ and $A_{2} = 0$, or $A_{1} =0$ and $A_{2} \neq 0$. The other is to discuss the test of the partial regression coefficient separately, such as the null hypothesis is $A_{1} =0$, and the alternative hypothesis is $A_{1} \neq 0$. In these two ways, the test statistics are different, the statistics are $F_{0}= \frac{ SS_{tot}- SS_{res} }{ n_{v} } / \frac{SS_{res} }{ n_{s}- n_{v}-1} $, $SS_{tot}$ is the total sum of squares, $SS_{res}$ is the residual sum of squares, $n_{s}$ is the number of samples, $n_{v}$ is the number of the independent variables. For the test of a single regression coefficient, its statistics is $F_{0}= \frac{ a_{1} ^{2} }{ C_{jj} } / \frac{ SS_{res} }{ n_{s}- n_{v} -1 } $, $ C_{jj}$ is the diagonal value of $( X^{'} X)^{-1} $ at the intersection, that is, $( X^{'} X)^{-1} =\left[\begin{matrix}\frac{511351}{98121} & - \frac{55781}{98121} & - \frac{1539}{327070}\\- \frac{55781}{98121} & \frac{6442}{98121} & \frac{66}{163535}\\- \frac{1539}{327070} & \frac{66}{163535} & \frac{67}{6541400}\end{matrix}\right]$, $\frac{6442}{98121} $ is the diagonal value.
 
-对于全部回归系数的总体检验，以及单个回归系数的检验，其结果P值均小于0.05，意味着所求得的多元线性回归模型是合适的。
+For the whole regression coefficient test and the single regression coefficient test, the P-value is less than 0.05, which means that the multiple linear regression model is appropriate.
 
 
 ```python
@@ -1438,36 +1443,36 @@ def ANOVA_multivarialbe(observed_vals,predicted_vals,independent_variable_n,a_i,
     from scipy.stats import f
     from sympy import Matrix,pprint
     '''
-    function - 多元线性回归方程-回归显著性检验（回归系数检验），全部回归系数的总体检验，以及单个回归系数的检验
+    function - Multiple linear regression equation - regression significance test(regression coefficient test), the population test of all regression coefficient, and single regression coefficient tests
     
     Paras:    
-    observed_vals - 观测值（实测值）
-    predicted_vals - 预测值
-    independent_variable_n - 自变量个数
-    a_i - 偏相关系数列表
-    X - 样本数据集_自变量
+    observed_vals - Observed value(measured value)
+    predicted_vals - Predicted value
+    independent_variable_n - The number of the independent variables
+    a_i - Partial correlation coefficient list
+    X - Sample dataset_the independent variable
     '''
     vals_df=pd.DataFrame({'obs':observed_vals,'pre':predicted_vals})
-    #总平方和，或总的离差平方和
+    #The total sum of squares, or the total sum of the squares deviation
     obs_mean=vals_df.obs.mean()
     SS_tot=vals_df.obs.apply(lambda row:(row-obs_mean)**2).sum()
     
-    #残差平方和
+    #The residual sum of squares
     SS_res=vals_df.apply(lambda row:(row.obs-row.pre)**2,axis=1).sum()
    
-    #回归平方和
+    #The regression sum of squares
     SS_reg=vals_df.pre.apply(lambda row:(row-obs_mean)**2).sum()
     
-    #样本个数
+    #The number of samples
     n_s=len(observed_vals)
     dfn=independent_variable_n
     dfd=n_s-independent_variable_n-1
     
-    #计算全部回归系数的总体检验统计量
+    #Calculate the total test statistics for all regression coefficients.
     F_total=((SS_tot-SS_res)/dfn)/(SS_res/dfd)
-    print("F-分布统计量_total=%.6f;p-value=%.6f"%(F_total,f.sf(F_total,dfn,dfd)))
+    print("F-distribution statistic_total=%.6f;p-value=%.6f"%(F_total,f.sf(F_total,dfn,dfd)))
     
-    #逐个计算单个回归系数的检验统计量
+    #Calculate the test statistics of a single regression coefficient one by one
     X=np.insert(X,0,1,1)
     X_m=Matrix(X)
     M_inverse=(X_m.T*X_m)**-1
@@ -1479,7 +1484,7 @@ def ANOVA_multivarialbe(observed_vals,predicted_vals,independent_variable_n,a_i,
     for a in a_i:
         F_ai=(a**2/C_jj)/(SS_res/dfd)
         F_ai_list.append(F_ai)
-        print("a%d=%.6f时，F-分布统计量_=%.6f;p-value=%.6f"%(i,a,F_ai,f.sf(F_total,1,dfd)))
+        print("a%d=%.6f，F-distribution statistic_=%.6f;p-value=%.6f"%(i,a,F_ai,f.sf(F_total,1,dfd)))
         i+=1
  
 a1_,a2_=LR_multivariate.coef_[0],LR_multivariate.coef_[1]
@@ -1487,15 +1492,15 @@ X=storeInfo_df[['area','distance_to_nearestStation']].to_numpy()
 ANOVA_multivarialbe(storeInfo_df.monthly_turnover.to_list(),storeInfo_df.pre.to_list(),2,a_i=[a1_,a2_],X=X) 
 ```
 
-    F-分布统计量_total=60.410426;p-value=0.000038
+    F-distribution statistic_total=60.410426;p-value=0.000038
      6442
     ─────
     98121
-    a0=41.513478时，F-分布统计量_=44.032010;p-value=0.000110
-    a1=-0.340883时，F-分布统计量_=0.002969;p-value=0.000110
+    a0=41.513478，F-distribution statistic_=44.032010;p-value=0.000110
+    a1=-0.340883，F-distribution statistic_=0.002969;p-value=0.000110
     
 
-#### 1.3.6 总体回归$A_{1}  X_{1} + A_{2}  X_{2}+ \ldots + A_{n}  X_{n}+B$的估计——置信区间
+#### 1.3.6 Population regression $A_{1}  X_{1} + A_{2}  X_{2}+ \ldots + A_{n}  X_{n}+B$ estimation——confidence interval
 多元线性回归模型的预测值置信区间估计使用了两种计算方式，一是，自定义函数逐步计算，其计算公式为：$\sqrt{F(1,n_s-n_v-1;0.05) \times ( \frac{1}{n_s}+ \frac{ D ^{2} }{ n_s-1 }  ) \times   \frac{SS_{res}}{n_s-n_v-1}  } $，其中$n_s$为样本个数，$n_v$为自变量个位数，$D ^{2}$为马氏距离（Mahalanobis distance）的平方，$SS_{res}$为残差平方和；$D ^{2}$马氏距离的平方计算公式为：先求$S=\begin{bmatrix} S_{11} &S_{12} & \ldots &S_{1p}  \\S_{21}  &S_{22}& \ldots &S_{2p}\\ \vdots & \vdots & \ddots & \vdots \\ S_{p1} &S_{p2}& \ldots &S_{pp}   \end{bmatrix} $的逆矩阵$S^{-1} $，其中，$S_{22}$代表第2个自变量的离差平方和，$S_{25}$代表第2个自变量和第5个自变量的离差积和，$S_{25}$与$S_{52}$是相等的，以此类推；然后根据$S^{-1}$，求取马氏距离的平方公式为：$D^{2} =[( x_{1}- \overline{ x_{1} }  )( x_{1}- \overline{ x_{1} }) S^{11} +( x_{1}- \overline{ x_{1} }  )( x_{2}- \overline{ x_{2} }) S^{12}]+ \ldots +( x_{1}- \overline{ x_{1} }  )( x_{p}- \overline{ x_{p} }) S^{1p}\\+( x_{2}- \overline{ x_{2} }  )( x_{1}- \overline{ x_{1} }) S^{21} +( x_{2}- \overline{ x_{2} }  )( x_{2}- \overline{ x_{2} }) S^{12}]+ \ldots +( x_{2}- \overline{ x_{2} }  )( x_{p}- \overline{ x_{p} }) S^{2p}\\ \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots  \ldots \\+( x_{p}- \overline{ x_{p} }  )( x_{1}- \overline{ x_{1} }) S^{p1} +( x_{p}- \overline{ x_{p} }  )( x_{2}- \overline{ x_{2} }) S^{12}]+ \ldots +( x_{p}- \overline{ x_{p} }  )( x_{p}- \overline{ x_{p} }) S^{pp}(n_s-1)$，其中$n_s$为样本个数。
 
 二是，使用[statsmodels](https://www.statsmodels.org/stable/index.html)的`statsmodels.regression.linear_model.OLS`普通最小二乘法（Ordinary Least Squares，OLS）求得多元线性回归方程，其语法结构与Sklearn基本相同。所求的的回归模型包含有置信区间的属性，可以通过`dt=res.get_prediction(X).summary_frame(alpha=0.05)`的方式提取。可以打印statsmodels计算所得回归模型的概要（summary），比较求解回归方程的偏回归系数和截距（coef_const/area/distance_to_nearestStation ），以及确认多元回归方程的精度R-squared（$R^2$）和修正自由度的判定系数Adj. R-squared，和回归显著性检验全面讨论偏回归系数的检验F-分布统计量F-statistic，对应P值Prob (F-statistic)，全部相等，互相印证了所使用的方法是否保持一致。
