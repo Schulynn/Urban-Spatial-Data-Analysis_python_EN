@@ -1,8 +1,8 @@
 > Created on Sat Jul 25 11/41/43 2020  @author: Richie Bao-caDesign设计(cadesign.cn)
 
 ## 1.Regression of public health data, with gradient descent method
-公共健康数据可以分为三类，分别为地理信息数据、疾病数据和经济条件数据。在公共健康数据中，其经济条件数据视为自变量，而疾病数据视为因变量，通常自变量为因，因变量为果，自变量是可以改变的因素，而因变量为不能改变的因素。
-公共健康数据中英对照表（字段映射表）：
+Public health data can be divided into three categories, geographic information data, disease data, and economic conditions data. In public health data, economic condition data is regarded as an independent variable, while disease data is regarded as a dependent variable. Usually, the independent variable is the cause. The dependent variable is the effect. The independent variable is the factor that can be changed, while the dependent variable is the factor that cannot be changed.
+Sino-English Table of Public Health Data(Field Mapping Table):
 ```python
 PubicHealth_Statistic_columns={'geographic information':
                                                       {'Community Area':'社区', 
@@ -39,14 +39,14 @@ PubicHealth_Statistic_columns={'geographic information':
                                 }
 ```
 
-> 该部分参考文献
-> 1. Cavin Hackeling. Mastering Machine Learning with scikit-learn[M].Packt Publishing Ltd.July 2017.Second published. 中文版为：Cavin Hackeling.张浩然译.scikit-learning 机器学习[M].人民邮电出版社.2019.2.
+> References for this part
+> 1. Cavin Hackeling. Mastering Machine Learning with scikit-learn[M].Packt Publishing Ltd.July 2017.Second published. 
 
-在实际的回归模型应用中，以使用[scikit-learn(Sklearn)](https://scikit-learn.org/stable/index.html)库为主，对于有些描述也做相应的变化，自变量为解释变量（explanatory variable）即特征（features）或属性（attributes），其值为特征向量，通常用X表示特征向量（vector）数组（array）或矩阵；因变量为响应变量（response variable），其值通常用y表示（为目标值，target value）；机器学习（machine learning）的算法（algorithms）和模型（models），被称为估计器（estimator），不过算法，模型和估计器的叫法有时会混淆使用。
+In the actual application of the regression model, [scikit-learn(Sklearn)](https://scikit-learn.org/stable/index.html) library is mainly used. Corresponding changes are made to some descriptions. Independent variables are explanatory variables, which are features or attributes; its value is the eigenvectors. X is usually used to represent an eigenvector array or matrix. The dependent variable is the response variable, whose value is usually represented by Y(is the target value). The algorithms and models of machine learning are known as estimators, although the terms algorithm, model, and estimator are sometimes used confusedly.
 
-首先读取公共健康数据为DataFrame数据格式，不过Sklearn的数据处理过程，以numpy的数组形式为主，需要在二者之间进行转换。
+The public health data is first to read in DataFrame format, but the Sklearn data processing is dominated by Numpy arrays and requires a conversion between them.
 
-> 通常用大写字母表示矩阵（大于或等于2维的数组），用小写字母表示向量
+> Matrices are usually represented by uppercase letters(array with dimensions greater than or equal to 2), and vectors are represented by lowercase letters.
 
 
 ```python
@@ -112,20 +112,20 @@ print(pubicHealth_gpd.head())
     [5 rows x 39 columns]
     
 
-### 1.1 公共健康数据的简单线性回归
-在进行回归之前，需要做相关性分析，确定解释变量和响应变量是否存在相关性，返回到‘公共健康数据的相关性分析’部分查看已经计算的结果，在经济条件数据和疾病数据中选取'Per Capita Income':'人均收入'和'Childhood Blood Lead Level Screening':'儿童血铅水平检查'，其相关系数为-0.64，呈现线性负相关关系。在回归部分阐述过求取简单线性回归方程的方法为普通最小二乘法（Ordinary Lease Squares,OLS）或线性最小二乘，即通过最小化残差平方和，对回归系数求微分并另微分结果为0，解方程组得回归系数值，构建简单线性回归方程，或模型、估计器。而如果模型预测的响应变量都接近观测值，那么模型就是拟合的，用残差平方和来衡量模型拟合性的方法称为残差平方和（RSS）代价函数。代价函数也被称为**损失函数**，用于定义和衡量一个模型的误差。其公式同回归部分的残差平方和：$SS_{res} = \sum_{i=1}^n  ( y_{i}- \widehat{ y_{i} }  )^{2} $或$SS_{res} = \sum_{i=1}^n  ( y_{i}- f( x_{i} )  )^{2} $，其中$ y_{i}$为观测值，$ \widehat{ y_{i}}$和$f( x_{i})$均为预测值（回归值），$f(x_{i})$即为所求得的估计器。因此对残差平方和回归系数求微分的过程就是对损失函数求极小值找到模型的参数值的过程，二者只是表述上的不同。
+### 1.1 Simple linear regression of public health data
+A correlation analysis is needed to determine whether the explanatory variables and the response variables are correlated before regression. We are returning to the 'Correlation analysis of public health data' to look at the results that have been calculated. 'Per Capita Income' and 'Childhood Blood Lead Level Screening' were selected from economic condition data and disease data, the correlation coefficient was -0.64, showing a negative linear correlation. In the regression session, Ordinary Lease Squares(OLS) or linear least squares are used to solve a simple linear regression equation, namely by minimizing the residual sum of squares to differentiate the regression coefficient, and make the results 0, get the value of the regression coefficient by solving equations set, and to construct a simple linear regression equation, or a model, estimator. If the response variables predicted by the model are all close to the observed value, then the model is fitted. The method to measure the fitting of the model by the residual sum of squares is called the residual sum of squares(RSS) cost function, also known as the *loss function*, which is used to define and measure the error of a model. The formula is the same as the residual sum of squares:$SS_{res} = \sum_{i=1}^n ( y_{i}- \widehat{ y_{i} } )^{2} $或$SS_{res} = \sum_{i=1}^n ( y_{i}- f( x_{i} ) )^{2} $, $ y_{i}$ is the observed value, $ \widehat{ y_{i}}$ and $f( x_{i})$ are the predicted value(regression value), $f(x_{i})$ is the estimator calculated. Therefore, differentiating the regression coefficient of the residual sum of squares is the process of finding the parameter value of the model by seeking the minimum value of the loss function, and the two are just different in expression.
 
-在'Cavin Hackeling. Mastering Machine Learning with scikit-learn'中，作者给出了另一种求解简单线性回归系数的方法，计算斜率的公式为：$\beta = \frac{cov(x,y)}{var(x)} =  \frac{ \sum_{i=1}^n ( x_{i}- \overline{x}  )(y_{i} - \overline{y} ) }{n-1} / \frac{ \sum_{i=1}^n  ( x_{i}- \overline{x}  )^{2} }{n-1}= \frac{ \sum_{i=1}^n ( x_{i}- \overline{x}  )(y_{i} - \overline{y} ) }{( x_{i}- \overline{x}  )^{2} }$，其中$var(x)$为解释变量的方差，$n$为训练数据的总量；cov(x,y)为协方差，$x_{i}$表示训练数据集中第$i$个$x$的值，$\overline{x} $为解释变量的均值，$y_{i}$为第$i$个$y$的值，$\overline{y}$为响应变量的均值。求得$\beta$之后，再由公式： $\alpha = \overline{y} - \beta  \overline{x} $求得$\alpha $截距。计算结果与使用Sklearn的`LinearRegression`（OLS）方法保持一致。
+In *Cavin Hackeling. Mastering Machine Learning with scikit-learn*, the author presents another method for solving simple linear regression coefficient, with the formula for calculating slope as follows: $\beta = \frac{cov(x,y)}{var(x)} = \frac{ \sum_{i=1}^n ( x_{i}- \overline{x} )(y_{i} - \overline{y} ) }{n-1} / \frac{ \sum_{i=1}^n ( x_{i}- \overline{x} )^{2} }{n-1}= \frac{ \sum_{i=1}^n ( x_{i}- \overline{x} )(y_{i} - \overline{y} ) }{( x_{i}- \overline{x} )^{2} }$，$var(x)$ is the variance of explanatory variable, $n$ is the total amount of training data, cov(x,y) is the covariance, $x_{i}$ represents the value of the $x_{i}$ $x$ in the training dataset, $\overline{x} $ is the mean of the explanatory variable, $y_{i}$ represents the $i$ $y$, $\overline{y}$ is the mean of the response variable. After the $\beta$ is obtained, the $\alpha $ intercept is obtained by the formula $\alpha = \overline{y} - \beta \overline{x} $. The calculation results are consistent with the `LinearRegression`(OLS) method provided by Sklearn. 
 
-> 方差（variance）用来衡量一组值的偏离程度，通常标记为$ \sigma ^{2} $，即标准差的平方，或方差的平方根即为标准差。当集合中的所有数值都相等时，其方差为0，方差描述了一个随机变量离其期望值的距离，通常期望值为该组值的均值。
+>  Variance is used to measure the degree of deviation of a set of values, usually marked as $ \sigma ^{2} $, that is, the square root of the standard deviation or the square root of the variance is the standard deviation. When all values in the set are equal, the variance is 0. The variance describes the distance of a random variable from its expected value, which is usually the mean of values.
 
-> 协方差（covariance）用来衡量两个变量的联合变化程度。方差则是协方差的一种特殊情况，即变量与自身的协方差。协方差表示两个变量总体的误差，这与只表示一个变量误差的方差不同。如果两个变量的变化趋势一致，即其中一个大于自身的期望值，另一个也大于其自身的期望值，则两个变量之间的协方差为正值；如果两个变量的变化趋势相反，即其中一个大于自身期望值，而另一个小于自身期望值，则两个变量之间的协方差为负值；当变量所有值都趋近于各自的期望值时，协方差趋近于0。两个变量统计独立时，协方差为0。但是协方差为0，不仅包括统计独立一种情况，如果两个变量间没有线性关系，二者之间的协方差为0，其线性无关但不一定是相对独立。
+> Covariance is used to measure the joint variation of two variables. Variance is a special case of covariance, that is, the covariance of a variable with itself. The covariance represents the error of the population of two variables, which is different from the variance of the error of only one variable. If the variation trend of the two variables is consistent, one is larger than its expected value, and the other is also larger than its expected value. The covariance between the two variables is positive. If the two variables' variation trend is the opposite, one is larger than its expected value, while the other is smaller than its expected value. The covariance between the two variables is negative. As all the values of the variable approach their expected values, the covariance approaches 0. When the two variables are statistically independent, the covariance is 0. But if the covariance is 0, it is not just a case of statistical independence; if there is no linear relationship between two variables, the covariance between them is 0. It is linearly independent but not necessarily relatively independent.
 
-* 训练（数据）集，测试（数据）集和验证（数据）集
+* Training (data)set, testing(data)set, and validation(data)set
 
-通常在训练模型前将数据集划分为训练数据集，测试数据集，也经常增加有验证数据集。训练数据集用于模型的训练，测试数据集依据衡量标准用来评估模型性能，测试数据集不能包含训练数据集中的数据，否则很难评估算法是否真的从训练数据集中学到了泛化能力，还是只是简单的记住了训练的样本，一个能够很好泛化的模型可以有效的对新数据进行预测。如果只是记住了训练数据集中解释变量和响应变量之间的关系，则称为过拟合。对于过拟合通常用正则化的方法加以处理。验证数据集常用来微调超参数的变量，超参数通常由人为调整配置，控制算法如何从训练数据中学习。各自部分划分没有固定的比例，通常训练集占50%$ \sim $75%，测试集占10%$ \sim $25%，余下的为验证集。
+Dataset is usually divided into a training dataset and a test dataset before the training model, and the validation dataset is often added. The training dataset is used to train the model, and the test dataset is used to evaluate the model performance according to the measurement criteria. The test dataset cannot contain the data in the training dataset; otherwise, it is difficult to assess whether the algorithm has really learned the generalization ability from the training dataset, or whether it simply remembers the training samples. A well-generalized model can effectively predict new data. If the model simply remembers the relationship between the explanatory variables and the response variables in the training dataset, it is called overfitting. Overfitting is usually treated by regularization. The validation dataset is often used to fine-tune the hyperparameters variables, which are usually configured manually, to control how the algorithm learns from the training data. There is no fixed proportion for each part division; usually, the training dataset accounts for 50%$ \sim $75%, the test dataset accounts for  10%$ \sim $25%, and the rest is the verification dataset.
 
-决定系数的计算结果为0.475165，其分数并没有过0.5，所训练的简单线性回归模型并不能根据解释变量很好的预测响应变量。事实上，在现实的世界中，很少用到简单的线性回归模型，数据的复杂性使得我们需要借助更有利的算法来解决实际问题。但是简单线性回归的逐步计算方式的阐述，可以让我们对回归模型有个比较清晰的理解。
+The determination coefficient was calculated as 0.475165, and the score did not exceed 0.5. The simple linear regression model trained could not well predict the response variable based on the explanatory variable. Simple linear regression models are rarely used in the real world, and the complexity of the data makes us need to resort to more advantageous algorithms to solve practical problems. But the elaboration of simple linear regression step by step calculation method can give us a clearer understanding of the regression model. 
 
 
 ```python
@@ -134,23 +134,23 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
 ax1=pubicHealth_Statistic.plot.scatter(x='Per Capita Income',y='Childhood Blood Lead Level Screening',c='DarkBlue',figsize=(8,8),label='ground truth')
-data_IncomeLead=pubicHealth_Statistic[['Per Capita Income','Childhood Blood Lead Level Screening']].dropna() #Sklearn求解模型需要移除数据集中的空值
-X=data_IncomeLead['Per Capita Income'].to_numpy().reshape(-1,1) #将特征值数据格转换为numpy的特征向量矩阵
-y=data_IncomeLead['Childhood Blood Lead Level Screening'].to_numpy() #将目标值数据格式转换为numpy格式的向量
+data_IncomeLead=pubicHealth_Statistic[['Per Capita Income','Childhood Blood Lead Level Screening']].dropna() #Sklearn solves models by removing null values from the dataset.
+X=data_IncomeLead['Per Capita Income'].to_numpy().reshape(-1,1) #Convert the eigenvalue to the eigenvector matrix of Numpy
+y=data_IncomeLead['Childhood Blood Lead Level Screening'].to_numpy() #Convert the target value to a vector in Numpy format
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 
 from sklearn.linear_model import LinearRegression
-#构建与拟合模型
+#Construct and fit the model
 LR=LinearRegression().fit(X_train,y_train) #
-#模型参数
+#Model parameters
 print("_"*50)
 print("Sklearn slop:%.6f,intercept:%.6f"%(LR.coef_, LR.intercept_))
 ax1.plot(X_train,LR.predict(X_train),'o-',label='linear regression',color='r',markersize=4)
 ax1.set(xlabel='Per Capita Income',ylabel='Childhood Blood Lead Level Screening')
 
-# 逐步计算回归系数
-income_variance=np.cov(X_train.T) #用nu.cov()求方程及协方差，注意返回值，如果是对两个变量求协方差，返回值为各自变量的方差及两个变量的协方差的矩阵
+# The regression coefficient is calculated step by step.
+income_variance=np.cov(X_train.T) #Use np.cov() to find the equation and the covariance. Notice the return value. If you find the covariance of two variables, the return value is the variance of each variable and the two variables' covariance matrix.
 income_lead_covariance=np.cov(X_train.T,y_train)
 print("income_variance=%.6f,income_lead_covariance=%.6f"%(income_variance,income_lead_covariance[0,1]))
 beta=income_lead_covariance[0,1]/income_variance
@@ -161,8 +161,8 @@ ax1.plot(X.T.mean(),y.mean(),'x',label='X|y mean',color='green',markersize=20)
 ax1.legend(loc='upper right', frameon=False)
 plt.show()
 
-#简单线性回归方程-回归显著性检验（回归系数检验）
-print("决定系数，coefficient of determination，r_squared=%.6f"%LR.score(X_test,y_test)) 
+#Simple linear regression equation - Regression Significance Test(regression coefficient test)
+print("coefficient of determination，r_squared=%.6f"%LR.score(X_test,y_test)) 
 ```
 
     __________________________________________________
@@ -175,10 +175,10 @@ print("决定系数，coefficient of determination，r_squared=%.6f"%LR.score(X_
 <a href=""><img src="./imgs/8_1.png" height="auto" width="auto" title="caDesign"></a>
 
 
-    决定系数，coefficient of determination，r_squared=0.475165
+    coefficient of determination，r_squared=0.475165
     
 
-### 1.2 公共健康数据的K-近邻模型（k-nearest neighbors algorithm,k-NN）
+### 1.2 K-nearest neighbor for public health data（k-nearest neighbors algorithm,k-NN）
 #### 1.2.1 k-NN
 k-NN是一种用于回归任务和分类任务的简单模型。在2、3维空间中我们可以将解释变量与响应变量映射到可以观察的空间中，这个能够定义数据集中所有成员之间距离的特征空间就是度量空间，但是如果解释变量数量比较多，就很难映射变量到可以观察的2，3维空间中，而是更高的空间维度。所有变量的成员都可以在这个度量空间中表示，k-NN的原理就是找到邻近的样本，在分类任务中是看这些样本所对应的占据多数的响应变量的类别；而回归任务中，则是计算邻近样本响应变量的均值。在k-NN中有个需要人为控制的参数k，即超参k是用于指定近邻的个数，不同的k值所训练出模型的决定系数不同，在下述代码中定义了一个k值的区间，通过循环k值，计算比较决定系数找到决定系数最大时的k值。计算结果为当k=5时，决定系数r_squared=0.675250，用k-NN算法所求得的回归模型较之简单线性回归模型的预测能力有很大改善，表明'Childhood Blood Lead Level Screening'儿童血铅水平检查变量的方差很大比例上可以被模型解释。
 
