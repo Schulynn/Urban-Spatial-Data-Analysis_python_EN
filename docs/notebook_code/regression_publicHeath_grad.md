@@ -998,7 +998,7 @@ w_next=train(X,y,a,w_,accuracy)
 
 * Gradient descent of a multivariable function
 
-多变量函数的梯度下降与单变量函数的梯度下降类似，只是在求梯度时是分别对各个变量求梯度，两者之间不互相干扰。计算结果如下。
+The gradient descent of a multivariable function is similar to that of a univariable function. The gradient is calculated for each variable separately, and there is no interference between the two. The results are as follows.
 
 
 ```python
@@ -1006,7 +1006,7 @@ import sympy
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
-# 定义单变量的函数，并绘制曲线
+# Define a univariable function, and draw a curve
 x1,x2=sympy.symbols(['x1','x2'])
 J=x1**2+x2**2
 J_=sympy.lambdify([x1,x2],J,"numpy")
@@ -1023,22 +1023,22 @@ axs[1]=fig.add_subplot(1,2,2, projection='3d')
 surf=axs[1].plot_surface(x1_mesh,x2_mesh ,y_mesh, cmap=cm.coolwarm,linewidth=0, antialiased=False,alpha=0.5,)
 #fig.colorbar(surf, shrink=0.5, aspect=5)
 
-#函数x1,x2微分
+#Defferentiate the function x1,x2
 dx1=sympy.diff(J,x1)
 dx2=sympy.diff(J,x2)
 dx1_=sympy.lambdify(x1,dx1,"math")
 dx2_=sympy.lambdify(x2,dx2,"math")
 
-#初始化
-x1_0=4 #初始化x1起点
-x2_0=4 ##初始化x2起点
-iteration=15 #初始化迭代次数
-a=0.1 #配置学习率
+#Initialize
+x1_0=4 #Initialize the x1 starting point
+x2_0=4 #Initialize the x2 starting point
+iteration=15 #Initialize the number of iteration
+a=0.1 #Configure the learning rate
 
 axs[0].scatter(x1_0,x2_0,J_(x1_0,x2_0),label='starting point',c='black',s=80)
 axs[1].scatter(x1_0,x2_0,J_(x1_0,x2_0),label='starting point',c='black',s=80)
 
-#根据梯度下降公式迭代计算
+#Iterate calculation according to the gradient descent
 for i in range(iteration):
     if i==0:
         x1_next=x1_0-a*dx1_(x1_0)
@@ -1048,7 +1048,7 @@ for i in range(iteration):
     x2_next=x2_next-a*dx2_(x2_next)    
     axs[0].scatter(x1_next,x2_next,J_(x1_next,x2_next),label='epoch=%d'%i,s=80)
     
-#调整学习率，比较梯度下降速度
+#Adjust the learning rate and compare the gradient descent rate
 a_=0.2
 for i in range(iteration):
     if i==0:
@@ -1065,7 +1065,7 @@ axs[1].set(xlabel='x',ylabel='y')
 axs[0].legend(loc='lower right', frameon=False)  
 axs[1].legend(loc='lower right', frameon=False)  
 
-axs[0].view_init(60,200) #可以旋转图形的角度，方便观察
+axs[0].view_init(60,200) #The angle of the graph can be rotated for easy observation.
 axs[1].view_init(60,200)
 plt.show()  
 ```
@@ -1074,13 +1074,14 @@ plt.show()
 <a href=""><img src="./imgs/8_10.png" height="auto" width="auto" title="caDesign"></a>
 
 
-用梯度下降方法求解二元函数模型，其过程基本同上述求解一元二次函数模型，注意在下述求解过程中，学习率的配置对计算结果有较大影响，可以尝试不同的学习率观察所求回归系数的变化。其计算结果在$\alpha =0.01$的条件下，$w=3.96$，$v=4.04$，与假设的值3,5还是有段距离，也可以打印图形，观察真实平面与训练所得模型的平面之间的差距，可以正则化，即增加惩罚项L2或L1尝试改进，不过这已经能够对梯度下降算法有个比较清晰的理解，这是后续应用[Sklear](https://scikit-learn.org/stable/)机器学习库和[Pytorch](https://pytorch.org/)深度学习库非常重要的基础。
+Solving the binary function model with the gradient descent method is the same as the above on the unary quadratic function model. Note that in the following solution process, the learning rate configuration has a great influence on the calculation results, so we can try different learning rates to observe the change of the regression coefficient. The calculation results under the condition of $\alpha =0.01$ are $w=3.96$，$v=4.04$; there is still a distance away from the hypothesis of 3, 5. We can also print graphs to observe the difference between the real plane and the trained model's plane, and normalize it by adding penalty L2 or L1 to try to improve it, but this already gives you a clear understanding of the gradient descent algorithm, which is a very important basis for the future application of the [Sklear](https://scikit-learn.org/stable/) machine learning library and the [Pytorch](https://pytorch.org/) deep learning library.
 
-同时，也应用了Sklearn库提供的SGDRegressor（ Stochastic Gradient Descent）随机梯度下降方法训练该数据，其$w=2.9999586$，$v=4.99993523$，即约为3和5,与原假设的系数值一样。
+
+At the same time, the SGDRegressor( Stochastic Gradient Descent) provided by the Sklearn library is also used to train the data; the results are $w=2.9999586$，$v=4.99993523$, about 3 and 5, which are the same as the coefficient values of the original hypothesis.
 
 
 ```python
-# 定义数据集，服从函数y= 3*x**2，方便比较计算结果
+# Define the dataset and follow the function y= 3*x**2 to compare the calculation results.
 import sympy
 from sympy import pprint
 import numpy as np
@@ -1093,41 +1094,41 @@ X2_val=np.arange(-5,5,0.1)
 y_val=y_(X1_val,X2_val)
 n_size=y_val.shape[0]
 
-#初始化
-a=0.01 #配置学习率
-accuracy=1e-10 #给出精度
-w_=5 #随机初始化系数，对应x1系数
-v_=5 #随机初始化系数，对应x2系数
+#Initialize
+a=0.01 #Configure the learning rate
+accuracy=1e-10 #Given the precision
+w_=5 #The random initialization coefficient corresponds to the x1 coefficient.
+v_=5 #The random initialization coefficient corresponds to the x2 coefficient.
 
-#定义模型
+#Define the model
 def model_quadraticLinear(w,v,x1,x2):
     '''定义二元一次方程，不含截距b'''    
     return w*x1+v*x2
 
-#定义损失函数
+#Define the loss function
 def Loss_MSE(model,X1,X2,y):
     '''用均方误差（MSE）作为损失函数'''
     model_=sympy.lambdify([x1,x2],model,"numpy")
     loss=(model_(x1=X1,x2=X2)-y)**2
     return loss.sum()/n_size/2
 
-#定义梯度下降函数，是对损失函数求梯度
+#To define the gradient descent function is to find the gradient of the loss function.
 def gradientDescent(loss,a,w,v):
     '''定义梯度下降函数，即对模型变量微分'''
     return a*sympy.diff(loss,w),a*sympy.diff(loss,v)
 
-#训练模型
+#Training model
 def train(X1_val,X2_val,y_val,a,w_,v_,accuracy):
-    '''根据精度值，训练模型'''
+    '''According to the precision value, training model''''
     w,v=sympy.symbols(['w','v'])
     model=model_quadraticLinear(w,v,x1,x2)
-    print("定义函数：")
+    print("Define a function:")
     pprint(model)
     loss=Loss_MSE(model,X1_val,X2_val,y_val)
-    print("定义损失函数：")
+    print("Define the loss function:")
     pprint(loss)    
     grad_w,grad_v=gradientDescent(loss,a,w,v)
-    print("定义梯度下降：")
+    print("Define the gradient descent:")
     pprint(grad_w)
     pprint(grad_v)
     print("_"*50)    
@@ -1140,7 +1141,7 @@ def train(X1_val,X2_val,y_val,a,w_,v_,accuracy):
     L=loss_(w=w_next,v=v_next)    
     
     i=0
-    print("迭代梯度下降，直至由损失函数计算的结果小于预设的值，w,v即为权重值（回归方程的系数）")
+    print("Iterate gradient descent until the result calculated by the loss function is less than the preset value, where w,v is the weight value(the coefficient of the regression equation")
     while not L<accuracy:        
         w_next=w_next-gradw_(w=w_next,v=v_next)
         v_next=v_next-gradv_(v=v_next,w=w_next)
@@ -1165,37 +1166,37 @@ surf=ax.plot_surface(x1_mesh,x2_mesh ,y_mesh, cmap=cm.coolwarm,linewidth=0, anti
 surf=ax.plot_surface(x1_mesh,x2_mesh ,y_pre_mesh, cmap=cm.ocean,linewidth=0, antialiased=False,alpha=0.2,)
 #fig.colorbar(surf, shrink=0.5, aspect=5)
 
-#用Sklearn库提供的SGDRegressor（ Stochastic Gradient Descent）随机梯度下降方法训练
+#Training with SGDRegressor(Stochastic Gradient Descent) provided by the Sklearn library
 from sklearn.linear_model import SGDRegressor
 from sklearn.model_selection import train_test_split
 
 X_=np.stack((x1_mesh.flatten(),x2_mesh.flatten())).T
 y_=y_mesh.flatten()
 X_train, X_test, y_train, y_test = train_test_split(X_, y_, test_size=0.33, random_state=42)
-SDGreg=SGDRegressor(loss='squared_loss') #配置损失函数，其正则化，即惩罚项默认为L2
+SDGreg=SGDRegressor(loss='squared_loss') #Configure the loss function, which is regularized, that is, the penalty item defaults to L2.
 SDGreg.fit(X_train,y_train)
 print("_"*50)
 print("Sklearn SGDRegressor test set r-squared score%s"%SDGreg.score(X_test,y_test))
 print("Sklearn SGDRegressor coef_:",SDGreg.coef_)
 
 ax.set(xlabel='x1',ylabel='x2',zlabel='z')
-ax.view_init(13,200) #可以旋转图形的角度，方便观察
+ax.view_init(13,200) #The angle of the graph can be rotated for easy observation.
 plt.show() 
 ```
 
-    定义函数：
+    Define a function:
     v⋅x₂ + w⋅x₁
-    定义损失函数：
+    Define the loss function:
                                              2                                    
     137.360000000001⋅(-0.125⋅v - 0.125⋅w + 1)  + 129.359999999998⋅(0.125⋅v + 0.125
     
            2
     ⋅w - 1) 
-    定义梯度下降：
+    Define the gradient descent:
     0.0833499999999994⋅v + 0.0833499999999994⋅w - 0.666799999999996
     0.0833499999999994⋅v + 0.0833499999999994⋅w - 0.666799999999996
     __________________________________________________
-    迭代梯度下降，直至由损失函数计算的结果小于预设的值，w,v即为权重值（回归方程的系数）
+    Iterate gradient descent until the result calculated by the loss function is less than the preset value, where w,v is the weight value(the coefficient of the regression equation
     iteration:0,Loss=8.172455,w=4.694389,v=4.705967
     iteration:10,Loss=0.251475,w=4.091926,v=4.153720
     iteration:20,Loss=0.007738,w=3.986244,v=4.056846
@@ -1213,16 +1214,16 @@ plt.show()
 <a href=""><img src="./imgs/8_11.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.4.3 用Sklearn库提供的SGDRegressor（ Stochastic Gradient Descent）随机梯度下降方法训练公共健康数据
-使用SGDRegressor随机梯度下降训练多元回归模型，其参数设置中损失函数配置为'squared_loss'，惩罚项(penalty)默认为L2（具体信息可以从Sklearn官网获取）。计算结果其决定系数为0.76，较多项式回归偏小。计算获取6个系数，对应6个特征。
+#### 1.4.3 Training public health data with SGDRegressor( Stochastic Gradient Descent) provided by the Sklearn library
+Use SGDRegressor to train the multiple regression model. In the parameter setting, the loss function is configured as 'squared_loss', and the penalty item is L2(specific information can be obtained from the official website of Sklearn). The calculation result is that the determination coefficient is 0.76, which is smaller than the polynomial regression. Six coefficients were obtained, corresponding to six features.
 
 
 ```python
 from sklearn.linear_model import SGDRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import make_pipeline
-X_=data_Income[['Per Capita Income','Below Poverty Level','Crowded Housing','Dependency','No High School Diploma','Unemployment',]].to_numpy() #将特征值数据格转换为numpy的特征向量矩阵
-y_=data_Income['Childhood Blood Lead Level Screening'].to_numpy() #将目标值数据格式转换为numpy格式的向量
+X_=data_Income[['Per Capita Income','Below Poverty Level','Crowded Housing','Dependency','No High School Diploma','Unemployment',]].to_numpy() #Convert the feature values to the eigenvector matrix of Numpy
+y_=data_Income['Childhood Blood Lead Level Screening'].to_numpy() #Convert the target value to a vector in Numpy format
 
 X_train, X_test, y_train, y_test = train_test_split(X_, y_, test_size=0.33, random_state=42)
 SDGreg=make_pipeline(StandardScaler(),
@@ -1238,33 +1239,33 @@ print("Sklearn SGDRegressor coef_:",SDGreg[1].coef_)
     Sklearn SGDRegressor coef_: [ 3.72006337 35.76012163 27.6430782   5.88146901 42.79059143 15.77942562]
     
 
-> 关于损失函数，代价函数/成本函数
+> In terms of the loss function, and the cost function
 
- 损失函数（Loss Function），针对单个样本，衡量单个样本的预测值$\widehat{y} ^{(i)} $和观测值$y^{(i)} $之间的差距；
+ Loss Function, For a single sample, measure the difference between the predicted value $\widehat{y} ^{(i)} $ and the observed value $y^{(i)} $;
  
- 代价函数/成本函数（Cost Function），针对多个样本，衡量多个样本的预测值$\sum_{i=1}^n   \widehat{y} ^{(i)}  $和观测值$\sum_{i=1}^n y^{(i)}  $之间的差距；
+ Cost Function, For multiple samples, measure the difference between the predicted value $\sum_{i=1}^n \widehat{y} ^{(i)} $ of multiple samples and the observed value $\sum_{i=1}^n y^{(i)} $.
  
-实际上，对于这三者的划分在实际相关文献使用上并没有体现出来，往往混淆，因此也不做特殊界定。
+The two's division is not reflected in the actual use of relevant literature, often confused, so there is no special definition.
 
-### 1.5 要点
-#### 1.5.1 数据处理技术
+### 1.5 key point
+#### 1.5.1 data processing technique
 
-* Sklearn库数据集的切分，标准化，正则化（Ridge,Lasso），make pipeline(构建管道)
+* Use the Sklearn library to split dataset, standardize, regularize(Ridge, Lasso), make a pipeline.
 
-* Sklearn的模型，简单线性回归，k-NN，多项式回归，随机梯度下降算法
+* Sklearn model, simple linear regression, k-NN, polynomial regression, stochastic gradient descent algorithm
 
-* Sklearn模型精度评价，决定系数，平均绝对误差，均方误差
+* Sklearn model accuracy evaluation, determination coefficient, mean absolute error, mean square error
 
-* PySAL库pointpats空间点模式分析方法
+* PySAL library 'pointpats' Point Pattern analysis method
 
-#### 1.5.2 新建立的函数
-* function - 返回指定邻近数目的最近点坐标，`k_neighbors_entire(xy,k=3)`
+#### 1.5.2 The newly created function tool
+* function - Returns the nearest point coordinates for a specified number of neighbors,`k_neighbors_entire(xy,k=3)`
 
-* function - 多项式回归degree次数选择，及正则化, `PolynomialFeatures_regularization(X,y,regularization='linear')`
+* function - Polynomial regression degree selection and regularization, `PolynomialFeatures_regularization(X,y,regularization='linear')`
 
-* 梯度下降法 - 定义模型，定义损失函数，定义梯度下降函数，定义训练模型函数
+* Gradient descent method - define the model, define the loss function, define the gradient descent function, define the training model function
 
-#### 1.5.3 所调用的库
+#### 1.5.3 The python libraries that are being imported
 
 
 ```python
@@ -1295,5 +1296,5 @@ from sympy import pprint
 from warnings import filterwarnings
 ```
 
-#### 1.5.4 参考文献
-1. Cavin Hackeling. Mastering Machine Learning with scikit-learn[M].Packt Publishing Ltd.July 2017.Second published. 中文版为：Cavin Hackeling.张浩然译.scikit-learning 机器学习[M].人民邮电出版社.2019.2.
+#### 1.5.4 Reference
+1. Cavin Hackeling. Mastering Machine Learning with scikit-learn[M].Packt Publishing Ltd.July 2017.Second published. 

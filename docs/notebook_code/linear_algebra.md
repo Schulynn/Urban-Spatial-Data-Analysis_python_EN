@@ -1,6 +1,6 @@
-> Created on Sat Aug  1 22/20/30 2020 @author: Richie Bao-caDesign设计(cadesign.cn)
+> Created on Sat Aug  1 22/20/30 2020 @author: Richie Bao-caDesign (cadesign.cn)
 
-## 1. 线性代数基础的代码表述
+## 1. A code representation of the linear algebra basis
 在城市空间数据分析方法解析中，如果想对某一解决问题的方法有比较清晰的理解，很多数学知识则不能规避，线性代数则是其中之一，在回归部分方程式的矩阵求解，特征向量与降维（例如主成成分分析PCA），空间变换等内容都需要基础的线性代数知识，因此主要以'漫画线性代数'结构为主要思路，结合'Gilbert Strang.Introduction to linear algbra'，及相关参考文献，以python为基础，结合python图表打印可视化，将主要的知识点串联起来，作为用到线性代数知识相关章节的基础知识储备。主要使用的库为[SymPy(Matrices-linear algebra)](https://docs.sympy.org/latest/modules/matrices/matrices.html)。
 
 线性代数（linear algebra）是关于向量空间和线性映射的一个数学分支，包括对线、面和子空间的研究，同时也涉及到所有的向量空间的一般性质。笼统的说，是使用向量和矩阵的数学空间表达方式，将$m$维空间（世界）与$n$维空间（世界）联系起来的数学分支。在设计规划学科，实际上我们所使用的rhinoceros（grasshopper）等三维软件平台对大量几何对象空间变换的操作就是对线性代数的应用。
