@@ -1,7 +1,7 @@
-> Created on Tue Nov 26 20/21/48 2019  @author: Richie Bao-caDesign设计(cadesign.cn) __+updated on Fri Jul 31 10/59/55 2020 by Richie Bao
+> Created on Tue Nov 26 20/21/48 2019  @author: Richie Bao-caDesign (cadesign.cn) __+updated on Fri Jul 31 10/59/55 2020 by Richie Bao
 
-## 1. Landsat遥感影像处理，数字高程，主成成分分析
-### 1.1 Landsat地理信息读取，裁切，融合，打印显示
+## 1. Landsat remote sensing image processing, digital elevation, principal component analysis
+### 1.1 Landsat geographic information reading, cropping, merging, printing display
 从1970s年代，地球资源卫星（the Landsat series of satellites）几乎不间断的提供全球范围地球表面中分辨率多光谱遥感影像数据。不间断的数据记录，增强了应用数据分析的潜力，可以帮助各领域的研究者在人口不断增长，城市不断发展下，关注粮食、水、森林等自然资源，应用其无以伦比的影像质量、覆盖率、细节价值分析城市的发展与自然平衡的问题(美国地质调查局[USGS-earthexplorer,United States Geological Survey](https://earthexplorer.usgs.gov/))。
 
 > 注，下述mermaid图表代码，在JupyterLab下无法显示，但是在通常的markdown下显示。

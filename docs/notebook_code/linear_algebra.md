@@ -1,46 +1,48 @@
 > Created on Sat Aug  1 22/20/30 2020 @author: Richie Bao-caDesign (cadesign.cn)
 
 ## 1. A code representation of the linear algebra basis
-在城市空间数据分析方法解析中，如果想对某一解决问题的方法有比较清晰的理解，很多数学知识则不能规避，线性代数则是其中之一，在回归部分方程式的矩阵求解，特征向量与降维（例如主成成分分析PCA），空间变换等内容都需要基础的线性代数知识，因此主要以'漫画线性代数'结构为主要思路，结合'Gilbert Strang.Introduction to linear algbra'，及相关参考文献，以python为基础，结合python图表打印可视化，将主要的知识点串联起来，作为用到线性代数知识相关章节的基础知识储备。主要使用的库为[SymPy(Matrices-linear algebra)](https://docs.sympy.org/latest/modules/matrices/matrices.html)。
+In the analysis of urban spatial data analysis methods, if you want to have a clear understanding of a certain method to solve the problem, a lot of mathematical knowledge cannot be avoided, and linear algebra is one of them. Basic knowledge of linear algebra is required for the matrix solution of regression equations, eigenvectors, dimensionality reduction(such as PCA), and space transformation. Therefore, the main ideas are based on the structure of *The Manga Guide to Linear Algebra*, combined with *Introduction to linear algebra*, and related references. Based on python, combined with python chart printing visualization, the main knowledge points are connected as the basic knowledge reserve of relevant chapters using linear algebra knowledge. The library mainly used is [SymPy(Matrices-linear algebra)](https://docs.sympy.org/latest/modules/matrices/matrices.html).
 
-线性代数（linear algebra）是关于向量空间和线性映射的一个数学分支，包括对线、面和子空间的研究，同时也涉及到所有的向量空间的一般性质。笼统的说，是使用向量和矩阵的数学空间表达方式，将$m$维空间（世界）与$n$维空间（世界）联系起来的数学分支。在设计规划学科，实际上我们所使用的rhinoceros（grasshopper）等三维软件平台对大量几何对象空间变换的操作就是对线性代数的应用。
+Linear algebra is a mathematical branch of vector spaces and linear mapping, including the study of lines, planes, subspaces, and all vector spaces' general properties. Generally speaking, it is a mathematics branch that connects the $m$ dimensional space(world) with $n$ dimensional space(world) using vector and matrix mathematical space expression. In fact, in the discipline of design and planning, the spatial transformation of many geometric objects using three-dimensional software platforms such as Rhinoceros(Grasshopper) used by us is the application of linear algebra.
 
-> 该部分参考文献
-> 1. [日]高桥 信著作,Inoue Iroha,株式会社 TREND-PRO漫画制作,腾永红译.漫画线性代数[M].科学出版社.北京.2009.08；
-> 2. Gilbert Strang.Introduction to linear algbra[M].Wellesley-Cambridge Press; Fifth Edition edition (June 10, 2016)
+> Reference for this part
+> 1.  Shin Takahashi, Iroha Inoue.The Manga Guide to Linear Algebra.No Starch Press; 1st Edition (May 1, 2012);
+> 2. Gilbert Strang.Introduction to linear algebra[M].Wellesley-Cambridge Press; Fifth Edition edition (June 10, 2016)
 
-### 1.1 矩阵
-形如$\begin{bmatrix} a_{11}  & a_{12} &\ldots&a_{1n}  \\ a_{21}  & a_{22} &\ldots&a_{2n}\\ \vdots & \vdots & \ddots & \vdots \\ a_{m1}  & a_{m2} &\ldots&a_{mn}  \end{bmatrix} $的数据集合即为$m$行$n$列，$m \times n$矩阵，这同于numpy的数组形式，也可以用pandas的DataFrame格式表达，在统计学上就可以通过矩阵方式对样本特征表述，尤其具有多个特征的样本。而$m$可以称为行标，而$n$则称为列标，组合起来就代表了矩阵中的每个元素。对于形如$\begin{bmatrix} a_{11}  & a_{12} &\ldots&a_{1n}  \\ a_{21}  & a_{22} &\ldots&a_{2n}\\ \vdots & \vdots & \ddots & \vdots \\ a_{n1}  & a_{n2} &\ldots&a_{nn}  \end{bmatrix} $，即$m=n$的矩阵为$n$阶方阵，对角线上的元素称为对角元素，在相关性分析中，所计算两两相关性的数组结果，就是方阵，而其对角元素皆为1，为其自身相关性结算结果。
+### 1.1 Matrix
+Like $\begin{bmatrix} a_{11} & a_{12} &\ldots&a_{1n} \\ a_{21} & a_{22} &\ldots&a_{2n}\\ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2} &\ldots&a_{mn} \end{bmatrix} $ of dataset, which is $m$ rows, $n$ columns, $m \times n$ matrix, which is similar to Numpy array, can also be expressed in the DataFrame format. In statistics, the sample feature, especially those with multiple features, can be expressed by matrix. $m$ can be called a row tag, and $n$ can be called a column tag, and together they represent each element in the matrix. For like $\begin{bmatrix} a_{11} & a_{12} &\ldots&a_{1n} \\ a_{21} & a_{22} &\ldots&a_{2n}\\ \vdots & \vdots & \ddots & \vdots \\ a_{n1} & a_{n2} &\ldots&a_{nn} \end{bmatrix} $, in other words, the matrix of $m=n$ is the square matrix of $n$ order, and the elements at the diagonal position are called diagonal elements. In the correlation analysis, the array result of the calculated pairwise correlations is the square matrix, and the diagonal elements are all 1, which is the settlement result of their own correlation.
 
 
-#### 1.1.1 矩阵的运算
 
-1. 加（减）法（addition,subtraction ）
 
-$m \times  n$矩阵$A$和$B$的和（差）：$A \pm B$为一个$m \times n$矩阵，其中每个元素是$A$和$B$相应元素的和（差），$(A \pm B)_{i,j} = A_{i,j} \pm  B_{i,j} $，例如$\begin{bmatrix}1 & 3&1 \\1 & 0&0 \end{bmatrix} + \begin{bmatrix}0 & 0&5 \\7 & 5&0 \end{bmatrix} = \begin{bmatrix}1+0& 3+0&1+5 \\1+7 & 0+5&0+0 \end{bmatrix} = \begin{bmatrix}1 & 3 &6\\8 & 5&0 \end{bmatrix}  $
+#### 1.1.1 Matrix operation
 
-2. 数乘（倍数,multiple）
+1. addition,subtraction 
 
-标量$c$与与矩阵$A$的数乘，cA的每个元素是$A$的相应元素与$c$的乘积，$(cA)_{i,j} =c  \cdot A_{i,j}  $，例如$2 \cdot \begin{bmatrix}1 & 3&1 \\1 & 0&0 \end{bmatrix}=\begin{bmatrix}2 \cdot1 & 2 \cdot3&2 \cdot1 \\2 \cdot1 & 2 \cdot0&2 \cdot0 \end{bmatrix}=\begin{bmatrix}2 & 6&2 \\2 & 0&0 \end{bmatrix}$
+The addition(subtraction) $A \pm B$ of $A$ and $B$ in the form of  matrix $m \times n$ is a $m \times n$ matrix, in which each elements is the addition(subtraction) of the corresponding elements in $A$ and $B$, $(A \pm B)_{i,j} = A_{i,j} \pm B_{i,j} $, for example  $\begin{bmatrix}1 & 3&1 \\1 & 0&0 \end{bmatrix} + \begin{bmatrix}0 & 0&5 \\7 & 5&0 \end{bmatrix} = \begin{bmatrix}1+0& 3+0&1+5 \\1+7 & 0+5&0+0 \end{bmatrix} = \begin{bmatrix}1 & 3 &6\\8 & 5&0 \end{bmatrix}  $
 
-3. 乘法（Multiplication）
+2. Scalar multiplication of matrix
 
-两个矩阵的乘法仅当第1个矩阵$A$的列数（column）和另一个矩阵$B$的行数（row）相等时才能定义。如果$A$是$m \times n$矩阵，$B$是$n \times p$，它们的乘积$AB$，是一个$m \times p$矩阵，$[AB]_{i,j}= A_{i,1} B_{1,j}+   A_{i,2} B_{2,j}+ \ldots + A_{i,n} B_{n,j}= \sum_{r=1}^n  A_{i,r}  B_{r,j}  $，例如$\begin{bmatrix}1 & 0&2 \\-1 & 3&1 \end{bmatrix} \times  \begin{bmatrix}3 & 1 \\2 & 1 \\1&0\end{bmatrix}= \begin{bmatrix}(1 \times 3 & 0 \times 2&2  \times 1)&(1 \times 1 & 0 \times 1&2  \times 0)\\(-1 \times 3 & 3 \times 2&1  \times 1)&(-1 \times 1 & 3 \times 1&1 \times 0) \end{bmatrix}= \begin{bmatrix}5 & 1 \\4 & 2 \end{bmatrix} $
+The scalar $c$ is multiplied by the matrix $A$, each element of cA is the product of the corresponding element of $A$ and $c$,$(cA)_{i,j} =c  \cdot A_{i,j}  $，for example $2 \cdot \begin{bmatrix}1 & 3&1 \\1 & 0&0 \end{bmatrix}=\begin{bmatrix}2 \cdot1 & 2 \cdot3&2 \cdot1 \\2 \cdot1 & 2 \cdot0&2 \cdot0 \end{bmatrix}=\begin{bmatrix}2 & 6&2 \\2 & 0&0 \end{bmatrix}$
 
-4. 幂（exponentiation）
+3. Multiplication
 
-相等于矩阵乘法，例如$  \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix} ^{3} = \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix} \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix} \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}= \begin{bmatrix}1 \times 1+2 \times 3\ & 1 \times 2+2 \times 4 \\3 \times 1+4 \times 2 & 3  \times 2+4 \times 4\end{bmatrix} \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}  = \begin{bmatrix}7& 10\\15& 22 \end{bmatrix} \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}  = \begin{bmatrix}7 \times 1+10 \times 3 & 7 \times 2+10 \times 4 \\15 \times 1+22 \times 3 & 15 \times 2+22 \times 4 \end{bmatrix} = \begin{bmatrix}37 & 54\\81 & 118 \end{bmatrix}  $
+The multiplication of two matrices is defined only if the number of columns in the first matrix $A$ is equal to the number of rows in the other matrix $B$. If $A$ is $m \times n$ matrix, $B$ is $n \times p$, their product $AB$ is $m \times p$ matrix. $[AB]_{i,j}= A_{i,1} B_{1,j}+   A_{i,2} B_{2,j}+ \ldots + A_{i,n} B_{n,j}= \sum_{r=1}^n  A_{i,r}  B_{r,j}  $，for example $\begin{bmatrix}1 & 0&2 \\-1 & 3&1 \end{bmatrix} \times  \begin{bmatrix}3 & 1 \\2 & 1 \\1&0\end{bmatrix}= \begin{bmatrix}(1 \times 3 & 0 \times 2&2  \times 1)&(1 \times 1 & 0 \times 1&2  \times 0)\\(-1 \times 3 & 3 \times 2&1  \times 1)&(-1 \times 1 & 3 \times 1&1 \times 0) \end{bmatrix}= \begin{bmatrix}5 & 1 \\4 & 2 \end{bmatrix} $
 
-* 线性方程组
+4. exponentiation
 
-矩阵乘法的一个基本应用是在线性方程组上，线性方程组是数学方程组的一种，它符合一下的形式：$\begin{cases} a_{1,1} x_{1}+a_{1,2} x_{2}+ \ldots +a_{1,n} x_{n}= b_{1} \\ a_{2,1} x_{1}+a_{2,2} x_{2}+ \ldots +a_{2,n} x_{n}= b_{2} \\ \vdots  \\ a_{m,1} x_{1}+a_{m,2} x_{2}+ \ldots +a_{m,n} x_{n}= b_{m}  \end{cases} $其中$a_{1,1},a_{1,2}$以及$b_{1},b_{2}$等等是已知的常数，而$ x_{1},x_{2}$等等则是要求的未知数。如果用线性代数中的概念来表达，则线性方程组可写为：$Ax=b$，其中$A$是$m \times n$矩阵，$x$是含有$n$个元素列向量，$b$是含有$m$个元素列向量。
+That is the same thing as matrix multiplication, for example, $  \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix} ^{3} = \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix} \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix} \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}= \begin{bmatrix}1 \times 1+2 \times 3\ & 1 \times 2+2 \times 4 \\3 \times 1+4 \times 2 & 3  \times 2+4 \times 4\end{bmatrix} \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}  = \begin{bmatrix}7& 10\\15& 22 \end{bmatrix} \begin{bmatrix}1 & 2 \\3 & 4 \end{bmatrix}  = \begin{bmatrix}7 \times 1+10 \times 3 & 7 \times 2+10 \times 4 \\15 \times 1+22 \times 3 & 15 \times 2+22 \times 4 \end{bmatrix} = \begin{bmatrix}37 & 54\\81 & 118 \end{bmatrix}  $
+
+* system of linear equations
+
+A basic application of matrix multiplication is on linear equations, which is a kind of mathematical system of equation. It conforms to the following form: $\begin{cases} a_{1,1} x_{1}+a_{1,2} x_{2}+ \ldots +a_{1,n} x_{n}= b_{1} \\ a_{2,1} x_{1}+a_{2,2} x_{2}+ \ldots +a_{2,n} x_{n}= b_{2} \\ \vdots  \\ a_{m,1} x_{1}+a_{m,2} x_{2}+ \ldots +a_{m,n} x_{n}= b_{m}  \end{cases} $ Where $a_{1,1},a_{1,2}$ and  $b_{1},b_{2}$ and so on is a known constant, while $ x_{1},x_{2}$ and so on is unknown. If expressed by the concepts in linear algebra, the system of linear equations can be written as: $Ax=b$, $A$ is a $m \times n$ matrix, $x$ is a column vector containing $n$ elements, and $b$ is a column vector containing $m$ elements.
 
 $A= \begin{bmatrix} a_{1,1}  & a_{1,2}& \ldots & a_{1,n}\\a_{2,1}  & a_{2,2}& \ldots & a_{2,n} \\ \vdots & \vdots & \ddots & \vdots \\a_{m,1}  & a_{m,2}& \ldots & a_{m,n}\end{bmatrix} $，$x= \begin{bmatrix} x_{1} \\x_{2}\\ \vdots \\x_{n}\end{bmatrix} $，$b= \begin{bmatrix} b_{1}   \\b_{2} \\ \vdots\\ b_{m}  \end{bmatrix} $
 
-这是线性方程组的另一种记录方法，已知矩阵$A$和向量$b$的情况下求得未知向量$x$s是线性代数的基本问题。
+It is another way of recording linear equations. Finding the unknown vector $x$ given the matrix $A$, and the vector $b$ is a fundamental problem in linear algebra.
 
 
-在多元回归部分，阐述过使用矩阵的方式求解回归模型，对于样本包含多个特征（解释变量）即$n$列，多个样本（样本容量）即$m$行，常规表达为$y=  \alpha  + \beta _{1} x_{1} + \beta _{2} x_{2}+  \ldots + \beta _{n} x_{n} $，其中$x_{1} ,x_{2}, \ldots ,x_{n}$为$n$个特征，每个特征下实际上包含有多个样本实例（$m$行），即$\begin{cases}  Y_{1}= \alpha  + \beta _{1} x_{11} + \beta _{2} x_{12}+  \ldots + \beta _{n} x_{1n} \\Y_{2}=\alpha  + \beta _{1} x_{21} + \beta _{2} x_{22}+  \ldots + \beta _{n} x_{2n}\\ \vdots \\Y_{n}=\alpha  + \beta _{1} x_{m1} + \beta _{2} x_{m2}+  \ldots + \beta _{n} x_{mn} \end{cases} $，表达为矩阵形式为$\begin{bmatrix} Y_{1}   \\Y_{2}\\ \vdots\\Y_{n}  \end{bmatrix} = \begin{bmatrix} \alpha  + \beta _{1} x_{11} + \beta _{2} x_{12}+  \ldots + \beta _{n} x_{1n} \\\alpha  + \beta _{1} x_{21} + \beta _{2} x_{22}+  \ldots + \beta _{n} x_{2n}\\ \vdots \\\alpha  + \beta _{1} x_{m1} + \beta _{2} x_{m2}+  \ldots + \beta _{n} x_{mn}\end{bmatrix} $，可以进一步简化为，$\begin{bmatrix} Y_{1}   \\Y_{2}\\ \vdots\\Y_{n}  \end{bmatrix} =\begin{bmatrix} 1  + x_{11} +x_{12}+  \ldots + x_{1n} \\1  + x_{21} + x_{22}+  \ldots +  x_{2n}\\ \vdots \\1  +  x_{m1} + x_{m2}+  \ldots + x_{mn}\end{bmatrix}  \times  \begin{bmatrix} \alpha  \\  \beta_{1} \\\beta_{2}\\ \vdots \\\beta_{n}  \end{bmatrix} $，实际上就是应用的矩阵的乘法。
+In multiple regression, the method of using a matrix to solve the regression model is described. For samples containing multiple features (explanatory variables), i.e., $n$column, multiple samples(sample size),i.e. row, conventionally expressed as  $y=  \alpha  + \beta _{1} x_{1} + \beta _{2} x_{2}+  \ldots + \beta _{n} x_{n} $，Where $x_{1} ,x_{2}, \ldots ,x_{n}$ is $n$ features, each feature actually contains multiple sample instances ($m$ rows), i.e., $\begin{cases}  Y_{1}= \alpha  + \beta _{1} x_{11} + \beta _{2} x_{12}+  \ldots + \beta _{n} x_{1n} \\Y_{2}=\alpha  + \beta _{1} x_{21} + \beta _{2} x_{22}+  \ldots + \beta _{n} x_{2n}\\ \vdots \\Y_{n}=\alpha  + \beta _{1} x_{m1} + \beta _{2} x_{m2}+  \ldots + \beta _{n} x_{mn} \end{cases} $，Expressed as matrix form is $\begin{bmatrix} Y_{1}   \\Y_{2}\\ \vdots\\Y_{n}  \end{bmatrix} = \begin{bmatrix} \alpha  + \beta _{1} x_{11} + \beta _{2} x_{12}+  \ldots + \beta _{n} x_{1n} \\\alpha  + \beta _{1} x_{21} + \beta _{2} x_{22}+  \ldots + \beta _{n} x_{2n}\\ \vdots \\\alpha  + \beta _{1} x_{m1} + \beta _{2} x_{m2}+  \ldots + \beta _{n} x_{mn}\end{bmatrix} $，It can be simplified even further, $\begin{bmatrix} Y_{1}   \\Y_{2}\\ \vdots\\Y_{n}  \end{bmatrix} =\begin{bmatrix} 1  + x_{11} +x_{12}+  \ldots + x_{1n} \\1  + x_{21} + x_{22}+  \ldots +  x_{2n}\\ \vdots \\1  +  x_{m1} + x_{m2}+  \ldots + x_{mn}\end{bmatrix}  \times  \begin{bmatrix} \alpha  \\  \beta_{1} \\\beta_{2}\\ \vdots \\\beta_{n}  \end{bmatrix} $，It is essentially the multiplication of the matrices.
 
 
 ```python
@@ -48,126 +50,127 @@ import sympy
 from sympy import Matrix,pprint
 A=Matrix([[1,3,1],[1,0,0]])
 B=Matrix([[0,0,5],[7,5,0]])
-print("矩阵加法：")
+print("Matrix addition:")
 pprint(A+B)
 print("_"*50)
 
-print("数乘：")
+print("Scalar multiplication of matrix:")
 pprint(2*A)
 print("_"*50)
 
 C=Matrix([[1,0,2],[-1,3,1]])
 D=Matrix([[3,1],[2,1],[1,0]])
-print("乘法：")
+print("Multiplication:")
 pprint(C*D)
 print("_"*50)
 
 E=Matrix([[1,2],[3,4]])
-print("幂：")
+print("Exponentiation:")
 pprint(E**3)
 print("_"*50)   
 ```
 
-    矩阵加法：
+    Matrix addition:
     ⎡1  3  6⎤
     ⎢       ⎥
     ⎣8  5  0⎦
     __________________________________________________
-    数乘：
+    Scalar multiplication of matrix:
     ⎡2  6  2⎤
     ⎢       ⎥
     ⎣2  0  0⎦
     __________________________________________________
-    乘法：
+    Multiplication:
     ⎡5  1⎤
     ⎢    ⎥
     ⎣4  2⎦
     __________________________________________________
-    幂：
+    Exponentiation:
     ⎡37  54 ⎤
     ⎢       ⎥
     ⎣81  118⎦
     __________________________________________________
     
 
-#### 1.1.2 特殊矩阵
-1. 零矩阵
+#### 1.1.2 Special matrix
+1. Zero matrix(null matrix)
 
-所有的元素均为0的矩阵，例如，$ \begin{bmatrix}0 & 0 \\0 & 0 \end{bmatrix} $
+A matrix where all the elements are zero, for example,$ \begin{bmatrix}0 & 0 \\0 & 0 \end{bmatrix} $
 
-2. 转置矩阵（transpose）
+2. Transpose matrix
 
-是指将$m \times n$矩阵$A= \begin{bmatrix} a_{1,1}  & a_{1,2}& \ldots & a_{1,n}\\a_{2,1}  & a_{2,2}& \ldots & a_{2,n} \\ \vdots & \vdots & \ddots & \vdots \\a_{m,1}  & a_{m,2}& \ldots & a_{m,n}\end{bmatrix} $，交换行列后得到的$n \times m$，$\begin{bmatrix} a_{1,1}  & a_{2,1}& \ldots &a_{m,1} \\ a_{1,2}  & a_{2,2}& \ldots &a_{m,2} \\ \vdots & \vdots & \ddots & \vdots \\ a_{1,n}  & a_{2,n}& \ldots &a_{m,n}\end{bmatrix} $，可以用$A^{T} $表示，例如$3 \times 2$的矩阵$\begin{bmatrix}1 & 2 \\3 & 4\\5&6 \end{bmatrix} $的转置矩阵为$2 \times 3$矩阵$\begin{bmatrix}1& 3&5 \\2 & 4&6 \end{bmatrix} $。
+Refers to the $m \times n$ matrix A $A= \begin{bmatrix} a_{1,1}  & a_{1,2}& \ldots & a_{1,n}\\a_{2,1}  & a_{2,2}& \ldots & a_{2,n} \\ \vdots & \vdots & \ddots & \vdots \\a_{m,1}  & a_{m,2}& \ldots & a_{m,n}\end{bmatrix} $，By swapping rows and columns $n \times m$，$\begin{bmatrix} a_{1,1}  & a_{2,1}& \ldots &a_{m,1} \\ a_{1,2}  & a_{2,2}& \ldots &a_{m,2} \\ \vdots & \vdots & \ddots & \vdots \\ a_{1,n}  & a_{2,n}& \ldots &a_{m,n}\end{bmatrix} $，You can use $A^{T} $ to express, for example, the transpose matrix of $3 \times 2$ matrix $\begin{bmatrix}1 & 2 \\3 & 4\\5&6 \end{bmatrix} $ is $2 \times 3$ matrix B $\begin{bmatrix}1& 3&5 \\2 & 4&6 \end{bmatrix} $。
 
-3. 对称矩阵（symmetric matrix）
+3. Symmetric matrix
 
-以对角元素为中心线对称的$n$阶方阵，例如$\begin{bmatrix}1 & 5&6&7 \\5 & 2&8&9\\6&8&3&10\\7&9&10&4 \end{bmatrix} $，对称矩阵与其转置矩阵完全相同。
+A symmetric square $n$ order matrix with diagonal elements as the centerline, such as $\begin{bmatrix}1 & 5&6&7 \\5 & 2&8&9\\6&8&3&10\\7&9&10&4 \end{bmatrix} $, the symmetric matrix is identical to its transpose matrix.
 
-4. (.5)，上三角矩阵和下三角矩阵（triangular matrix）
+4. Ttriangular matrix
 
-如$\begin{bmatrix}1 & 5&6&7 \\0 & 2&8&9\\0&0&3&10\\0&0&0&4 \end{bmatrix} $，对角元素左下角的所有元素均为0的$n$阶矩阵。
+For example,$\begin{bmatrix}1 & 5&6&7 \\0 & 2&8&9\\0&0&3&10\\0&0&0&4 \end{bmatrix} $，A $n$ order matrix in which all the elements in the lower-left corner of a diagonal element are 0.
 
-如$\begin{bmatrix}1 & 0&0&0 \\5 & 2&0&0\\6&8&3&0\\7&9&10&4 \end{bmatrix}$,对角元素右上角的所有元素均为0的$n$阶矩阵。
+For example,$\begin{bmatrix}1 & 0&0&0 \\5 & 2&0&0\\6&8&3&0\\7&9&10&4 \end{bmatrix}$,A $n$ order matrix in which all the elements in the upper-right corner of a diagonal element are 0.
 
-6. 对角矩阵 (diagonal matrix)
+6. Diagonal matrix
 
-如$\begin{bmatrix}1 & 0&0&0 \\0& 2&0&0\\0&0&3&0\\0&0&0&4 \end{bmatrix}$，对角元素以外的元素均为0的$n$阶矩阵，可表示为$diag(1,2,3,4)$，对角矩阵的$p$次幂，等于对角元素的$p$次幂，公式为：$\begin{bmatrix} a_{1,1}  & 0&0&0 \\0& a_{2,2}&0&0\\0&0&a_{3,3}&0\\0&0&0&a_{n,n} \end{bmatrix}^{p} =\begin{bmatrix} a_{1,1}^p  & 0&0&0 \\0& a_{2,2}^p&0&0\\0&0&a_{3,3}^p&0\\0&0&0&a_{n,n}^p \end{bmatrix}$，例如$\begin{bmatrix}2 & 0 \\0 & 3 \end{bmatrix} ^{2} = \begin{bmatrix}2^{2}  &  0  \\0&  3^{2}  \end{bmatrix} = \begin{bmatrix}4 & 0 \\0& 9 \end{bmatrix} $
+For example, $\begin{bmatrix}1 & 0&0&0 \\0& 2&0&0\\0&0&3&0\\0&0&0&4 \end{bmatrix}$，A $n$ order matrix in which all elements other than diagonal elements are 0 can be expressed as $diag(1,2,3,4)$. The $p$ power of the diagonal matrix is equal to the $p$ power of the diagonal elements, and the formula is: $\begin{bmatrix} a_{1,1}  & 0&0&0 \\0& a_{2,2}&0&0\\0&0&a_{3,3}&0\\0&0&0&a_{n,n} \end{bmatrix}^{p} =\begin{bmatrix} a_{1,1}^p  & 0&0&0 \\0& a_{2,2}^p&0&0\\0&0&a_{3,3}^p&0\\0&0&0&a_{n,n}^p \end{bmatrix}$，such as, $\begin{bmatrix}2 & 0 \\0 & 3 \end{bmatrix} ^{2} = \begin{bmatrix}2^{2}  &  0  \\0&  3^{2}  \end{bmatrix} = \begin{bmatrix}4 & 0 \\0& 9 \end{bmatrix} $
 
-7. 单位矩阵（identity matrix）
+7. Identity matrix
 
-如$\begin{bmatrix}1 & 0&0&0 \\0 & 1&0&0 \\ 0&0&1&0\\0&0&0&1   \end{bmatrix} $，对角元素均为1，对角元素以外的其它元素全部为0的$n$阶方阵，即$diag(1,1 ,\ldots ,1)$。单位矩阵与任何矩阵相乘，都对这个矩阵没有任何影响。
+For example, $\begin{bmatrix}1 & 0&0&0 \\0 & 1&0&0 \\ 0&0&1&0\\0&0&0&1   \end{bmatrix} $，A $n$ order square matrix in which the diagonal elements are all 1, and all other elements other than diagonal elements are 0 is an identity matrix, namely $diag(1,1 ,\ldots ,1)$.  The identity matrix times any matrix; it does not make any difference to the matrix.
 
-8. 逆矩阵 （inverse matrix）
+8. Inverse matrix
 
-又称反矩阵，在线性代数中，给定一个$n$阶方阵$A$，若存在$n$阶方阵B，使得$AB=BA=I_n$，其中$I_n$为$n$阶单位矩阵，则称$A$是可逆的，且$B$是A的逆矩阵，记作$A^{-1}$。只有方阵$n \times n $才可能有逆矩阵。若方阵$A$的逆矩阵存在，则称$A$为非奇异方阵或可逆矩阵。逆矩阵的求法有代数余子式法（不实用），消元法等，对其解法感兴趣的可以参看'漫画线性代数'。在代码的世界里，直接使用sympy库提供的方法。
+Also known as the inverse matrix, in linear algebra, given a $n$ order square matrix $A$, if there is a $n$ order square matrix B, so that $AB=BA=I_n$, where $I_n$ is $n$ order identity matrix, then $A$ is invertible, and $B$ is the inverse matrix of A, denoted as $A^{-1}$. Only $n \times n $ square matrix can have an inverse matrix. If the inverse matrix of a square matrix $A$ exists, then $A$ is said to be a non-singular square matrix or invertible matrix. The inverse matrix can be solved by the cofactor method(unpractical), elimination method, etc. If you are interested in the solution, see *The Manga Guide to Linear Algebra*. In the code world, directly use the method provided by Sympy.
 
-并不是所有的方阵都有逆矩阵，可以使用行列式指标determinant，缩写为det。可以使用smypy库的det()方法计算判断。
+
+Not all square matrices have an inverse matrix, where we can use determinant,  abbreviated as det, and use the det() method provided by Sympy library to calculate and judge.
 
 
 ```python
-print("零矩阵：")
+print("Zero matrix:")
 pprint(sympy.zeros(2))
 
-print("转置矩阵：")
+print("Transpose matrix:")
 F=Matrix([[1,2],[3,4],[5,6]])
 pprint(F.T)
 
-print("对称矩阵的转置矩阵：")
+print("Transpose matrix of a symmetric matrix:")
 G=Matrix([[1,5,6,7],[5,2,8,9],[6,8,3,10],[7,9,10,4]])
 pprint(G.T)
 
-print("对角矩阵的2次幂：")
+print("A diagonal matrix in the power of 2:")
 H=Matrix([[2,0],[0,3]])
 pprint(H**2)
 
-print("单位矩阵：")
+print("Identity matrix:")
 pprint(sympy.eye(4))
 
-print("单位矩阵与任何矩阵相乘，都对这个矩阵没有任何影响:")
+print("The identity matrix multiplied by any matrix does not affect the matrix:")
 pprint(sympy.eye(4)*G)
 
-print("求解逆矩阵，并乘以自身：")
-print("使用-1次方计算逆矩阵:")
+print("Solve the inverse matrix and multiply it by itself:")
+print("Calculate the inverse matrix using the -1 power:")
 G_inverse=G**-1
 pprint(G*G_inverse)
-print("使用.inv()计算逆矩阵:")
+print(".inv() is used to calculate the inverse matrix:")
 G_inverse_=G.inv()
 pprint(G*G_inverse_)
 
-print("判断方阵是否有逆矩阵：")
+print("Judge whether the square matrix has an inverse matrix:")
 print(G.det())
 print(G_inverse.det())
 ```
 
-    零矩阵：
+    Zero matrix:
     ⎡0  0⎤
     ⎢    ⎥
     ⎣0  0⎦
-    转置矩阵：
+    Transpose matrix:
     ⎡1  3  5⎤
     ⎢       ⎥
     ⎣2  4  6⎦
-    对称矩阵的转置矩阵：
+    Transpose matrix of a symmetric matrix:
     ⎡1  5  6   7 ⎤
     ⎢            ⎥
     ⎢5  2  8   9 ⎥
@@ -175,11 +178,11 @@ print(G_inverse.det())
     ⎢6  8  3   10⎥
     ⎢            ⎥
     ⎣7  9  10  4 ⎦
-    对角矩阵的2次幂：
+    A diagonal matrix in the power of 2:
     ⎡4  0⎤
     ⎢    ⎥
     ⎣0  9⎦
-    单位矩阵：
+    Identity matrix:
     ⎡1  0  0  0⎤
     ⎢          ⎥
     ⎢0  1  0  0⎥
@@ -187,7 +190,7 @@ print(G_inverse.det())
     ⎢0  0  1  0⎥
     ⎢          ⎥
     ⎣0  0  0  1⎦
-    单位矩阵与任何矩阵相乘，都对这个矩阵没有任何影响:
+    The identity matrix multiplied by any matrix does not affect the matrix:
     ⎡1  5  6   7 ⎤
     ⎢            ⎥
     ⎢5  2  8   9 ⎥
@@ -195,8 +198,8 @@ print(G_inverse.det())
     ⎢6  8  3   10⎥
     ⎢            ⎥
     ⎣7  9  10  4 ⎦
-    求解逆矩阵，并乘以自身：
-    使用-1次方计算逆矩阵:
+    Solve the inverse matrix and multiply it by itself:
+    .inv() is used to calculate the inverse matrix:
     ⎡1  0  0  0⎤
     ⎢          ⎥
     ⎢0  1  0  0⎥
@@ -212,24 +215,27 @@ print(G_inverse.det())
     ⎢0  0  1  0⎥
     ⎢          ⎥
     ⎣0  0  0  1⎦
-    判断方阵是否有逆矩阵：
+    Judge whether the square matrix has an inverse matrix:
     -3123
     -1/3123
     
 
-### 1.2 向量 （euclidean vector）
-#### 1.2.1 向量概念，表达及运算
-一般的，同时满足具有大小和方向两个性质的几何对象即可认为是向量，其代数表示在指定了一个坐标系之后，用一个向量在该坐标系下的坐标来表示该向量，兼具符号的抽象性和几何形象性，具有最高的实用性，广泛应用于定量分析的情景。对于自由向量，将向量的起点平移到坐标原点后，向量就可以用一个坐标系下的一个点来表示，该点的坐标值即向量的终点坐标
+### 1.2 Euclidean vector
+#### 1.2.1 Vector concepts, expressions, and operations
+Generally, at the same time, the geometrical objects satisfy with characteristics of both magnitude and direction can be regarded as a vector, it said after specifies a coordinate system, with the coordinates of a vector in the coordinates system to represent the vector, both abstract and geometric figuration, have the highest practical, widely used in the quantitative analysis. For a free vector, the vector can be represented by a point in a coordinate system whose coordinate value is the endpoint coordinate of the vector when the vector's starting point is shifted to the origin of coordinates.
 
-设一个向量$\vec{a}$，有坐标系$S$。在$S$中定义好若干个特殊的基本向量（称为基向量Base Vector，各个基向量共同组成该坐标系下的基底）$\vec{ e_{1} },\vec{ e_{2} }, \ldots ,\vec{ e_{n} }$之后，则向量在各个基向量下的投影即为对应的坐标系，各个投影值组成了该向量在该坐标系$S$下可唯一表示的有序数组（即坐标），且与向量的重点一一对应。换言之，其它的向量只需通过将这些基本向量拉伸后再按照平行四边形法则进行向量加法即可表示（通常被称为“用基底线性表出一个向量”，即该向量是基向量的某种线性组合），即：$\vec{ a}=a_{1} \vec{ e_{1} },a_{2} \vec{ e_{2} }, \ldots ,a_{n} \vec{ e_{n} }$，其中$\vec{ a_{1} },\vec{ a_{2} }, \ldots ,\vec{ a_{n} }$是$\vec{ a}$分别在$\vec{ e_{1} },\vec{ e_{2} } \ldots ,\vec{ e_{n} }$下对应的投影。当基底已知，可直接省略各基向量的符号，类似于坐标系上的点， 直接用坐标表示为$\vec{a}=( a_{1}, a_{2}, \ldots , a_{n} )$。在矩阵运算中，向量更多的被写成类似于矩阵的列向量或行向量。在线性代数中所指的向量，通常默认为列向量。如一个向量$\vec{a}=(a,b,c)$可以写成：$\vec{a}= \begin{bmatrix}a \\b\\c \end{bmatrix} $，$\vec{a}= \begin{bmatrix}a &b&c \end{bmatrix} $，其中第一个为列向量写法，第二个为行向量写法。$n$维列向量可视为$n \times 1$矩阵，$n$维行向量可视为$1\times n$矩阵。
 
-在常见的三维空间直角坐标系$\bigcirc xyz$（三维笛卡尔坐标系）里，基本向量就是行轴（$\bigcirc x$）、竖轴（$\bigcirc y$）、以及纵轴（$\bigcirc z$）为方向的三个长度为1的单位向量$\vec{i},\vec{j},\vec{k}$，即基向量。这三个向量取好之后，其它的向量就可以透过三元数组来表示，因为它们可以表示成一定倍数的三个基本向量的总和。比如说一个标示为（2,1,3）的向量就是2个向量$\vec{i}$加上1个向量$\vec{j}$加上3个向量$\vec{k}$得到的向量，即：$(a,b,c)=a\vec{i}+b\vec{j}+c\vec{k}$。因此向量本质上讲即为矩阵，向量的计算同于矩阵的计算。
+Assume a vector $\vec{a}$ with a coordinate system $S$. Defined several special basic vectors (referred to as the base vector which together constitutes the base in this coordinate system) $\vec{ e_{1} },\vec{ e_{2} }, \ldots ,\vec{ e_{n} }$, the projection of the vector under different base vector is the corresponding coordinate system. Each projection value constitutes an ordered array(coordinate) that can be uniquely represented by the vector under the coordinate system $S$, and corresponds to its endpoint. In other words, other vectors can be represented by simply stretching these vectors and then adding them following the parallelogram rule (commonly referred to as "representing a vector with basal linear", i.e. the vector is some linear combination of the base vectors), namely, $\vec{ a}=a_{1} \vec{ e_{1} },a_{2} \vec{ e_{2} }, \ldots ,a_{n} \vec{ e_{n} }$，Where $\vec{ a_{1} },\vec{ a_{2} }, \ldots ,\vec{ a_{n} }$ is the corresponding projection of $\vec{ a}$ in the $\vec{ e_{1} },\vec{ e_{2} } \ldots ,\vec{ e_{n} }$ respectively. When the base is known, the symbol of each base vector can be directly omitted, similar to the point in the coordinate system, and directly expressed as $\vec{a}=( a_{1}, a_{2}, \ldots , a_{n} )$ with coordinate. In matrix operations, vectors are more often written as a matrix-like column or row vectors.  A vector referred to linear algebra usually defaults to a column vector. For example, a vector $\vec{a}=(a,b,c)$ can be written as $\vec{a}= \begin{bmatrix}a \\b\\c \end{bmatrix} $，$\vec{a}= \begin{bmatrix}a &b&c \end{bmatrix} $, where the first is a column vector style, and the second is a row vector style. $n$ dimension column vector can be regarded as $n \times 1$ matrix, $n$ dimension row vector can be regarded as $1\times n$ matrix.
 
-SymPy库对向量计算有两种方式，一种是完全使用矩阵，因为二者计算相同，例如和、差、倍数和积；另一种是该库提供了专门针对向量的类'Vector'，通过Vector所提供的方法可以实现向量的表达以及对向量的基本运算。向量的主要目的是要解决空间几何问题，因此对于向量的理解要将空间几何图形与表达式结合起来，才能够有效的理解前因后果。单纯的看向量的表达式不是很理智的学习途径。对该部分而言，再了解基本的向量概念、坐标空间、运算之后，如果要用代码来表达和计算向量，有必要阅读SymPy对应的[Vector](https://docs.sympy.org/dev/modules/vector/index.html)以及[Matrices(linear algebra)](https://docs.sympy.org/latest/modules/matrices/matrices.html)两个部分，那么再阅读下述代码将会相对轻松。
+In the common three-dimensional rectangular system $\bigcirc xyz$(three-dimensional Cartesian coordinate system), the basic vector is the unit vector $\vec{i},\vec{j},\vec{k}$ of length 1 with the abscissa axis($\bigcirc x$), the ordinate axis($\bigcirc y$), and the applicate axis($\bigcirc z$) in the direction, namely the base vector. Once these three vectors are taken, the rest of the vectors can be represented through an array of triples, because they can be represented as the sum of certain multiples of the three fundamental vectors. Such as a labeled vector (2,1,3) is 2 vectors $\vec{i}$ plus 1 vector $\vec{j}$ plus 3 vectors $\vec{k}$, namely $(a,b,c)=a\vec{i}+b\vec{j}+c\vec{k}$. So the vector is essentially a matrix, and the calculation of the vector is the same as the calculation of the matrix.
 
-为了方便使用matplotlib打印三维空间下向量，定义了`vector_plot_3d`函数。首先定义了名称为'C'的三维坐标系统，获取其基向量'i,j,k'，用基向量构建向量'v1'，同时通过提取该向量在三个轴向上的系数建立v1向量在各轴上的分量（投影向量），各轴的投影向量之和即为v1向量，打印其在三维空间上的向量图形，观察向量见的关系。注意，向量空间起始位置的确定,vector_k的起始点，以vector_i和vector_j之和的向量作为起点，而vector_j以vector_i作为起点。
+There are two ways provided by the Sympy library for vector calculation. One is to use matrices entirely, since they are the same calculations, such as sum, difference, multiples, and products; The other is that the library provides a special class 'Vector' for vectors, which can realize the expression of vectors and basic operations on vectors through the methods provided by 'Vector'. A vector's main purpose is to solve space geometry, so understanding vector should be combined with space geometry and expression to understand the cause and effect effectively. Simply looking at vector expressions is not a very rational way to learn. For this part, after understanding the basic concepts of vectors, coordinate spaces, and operations, if you want to express and calculate vectors in code, it is necessary to read Sympy corresponding ['Vector'](https://docs.sympy.org/dev/modules/vector/index.html) and ['Matrices' (linear algebra)](https://docs.sympy.org/latest/modules/matrices/matrices.html) two parts, then read the following code will be relatively easy.
 
-* 把$n \times 1$向量$\begin{bmatrix} a_{1}  \\ a_{2} \\ \vdots \\ a_{n}  \end{bmatrix} $，所有分量构成的集合表示为$ \\R^{n} $。
+
+The `vector_plot_3d` function is defined to facilitate the use of Matplotlib to print vectors in 3D space. Firstly, the 3d coordinate system named 'C' is defined, and the base vector 'i,j,k' are obtained, and the base vectors are used to construct the vector 'v1'. At the same time, by extracting this vector's coefficient in the three axes, the components of the v1 vector on each axis (projection vector) are established, and the sum of projection vectors of each axis is the v1 vector. Print its vector graph in three-dimensional space, observe the relationship between vectors. Note that in determining the vector space's starting position, vector_k starts with the vector of the sum of vector_i and vector_j, and vector_j starts with vector_i.
+
+* All components collection of the $n \times 1$ vector $\begin{bmatrix} a_{1} \\ a_{2} \\ \vdots \\ a_{n} \end{bmatrix} $ represented as $ \\R^{n} $.
+
 
 
 ```python
@@ -243,16 +249,16 @@ ax=fig.add_subplot( projection='3d')
 
 def vector_plot_3d(ax_3d,C,origin_vector,vector,color='r',label='vector',arrow_length_ratio=0.1):
     '''
-    funciton - 转换SymPy的vector及Matrix数据格式为matplotlib可以打印的数据格式
+    funciton - Transform vector and Matrix data formats in Sympy to Matplotlib printable  data formats
     
     Paras:
-    ax_3d - matplotlib的3d格式子图
-    C - /coordinate_system - SymPy下定义的坐标系
-    origin_vector - 如果是固定向量，给定向量的起点（使用向量，即表示从坐标原点所指向的位置），如果是自由向量，起点设置为坐标原点
-    vector - 所要打印的向量
-    color - 向量色彩
-    label - 向量标签
-    arrow_length_ratio - 向量箭头大小     
+    ax_3d - Matplotlib 3d subgraph
+    C - /coordinate_system - Coordinate systems defined under the Sympy
+    origin_vector - If it is a fixed vector, the vector's starting point is given (using the vector, which indicates the position from the origin of coordinates). If it is a free vector, the starting point is set to the origin of coordinates.
+    vector - The vector to be printed
+    color - Vector color
+    label - Vector label
+    arrow_length_ratio - Vector arrow size
     '''
     origin_vector_matrix=origin_vector.to_matrix(C)
     x=origin_vector_matrix.row(0)[0]
@@ -266,14 +272,14 @@ def vector_plot_3d(ax_3d,C,origin_vector,vector,color='r',label='vector',arrow_l
     ax_3d.quiver(x,y,z,u,v,w,color=color,label=label,arrow_length_ratio=arrow_length_ratio)
 
 
-#定义坐标系统，以及打印向量v1=3*i+4*j+5*k
+#Define the coordinate system and print the vector v1=3*i+4*j+5*k
 C=CoordSys3D('C')
 i, j, k = C.base_vectors()
 v1=3*i+4*j+5*k
 v1_origin=Vector.zero
 vector_plot_3d(ax,C,v1_origin,v1,color='r',label='vector',arrow_length_ratio=0.1)
 
-#打印向量v1=3*i+4*j+5*k在轴上的投影
+#Print the projection of vector V1=3*i+4*j+5*k onto the axis
 v1_i=v1.coeff(i)*i
 vector_plot_3d(ax,C,v1_origin,v1_i,color='b',label='vector_i',arrow_length_ratio=0.1)
 
@@ -288,7 +294,7 @@ ax.set_ylim3d(0,5)
 ax.set_zlim3d(0,5)
 
 ax.legend()
-ax.view_init(20,20) #可以旋转图形的角度，方便观察
+ax.view_init(20,20) #The angle of the graph can be rotated for easy observation
 plt.show()
 ```
 
@@ -296,35 +302,37 @@ plt.show()
 <a href=""><img src="./imgs/9_1.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.2.2 线性无关
-在线性代数里，向量空间的一组元素中，若没有向量可用有限个其它向量的线性组合所表示，则称为线性无关（linearly independent）或线性独立，反之称为线性相关（linearly dependnet）。即假设$V$在域$K$上的向量空间，如果从域$K$中有非全零的元素$a_{1} ,a_{2} , \ldots ,a_{n} $，使得$a_{1}v_{1}+a_{2} v_{2}+ \ldots +a_{n}v_{n}=0 $，或建立的表示为，$\sum_{i=1}^n  a_{i}   v_{i} =0$，其中$v_{1} ,v_{2} , \ldots ,v_{n} $是$V$的向量，称它们为线性相关，其中右边的0，为$\vec 0$即0向量（vector），而不是0标量（scalar）；如果$K$中不存在这样的元素，那么$v_{1} ,v_{2} , \ldots ,v_{n} $线性无关。对线性无关可以给出更直接的定义，向量$v_{1} ,v_{2} , \ldots ,v_{n} $线性无关，若且唯若它们满足一下条件：如果$a_{1} ,a_{2} , \ldots ,a_{n} $是$K$的元素，适合：$a_{1}v_{1}+a_{2} v_{2}+ \ldots +a_{n}v_{n}=0 $那么对所有$i=1,2, \ldots ,n$都有$a_{i} =0$。
+#### 1.2.2 Linear independence
+In linear algebra, a set of elements in the vector space, without a vector by a finite number of a linear combination of the other vector, can be used, says it is called linear independence(linearly independent), whereas called linear dependence(linearly dependent). The assumption on $V$ in the vector space of domain $K$, if the domain $K$ has not all zero elements $a_{1} ,a_{2} , \ldots ,a_{n} $ , makes $a_{1}v_{1}+a_{2} v_{2}+ \ldots +a_{n}v_{n}=0 $, or said, $\sum_{i=1}^n a_{i} v_{i} =0$, where $v_{1} ,v_{2} , \ldots ,v_{n} $ is the vector of $V$, we will call them linear independence. The 0 on the right is $\vec 0$, namely a vector of 0, instead of 0 scalar. If there is no such elements of $K$, then $v_{1} ,v_{2} , \ldots ,v_{n} $ are linear indenpendence. Linear independence can be defiend more directly. Vector $v_{1} ,v_{2} , \ldots ,v_{n} $ are linear independence, if and only if they meet the conditions: if $a_{1} ,a_{2} , \ldots ,a_{n} $ are elements of $K$, suitable for $a_{1}v_{1}+a_{2} v_{2}+ \ldots +a_{n}v_{n}=0 $, so for all $i=1,2, \ldots ,n$ have $a_{i} =0$.
 
-在$V$中的一个无限集，如果它任何一个有限子集都是线性无关，那么原来的无限集也是线性无关。线性相关性是线性代数的重要概念，因为线性无关的一组向量可以生成一个向量空间，而这组向量则是这个向量空间的基。
+For an infinite set of $V$, if any of its finite subsets are linear independence, then the original infinite set is linearly independent. Linear dependence is an important concept in linear algebra because a linearly independent vector set can generate a vector space. This set of vectors is the base of the vector space.
 
-首先通过sympy.vector的CoordSys3D方法建立三维坐标系（可以直接提取单位向量$\vec{i},\vec{j},\vec{k}$），依托该坐标系建立（$V$）向量集合，包括v2,v3,v4,v5，均由单位向量的倍数建立，如果倍数等于0，例如`v2=a*1*N.i+a*0*N.j`，也保持了0的存在，以保持各个方向上的一致性，便于观察。可以通过打印各个单独向量，查看变量在sympy中的表现形式。该向量集合是线性相关，可以给出除了$a=b=c=d=0$外，其它a,b,c,d的值，即有非全零的元素，例如a_,b_,c_,d_=1,2,0,-1  ，或者a_,b_,c_,d_=1,-3,-1,2  ，均也满足$a_{1}v_{1}+a_{2} v_{2}+ \ldots +a_{n}v_{n}=0 $，上述的a,b,c,d即为$a_{1} ,a_{2} , \ldots ,a_{n} $。因此可以打印图形，通过定义`move_alongVectors`函数实现，可以看到第1，2个图形，形成闭合平面二维图形（回到起点）。同样在三维空间中，定义了向量集合v6,v7,v8,v9，因为线性相关，如第3个图形，形成空间闭合的折线（回到起点）。
+First, a 3d coordinate system was established through the 'CoordSys3D' method in Sympy(in which unit vectors $\vec{i},\vec{j},\vec{k}$ can be extracted directly); based on this coordinate system, the vector set ($V$), including v2,v3,v4,v5, is established by multiples of unit vectors. If the multiple is equal to 0, for example, `v2=a*1*N.i+a*0*N.j`, 0 is also maintained to maintain consistency in all directions, making it easy to observe. By printing individual vectors, we can view the expression form of variables in Sympy. The vector collection is linearly dependent, which can be given in addition to $a=b=c=d=0$, the other a,b,c,d value, that is not all zero elements, such as a_,b_,c_,d_=1,2,0,-1, or a_,b_,c_,d_=1,-3,-1,2, also meet $a_{1}v_{1}+a_{2} v_{2}+ \ldots +a_{n}v_{n}=0 $, the above a,b,c,d is the $a_{1} ,a_{2} , \ldots ,a_{n} $. You can therefore print the graphs by defining the `move_alongVectors` function implementation, where you will see the first and second graphs forming a closed 2d graph(back to the starting point). Also in the 3d space, the vector set v6,v7,v8,v9 are defined. Because of linear dependence, such as the third figure, a closed polyline is formed(back to the starting point).
+ 
 
-判断一个向量集合$V$，是否线性无关，可以使用`matrix.rref()`将表示向量的矩阵转换为行阶梯形矩阵（Row Echelon Form），如果返回的简化行阶梯形矩阵末尾行存在全零值，则表明该向量数据集为线性相关。例如，使用`matrix.to_matrix(C)`方法将v2,v3,v4,v5等向量转换为矩阵表达形式，并通过`matrix.col_insert()`方法合并为矩阵，使用`matrix.rref()`计算，对于数据集v2,v3,v4,v5，其简化行阶梯形矩阵计算结果为$\begin{bmatrix}1 & 0&0 \\0 & 1&0\\0&0&1\\0&0&0 \end{bmatrix} $，末尾包括全零行，因此为线性相关。同时返回了主元位置的列表为（0，1，2）。而v10,v11组成的向量集合则末尾不含全零行，因此为线性无关，无法通过各个向量构建闭合的空间折线，则可以生成向量空间，这组向量就是这个向量空间的基。对于$\\R_{m} $的任意元素向量$\begin{bmatrix} y_{1} \\ y_{2}\\ \vdots \\ y_{m}   \end{bmatrix}$，当$\begin{bmatrix} y_{1} \\ y_{2}\\ \vdots \\ y_{m}   \end{bmatrix} = c_{1} \begin{bmatrix} a_{11} \\ a_{21}\\ \vdots \\ a_{m1}   \end{bmatrix} + c_{2} \begin{bmatrix} a_{12} \\ a_{22}\\ \vdots \\ a_{m2}   \end{bmatrix} + \ldots + c_{n} \begin{bmatrix} a_{1n} \\ a_{2n}\\ \vdots \\ a_{mn}   \end{bmatrix} $的解$c_{1} ,c_{2}, \ldots ,c_{n}  $均为零时，则把集合$\Bigg\{ \begin{bmatrix} a_{11} \\ a_{21}\\ \vdots \\ a_{m1}   \end{bmatrix},\begin{bmatrix} a_{12} \\ a_{22}\\ \vdots \\ a_{m2}   \end{bmatrix} , \ldots , \begin{bmatrix} a_{1n} \\ a_{2n}\\ \vdots \\ a_{mn}   \end{bmatrix} \Bigg\}$叫做基，即为了表示$\\R_{m} $任意元素所必需的最少向量构成的集合。
+To determine whether a vector set $V$, is linearly independent, you can use `matrix.rref()` to transform the matrix representing vectors into a Row Echelon Form. If there are all zero values at the end of the returned reduced Row Echelon Form, the vector set is linearly dependent. For example, using `matrix.to_matrix(C)` method to convert v2,v3,v4,v5 and other vectors into matrix expression, and using `matrix.col_insert()` method to merge them int matrix, using `matrix.rref()` to calculate, for the dataset v2,v3,v4,v5, the result of its reduced Row Echelon Form is $\begin{bmatrix}1 & 0&0 \\0 & 1&0\\0&0&1\\0&0&0 \end{bmatrix} $, the end contains all zero rows, therefore, the dataset is linearly dependent. The list (0,1,2) of pivot locations is also returned. However, the vector set composed of v10,v11, does not contain all-zero rows at the end, so it is linearly independent. It is impossible to construct a closed spacial polyline through each vector so that the vector space can be generated, and the vector set is the base of this vector space. For any element vector in $\\R_{m} $ $\begin{bmatrix} y_{1} \\ y_{2}\\ \vdots \\ y_{m}   \end{bmatrix}$，When the solutions $c_{1} ,c_{2}, \ldots ,c_{n}  $ of  $\begin{bmatrix} y_{1} \\ y_{2}\\ \vdots \\ y_{m}   \end{bmatrix} = c_{1} \begin{bmatrix} a_{11} \\ a_{21}\\ \vdots \\ a_{m1}   \end{bmatrix} + c_{2} \begin{bmatrix} a_{12} \\ a_{22}\\ \vdots \\ a_{m2}   \end{bmatrix} + \ldots + c_{n} \begin{bmatrix} a_{1n} \\ a_{2n}\\ \vdots \\ a_{mn}   \end{bmatrix} $ are all zero，the set  $\Bigg\{ \begin{bmatrix} a_{11} \\ a_{21}\\ \vdots \\ a_{m1}   \end{bmatrix},\begin{bmatrix} a_{12} \\ a_{22}\\ \vdots \\ a_{m2}   \end{bmatrix} , \ldots , \begin{bmatrix} a_{1n} \\ a_{2n}\\ \vdots \\ a_{mn}   \end{bmatrix} \Bigg\}$ is called the base，that is, to represent the set in $\\R_{m} $ composed by the minimum vectors required to any element.
 
-* 阶梯型矩阵
+* Echelon Form matrix
 
-线性代数中，一个矩阵如果符合下列条件的话，则称之为行阶梯型矩阵（Row Echelon Form）：
+In linear algebra, a matrix is called Row Echelon Form if it meets the following conditions:
 
-1. 所有非零行（矩阵的行至少有一个非零元素）在所有全零行的上面。即全零行都在矩阵的底部。
-2. 非零行的首项系数（leading coefficient），也称主元，即最左边的首个非零元素，严格的比上面行的首相系数更靠右（有些版本会要求非零行的首相系数必须是1）。
-3. 首项系数所在列，在该首相系数下面的元素都是零（前两条的推论）。
+1. All non-zero rows(up to at least one non-zero element of the matrix) are on top of all zero rows. So all the zero rows are at the bottom of the matrix.
+2. The leading coefficient of non-zero rows, also known as the pivot element, is the first non-zero element on the far left, which is strictly further to the right than the first coefficient on the above row(some versions require that the first coefficient of the non-zero row must be 1).
+3. In the column where the first coefficient is, the elements below the first coefficient are all zero(corollary to the first two).
 
-例如：$\begin{bmatrix}1 &  a_{1} &a_{2} | & b_{1}   \\0 &  2 &a_{3} | & b_{2} \\0 &  0 &1| & b_{3}  \end{bmatrix} $。
+For example: $\begin{bmatrix}1 &  a_{1} &a_{2} | & b_{1}   \\0 &  2 &a_{3} | & b_{2} \\0 &  0 &1| & b_{3}  \end{bmatrix} $。
 
-> 增广矩阵，又称广置矩阵，是在线性代数中系数矩阵的右边填上线性方程组等号右边的常数列得到的矩阵。例如，方程$AX=B$的系数矩阵为$A$，它的增广矩阵为$A | B$。方程组唯一确定增广矩阵，通过增广矩阵的初等行变换可用于判断对应线性方程组是否有解，以及化简原方程组的解。其竖线可以省略。
+> The augmented matrix, also known as extended matrix, is the matrix obtained by filling the right side of the coefficient matrix in linear algebra with the constant sequence on the right side of the equal sign of linear equations. For example, the coefficient matrix of the equation $AX=B$ is $A$, and its augmented matrix is $A | B$. The equation set uniquely determines the augmented matrix. The augmented matrix's elementary row transformation can be used to judge whether the corresponding linear system of equations has a solution and simplifies the original equation's solution. Its vertical line can be omitted.
 
-化简后的行阶梯型矩阵（reduced row echelon form，或译为简约行梯形式），也称作行规范形矩阵（row canonical form）,如果满足额外的条件：每个首相系数是1，且是其所在列的唯一的非零元素，例如，$\begin{bmatrix}1& 0& a_{1}  &0& | & b_{1} \\0& 1&0&0& | &b_{2}  \\0&0&0&1& | & b_{3} \end{bmatrix} $，注意化简后的行阶梯型矩阵的左部分（系数部分）不意味着总是单位阵。
+The reduced row echelon form is also known as row canonical form, if an additional condition is met: each leading item coefficient is 1 and is the only non-zero element of its column, for example, $\begin{bmatrix}1& 0& a_{1} &0& | & b_{1} \\0& 1&0&0& | &b_{2} \\0&0&0&1& | & b_{3} \end{bmatrix} $, note that the left part of the reduced row echelon form (coefficient part) does not mean that it is always the identity matrix.
 
-通过有限步的行初等变换，任何矩阵可以变换到行阶梯形。由于行初等变换保持了矩阵的行空间，因此行阶梯型矩阵的行空间与变换前的原矩阵的行空间相同（这也是在使用sympy.rref()计算化简后的行阶梯型矩阵（reduced row echelon form），需要将形状为$\begin{bmatrix} a_{1}i  &  a_{2}i & a_{3}i  \\ a_{1}j &  a_{2}j & a_{3}j\\ \vdots & \vdots & \vdots \\ a_{1}k &  a_{2}k& a_{3}k   \end{bmatrix} $的向量集合，转置矩阵变换为$\begin{bmatrix} a_{1}i  &  a_{1}j & a_{1}k  \\ a_{2}i &  a_{2}j & a_{2}k\\ \vdots & \vdots & \vdots \\ a_{3}i &  a_{3}j& a_{3}k   \end{bmatrix} $，保持矩阵行为$ a_{n} \vec{i}, a_{n}\vec{j}, a_{n}\vec{k}$）。行阶梯形的结果并不是唯一的。例如，行阶梯型乘以一个标量系数仍然是行阶梯形。但是，可以证明一个矩阵的化简后的行阶梯形是唯一的。
+Any matrix can be transformed into row echelon form by finite-step row elementary transformations. Due to the elementary transformation retain the line space of the matrix, the line space of the row echelon matrix is the same as the original matrix before the transformation(this is also using 'sympy.rref()' to calculate reduced row echelon form), need to transpose the vector set with shape $\begin{bmatrix} a_{1}i & a_{2}i & a_{3}i \\ a_{1}j & a_{2}j & a_{3}j\\ \vdots & \vdots & \vdots \\ a_{1}k & a_{2}k& a_{3}k \end{bmatrix} $ into $\begin{bmatrix} a_{1}i & a_{2}i & a_{3}i \\ a_{1}j & a_{2}j & a_{3}j\\ \vdots & \vdots & \vdots \\ a_{1}k & a_{2}k& a_{3}k \end{bmatrix} $, keep matrix row as $ a_{n} \vec{i}, a_{n}\vec{j}, a_{n}\vec{k}$）. Row echelon form is not unique. For example, row echelon form multiplied by a scalar coefficient is still a row echelon form. But, it turns out that the reduced row echelon form of a matrix is unique.
+
 
 
 ```python
 from sympy.vector import CoordSys3D
-from sympy.abc import a, b, c,d,e,f,g,h,o,p #相当于a,b=sympy.symbols(["a","b"])
+from sympy.abc import a, b, c,d,e,f,g,h,o,p #The equivalent of a,b=sympy.symbols(["a","b"])
 from sympy.vector import Vector
 from sympy import pprint,Eq,solve
 import matplotlib.pyplot as plt
@@ -335,7 +343,7 @@ axs[0]=fig.add_subplot(1,3,1, projection='3d')
 axs[1]=fig.add_subplot(1,3,2, projection='3d')
 axs[2]=fig.add_subplot(1,3,3, projection='3d')
 
-#A - 2维度，绘制v2+v3+v4+v5=0的解，线性相关，有多个解
+#A - In 2d, draw the solutions of v2+v3+v4+v5=0, linearly dependent, with multiple solutions.
 N=CoordSys3D('N')
 v2=a*1*N.i+a*0*N.j
 v3=b*0*N.i+b*1*N.j
@@ -347,19 +355,19 @@ def move_alongVectors(vector_list,coeffi_list,C,ax,):
     import random
     import sympy
     '''
-    function - 给定向量，及对应系数，延向量绘制
+    function - Given the vector and the corresponding coefficient, draw along the vector.
     
     Paras:
-    vector_list - 向量列表，按移动顺序
-    coeffi_list - 向量的系数    
-    C - SymPy下定义的坐标系
-    ax - 子图
+    vector_list - List of vectors, in moving order.
+    coeffi_list - Coefficient of vector   
+    C - The coordinate system defined under Sympy
+    ax - Subgraph
     '''
     colors=[color[0] for color in mcolors.TABLEAU_COLORS.items()]  #mcolors.BASE_COLORS, mcolors.TABLEAU_COLORS,mcolors.CSS4_COLORS
     colors__random_selection=random.sample(colors,len(vector_list)-1)
     v_accumulation=[]
     v_accumulation.append(vector_list[0])
-    #每个向量绘制以之前所有向量之和为起点
+    #Each vector is drawn, starting with the sum of all the previous vectors.
     for expr in vector_list[1:]:
         v_accumulation.append(expr+v_accumulation[-1])
     
@@ -367,19 +375,19 @@ def move_alongVectors(vector_list,coeffi_list,C,ax,):
     for i in range(1,len(vector_list)):
         vector_plot_3d(ax,C,v_accumulation[i-1].subs(coeffi_list),vector_list[i].subs(coeffi_list),color=colors__random_selection[i-1],label='v_%s'%coeffi_list[i-1][0],arrow_length_ratio=0.2)
         
-#v2+v3+v4+v5=0，向量之和为0的解,解-1
+#v2+v3+v4+v5=0，The solution-1 when the sum of the vectors is 0
 vector_list=[v0,v2,v3,v4,v5]
 a_,b_,c_,d_=1,2,0,-1        
 coeffi_list=[(a,a_),(b,b_),(c,c_),(d,d_)]
 move_alongVectors(vector_list,coeffi_list,N,axs[0],)    
     
-#v2+v3+v4+v5=0，向量之和为0的解,解-2
+#v2+v3+v4+v5=0，The solution-2 when the sum of the vectors is 0
 vector_list=[v0,v2,v3,v4,v5]
 a_,b_,c_,d_=1,-3,-1,2      
 coeffi_list=[(a,a_),(b,b_),(c,c_),(d,d_)]
 move_alongVectors(vector_list,coeffi_list,N,axs[1],)       
 
-#B - 3维度，绘制v6+v7+v8+v9=0的解，线性相关
+#B - 3D, draw the solution of v6+v7+v8+v9=0, linear dependence
 M=CoordSys3D('M')
 v6=e*1*M.i+e*0*M.j+e*0*M.k
 v7=f*0*M.i+f*1*M.j+f*0*M.k
@@ -392,8 +400,8 @@ e_,f_,g_,h_=3,1,-1,-1
 coeffi_list=[(e,e_),(f,f_),(g,g_),(h,h_)]
 move_alongVectors(vector_list,coeffi_list,M,axs[2],)  
       
-#C - 向量转换为矩阵，判断线性无关
-#C-1 - 对于向量集合v2,v3,v4,v5
+#C - The vector is converted to a matrix, and judge whether it is linearly independent.
+#C-1 - For the vector set v2,v3,v4,v5
 v_2345_matrix=v2.to_matrix(N)
 for v in [v3,v4,v5]:
     v_temp=v.to_matrix(N)
@@ -403,7 +411,7 @@ pprint(v_2345_matrix)
 print("v_2345_matrix.T rref:")
 pprint(v_2345_matrix.T.rref())
 
-#C-2 - 对于向量集合v6,v7,v8,v9
+#C-2 - For the vector setv6,v7,v8,v9
 print("_"*50)
 v_6789_matrix=v6.to_matrix(M)
 for v in [v7,v8,v9]:
@@ -414,7 +422,7 @@ pprint(v_6789_matrix)
 print("v_6789_matrix.T rref:")
 pprint(v_6789_matrix.T.rref())
 
-#C-3 对于向量集合v10,v11
+#C-3 For the vector set v10,v11
 print("_"*50)
 C=CoordSys3D('C')
 v10=o*1*C.i+o*0*C.j
@@ -440,7 +448,7 @@ axs[2].set_zlim3d(0,4)
 axs[0].legend()
 axs[1].legend()
 axs[2].legend()
-axs[0].view_init(90,0) #可以旋转图形的角度，方便观察
+axs[0].view_init(90,0) #The angle of the graph can be rotated for easy observation
 axs[1].view_init(90,0)
 axs[2].view_init(30,50)
 plt.show()
@@ -492,7 +500,7 @@ plt.show()
 <a href=""><img src="./imgs/9_2.png" height="auto" width="auto" title="caDesign"></a>
 
 
-上述代码是以sympy.vector提供的向量方式建立向量数据集，能够比较直观的理解向量空间及向量在空间中的运算。下述代码则直接建立矩阵模式的向量系数矩阵并进行相关计算，包括求得行阶梯形矩阵，简化的行阶梯形矩阵，以及求解系数，从而可以判断该向量集V_C_matrix，为线性相关，有非全零解，可以在空间中构建回到起点闭合的图形。
+The above code establishes a vector dataset using 'sympy.vector' method, which enables intuitive understanding of vector space and vector operations in space. The following code directly establishes the vector coefficient matrix of the matrix mode. It conducts the relevant calculation, including obtaining the row echelon form matrix, reduced echelon form matrix, and solving the coefficient, so that it can be judged that the vector set V_C_matrix is linearly dependent and has a non-complete zero solution. The graph returning to the starting point can be constructed in the space.
 
 
 ```python
@@ -501,22 +509,22 @@ V_C_matrix=Matrix([[1,4,2,-3],[7,10,-4,-1],[-2,1,5,-4]])
 
 lambda_1,lambda_2,lambda_3=sympy.symbols(['lambda_1','lambda_2','lambda_3'])
 coeffi_expr=V_C_matrix.T*Matrix([lambda_1,lambda_2,lambda_3])
-print("向量集合(线性方程组)系数矩阵：")
+print("Vector set(linear equations) coefficient matrix:")
 pprint(coeffi_expr)
 print("echelon_form:")
 pprint(coeffi_expr.echelon_form())
 print("reduced row echelon form:")
 pprint(coeffi_expr.rref())
 
-#解线性方程组
-print("解线性方程组（矩阵模式），sympy提供的几种方式：")
+#Solving systems of linear equations
+print("For solutions of linear equations(matrix patterns), Sympy provide several ways:")
 pprint(solve(coeffi_expr,(lambda_1,lambda_2,lambda_3)))
 pprint(solve(coeffi_expr,set=True))
 from sympy import Matrix, solve_linear_system
 pprint(solve_linear_system(V_C_matrix.T,lambda_1,lambda_2,lambda_3))
 ```
 
-    向量集合(线性方程组)系数矩阵：
+    Vector set(linear equations) coefficient matrix:
     ⎡ λ₁ + 7⋅λ₂ - 2⋅λ₃ ⎤
     ⎢                  ⎥
     ⎢4⋅λ₁ + 10⋅λ₂ + λ₃ ⎥
@@ -540,7 +548,7 @@ pprint(solve_linear_system(V_C_matrix.T,lambda_1,lambda_2,lambda_3))
     ⎜⎢0⎥      ⎟
     ⎜⎢ ⎥      ⎟
     ⎝⎣0⎦      ⎠
-    解线性方程组（矩阵模式），sympy提供的几种方式：
+    For solutions of linear equations(matrix patterns), Sympy provide several ways:
     ⎧    -3⋅λ₃       λ₃⎫
     ⎨λ₁: ──────, λ₂: ──⎬
     ⎩      2         2 ⎭
@@ -550,14 +558,14 @@ pprint(solve_linear_system(V_C_matrix.T,lambda_1,lambda_2,lambda_3))
     {λ₁: 3/2, λ₂: -1/2}
     
 
-#### 1.2.3 维数
-* 子空间（线性子空间，或向量子空间）
+#### 1.2.3 Dimension
+* Subspaces(linear subspaces, or vector subspaces)
 
-假设$c$为任意实数，若$\\R_{m} $的子集$W$满足下述三个条件：1. $W$的任意元素的$c$倍也是$W$的元素；2.$W$的任意元素的和也是$W$的元素；3. 零向量$\vec 0$在$W$中。即满足这三个条件时，1. 如果$ \begin{bmatrix} a_{1i}  \\a_{2i}\\ \vdots \\a_{mi} \end{bmatrix}  \in W $，那么 $c\begin{bmatrix} a_{1i}  \\a_{2i}\\ \vdots \\a_{mi} \end{bmatrix}  \in W$；2. 如果$ \begin{bmatrix} a_{1i}  \\a_{2i}\\ \vdots \\a_{mi} \end{bmatrix}  \in W $并且$ \begin{bmatrix} a_{1j}  \\a_{2j}\\ \vdots \\a_{mj} \end{bmatrix}  \in W$，那么$ \begin{bmatrix} a_{1i}  \\a_{2i}\\ \vdots \\a_{mi} \end{bmatrix} +\begin{bmatrix} a_{1j}  \\a_{2j}\\ \vdots \\a_{mj} \end{bmatrix}  \in W$；同时 $\vec0 \in W$ ，则把$W$叫做$\\R_{m} $的线性子空间，简称子空间。在理解向量子空间时可以先从2、3维空间思考，如果乘以一个倍数，实际上只是对向量的缩放，而对于向量的和也只是延着多个向量的行进，这些计算都存在于一个空间维度中，进而可以帮助理解拓展到大于3个的维度（无法类似2，3维度直接观察），例如“通过原点的直线”，“通过原点的平面”等等描述。
+Assuming $c$ is any real number. If the subset $W$ of $\\R_{m} $ satisfies the following three conditions: 1. $c$ times any element of  $W$ is also an element of $W$; 2. The sum of any element of $W$ is also an element of $W$; 3. Zero vector $\vec 0$ is in $W$. That satisfy the three conditions, 1, if $ \begin{bmatrix} a_{1i} \\a_{2i}\\ \vdots \\a_{mi} \end{bmatrix} \in W $, then $c\begin{bmatrix} a_{1i} \\a_{2i}\\ \vdots \\a_{mi} \end{bmatrix} \in W$; 2. if $ \begin{bmatrix} a_{1i} \\a_{2i}\\ \vdots \\a_{mi} \end{bmatrix} \in W $ and $ \begin{bmatrix} a_{1j} \\a_{2j}\\ \vdots \\a_{mj} \end{bmatrix} \in W$, then $ \begin{bmatrix} a_{1i} \\a_{2i}\\ \vdots \\a_{mi} \end{bmatrix} +\begin{bmatrix} a_{1j} \\a_{2j}\\ \vdots \\a_{mj} \end{bmatrix} \in W$; At the same time  $\vec0 \in W$, then $W$ is called $\\R_{m} $ linear subspaces, abbreviated as subspace. We can understand the subspace from 2 or 3 dimensional space first, if it multiply by a multiple, which is really just a scalling of the vector; as for the sum of vectors, they only travel along multiple vectors, and these calculation exist in one spatial dimension, which can help us understand the expansion to more than 3 dimensions(which can not be directly observed like 2 and 3 dimensions), such as "the line through the origin", "the plane through the origin" and so on.
 
-$W$线性无关的元素，即基元素，$\Bigg\{ \begin{bmatrix} a_{11} \\ a_{21}\\ \vdots \\ a_{m1}   \end{bmatrix},\begin{bmatrix} a_{12} \\ a_{22}\\ \vdots \\ a_{m2}   \end{bmatrix} , \ldots , \begin{bmatrix} a_{1n} \\ a_{2n}\\ \vdots \\ a_{mn}   \end{bmatrix} \Bigg\}$，其中基元素的个数$n$叫做子空间$W$的维度，一般表示为$dimW$（dim为dimension缩写）。
+$W$ linearly independent element, namely base element, $\Bigg\{ \begin{bmatrix} a_{11} \\ a_{21}\\ \vdots \\ a_{m1}   \end{bmatrix},\begin{bmatrix} a_{12} \\ a_{22}\\ \vdots \\ a_{m2}   \end{bmatrix} , \ldots , \begin{bmatrix} a_{1n} \\ a_{2n}\\ \vdots \\ a_{mn}   \end{bmatrix} \Bigg\}$，The number $n$ of base elements is called the subspace $ W $ dimension and is typically expressed as $dimW$(dim is the dimension abbreviation).
 
-例如$W$是$\\R^{3} $的子空间，向量vector_a=0*C.i+3*C.j+1*C.k，即$\begin{bmatrix}0  \\3\\1 \end{bmatrix} $，与向量vector_b=0*C.i+1*C.j+2*C.k，即$\begin{bmatrix}0  \\1\\2 \end{bmatrix} $是$W$的线性无关（通过`pprint(v_a_b.T.rref())`查看，不含全零行）的元素。显然，$\Bigg\{ c_{1} \begin{bmatrix}0  \\3\\1 \end{bmatrix}+ c_{2} \begin{bmatrix}0  \\1\\2 \end{bmatrix}   c_{1}, c_{2}为任意实数 \Bigg\}$等式成立，因此集合$\Bigg\{ \begin{bmatrix}0  \\3\\1 \end{bmatrix}, \begin{bmatrix}0  \\1\\2 \end{bmatrix}    \Bigg\}$是子空间$W$的基，子空间的维数为2。
+Such as $W$ is the $\\R^{3} $ subspace, the vector vector_a=0*C.i+3*C.j+1*C.k, namely $\begin{bmatrix}0 \\3\\1 \end{bmatrix} $ and the vector vector_b=0*C.i+1*C.j+2*C.k, namely $\begin{bmatrix}0 \\1\\2 \end{bmatrix} $ is linearly independent(viewed throug `pprint(v_a_b.T.rref())`, without all zero lines) element. Obviously, $\Bigg\{ c_{1} \begin{bmatrix}0 \\3\\1 \end{bmatrix}+ c_{2} \begin{bmatrix}0 \\1\\2 \end{bmatrix} c_{1}, c_{2} for any real number \Bigg\}$ equation is satisfied, so the set $\Bigg\{ \begin{bmatrix}0 \\3\\1 \end{bmatrix}, \begin{bmatrix}0 \\1\\2 \end{bmatrix}  \Bigg\}$ is the base for the subspace $W$ with a dimension of 2.
 
 
 ```python
@@ -586,7 +594,7 @@ ax.set_ylim3d(-5,5)
 ax.set_zlim3d(-5,5)
 
 ax.legend()
-ax.view_init(20,20) #可以旋转图形的角度，方便观察
+ax.view_init(20,20) #The angle of the graph can be rotated for easy observation
 plt.show()
 
 v_a_b=vector_a.to_matrix(C).col_insert(-1,vector_b.to_matrix(C))
@@ -604,15 +612,14 @@ pprint(v_a_b.T.rref())
     ⎝⎣0  0  1⎦        ⎠
     
 
-### 1.3 线性映射
-#### 1.3.1 定义，线性映射的矩阵计算方法，像
-假设$\begin{bmatrix}  x_{1i} \\x_{2i}\\ \vdots \\x_{ni} \end{bmatrix} $和$\begin{bmatrix}  x_{1j} \\x_{2j}\\ \vdots \\x_{nj} \end{bmatrix} $为$\\R^{n} $的任意元素，$f$为从$\\R^{n} $到$\\R^{m} $的映射。当映射$f$满足以下两个条件时，则称映射$f$是从$\\R^{n} $到$\\R^{m} $线性映射。1. $f \Bigg\{  \begin{bmatrix}x_{1i}  \\x_{2i}\\ \vdots \\x_{ni} \end{bmatrix}  \Bigg\}+f \Bigg\{  \begin{bmatrix}x_{1j}  \\x_{2j}\\ \vdots \\x_{nj} \end{bmatrix}  \Bigg\}$与$f \Bigg\{  \begin{bmatrix}x_{1i} +x_{1j} \\x_{2i}+x_{2j}\\ \vdots \\x_{ni}+x_{nj} \end{bmatrix}  \Bigg\} $相等；2. $cf \Bigg\{  \begin{bmatrix}x_{1i}  \\x_{2i}\\ \vdots \\x_{ni} \end{bmatrix}  \Bigg\} $与$f \Bigg\{ c \begin{bmatrix}x_{1i}  \\x_{2i}\\ \vdots \\x_{ni} \end{bmatrix}  \Bigg\} $相等。从$\\R^{n} $到$\\R^{m} $线性映射，可以被称为线性变换或一次变换。为了方便理解线性变换，可以将映射$f$理解为一个函数（变换矩阵），输入一个向量，经过$f$作用后，而后输出一个向量的过程，即向量发生了运动。就是，当$\begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} $ （输入）通过$m \times n$矩阵$\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
- \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} $对应的从$\\R^{n} $到$\\R^{m} $的线性映射，形成的像是$\begin{bmatrix}  y_{1} \\y_{2}\\ \vdots \\y_{n} \end{bmatrix} $（输出），其矩阵计算公式表示为：$f\Bigg\{\begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix}\Bigg\}=\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
- \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} \begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix}=\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
- \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} \Bigg\{   x_{1}   \begin{bmatrix}1 \\0\\ \vdots \\0 \end{bmatrix}  +x_{2}   \begin{bmatrix}0 \\1\\ \vdots \\0 \end{bmatrix} + \ldots +x_{n}   \begin{bmatrix}0 \\0\\ \vdots \\1 \end{bmatrix} \Bigg\}$。对像而言，即假设$x_{i} $是集合$X$的元素，把通过映射$f$与$x_{i} $对应的集合$Y$的元素叫做$x_{i} $通过映射$f$形成的像。
+### 1.3 Linear mapping
+#### 1.3.1 Definition, the matrix calculation method of linear mapping, image
+Assuming $\begin{bmatrix} x_{1i} \\x_{2i}\\ \vdots \\x_{ni} \end{bmatrix} $和$\begin{bmatrix} x_{1j} \\x_{2j}\\ \vdots \\x_{nj} \end{bmatrix} $ is any element of $\\R^{n} $, $f$ is the mapping from $\\R^{n} $ to $\\R^{m} $. When the mapping $f$ meets the following two conditions, says the mapping $f$ is a linear mapping from $\\R^{n} $ to $\\R^{m} $. 1. $f \Bigg\{ \begin{bmatrix}x_{1i} \\x_{2i}\\ \vdots \\x_{ni} \end{bmatrix} \Bigg\}+f \Bigg\{ \begin{bmatrix}x_{1j} \\x_{2j}\\ \vdots \\x_{nj} \end{bmatrix} \Bigg\}$ and $f \Bigg\{  \begin{bmatrix}x_{1i} +x_{1j} \\x_{2i}+x_{2j}\\ \vdots \\x_{ni}+x_{nj} \end{bmatrix} \Bigg\} $ is equal; 2. $cf \Bigg\{ \begin{bmatrix}x_{1i} \\x_{2i}\\ \vdots \\x_{ni} \end{bmatrix} \Bigg\} $ and $f \Bigg\{ c \begin{bmatrix}x_{1i} \\x_{2i}\\ \vdots \\x_{ni} \end{bmatrix} \Bigg\} $ is equal. A linear mapping from $\\R^{n} $ to $\\R^{m} $ can be called a linear transformation. To facilitate the understanding of linear transformation, the mapping $f$ can be understood as a function (transformation matrix), the process of inputting  a vector, after the effect of $f$, and then outputting a vector, that is, the vector is moving. That is, when $\begin{bmatrix} x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} $ (input) by $m \times n$ matrix $\begin{bmatrix} a_{11} & a_{12}& \ldots & a_{1n} \\ a_{21} & a_{22}& \ldots & a_{2n} \\ 
+ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2}& \ldots & a_{mn} \end{bmatrix} $ corrosponding from $\\R^{n} $ to $\\R^{m} $ linear mapping, formed image is $\begin{bmatrix} y_{1} \\y_{2}\\ \vdots \\y_{n} \end{bmatrix} $(output), whose matrix calculation formula is expressed as : $f\Bigg\{\begin{bmatrix} x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix}\Bigg\}=\begin{bmatrix} a_{11} & a_{12}& \ldots & a_{1n} \\ a_{21} & a_{22}& \ldots & a_{2n} \\ 
+ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2}& \ldots & a_{mn} \end{bmatrix} \begin{bmatrix} x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix}=\begin{bmatrix} a_{11} & a_{12}& \ldots & a_{1n}  \\ a_{21} & a_{22}& \ldots & a_{2n} \\ 
+ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2}& \ldots & a_{mn} \end{bmatrix} \Bigg\{ x_{1} \begin{bmatrix}1 \\0\\ \vdots \\0 \end{bmatrix} +x_{2} \begin{bmatrix}0 \\1\\ \vdots \\0 \end{bmatrix} + \ldots +x_{n} \begin{bmatrix}0 \\0\\ \vdots \\1 \end{bmatrix} \Bigg\}$.  For the image, assuming $x_{i} $ is elements of the set $X$, by mapping $f$, the element of the set $Y$ that corresponds to $x_{i} $ is called the image of $x_{i} $ by mapping $f$. 
  
-定义三维的C向量空间，单位向量为$\vec{i},\vec{j},\vec{k}$，定义v_1向量的系数为a1,a2,a3=-1,2,0，其中0可以省略，即为v_1=a1*i+a2*j=-1*i+2*j向量。给定新的向量集合v_2，v_3，通过计算简化的行阶梯形矩阵，判断为向量无关，因此将该数据集作为基，可以建立新的向量空间，并由v_2，v_3的基构建变换矩阵，v_1的系数矩阵乘以变换矩阵计算得新向量空间下的v_1在相对于C（原）向量空间下的向量v_1_N。
-
+Define three-dimensional C vector space, unit vector is $\vec{i},\vec{j},\vec{k}$, define v_1 vector coefficient is a1,a2,a3=-1,2,0, where 0 can be omitted, that is, v_1=a1*i+a2*j=-1*i+2*j vector. Given the new vector collection v_2, v_3, by calculating the reduced row echelon form matrix, the vector is judged to be linear independence, therefore, taking this dataset as the base, the new vector space can be established, and the transformation matrix is constructed from the base v_2, v_3, the coefficient matrix of v_1 times the transformation matrix is v_1 in the new vector space with respect to the C vector space v_1_N.
 
 ```python
 fig, ax=plt.subplots(figsize=(12,12))
@@ -635,14 +642,14 @@ vector_plot_3d(ax,C,v_0,v_3,color='blue',label='v_3',arrow_length_ratio=0.1)
 
 def vector2matrix_rref(v_list,C):
     '''
-    function - 将向量集合转换为向量矩阵，并计算简化的行阶梯形矩阵
+    function - The vector set is converted to a vector matrix, and the reduced row echelon form matrix is calculated.
     
     Paras:
-    v_list - 向量列表
-    C - sympy定义的坐标系统
+    v_list - Vector list
+    C - The coordinate system defined by Sympy
     
     return:
-    v_matrix.T - 转换后的向量矩阵,即线性变换矩阵
+    v_matrix.T - The transformed vector matrix, namely the linear transformation matrix
     '''
     v_matrix=v_list[0].to_matrix(C)
     for v in v_list[1:]:
@@ -652,25 +659,26 @@ def vector2matrix_rref(v_list,C):
     print("_"*50)
     pprint(v_matrix.T.rref())
     return v_matrix.T
-print("v_2,v_3简化的行阶梯形矩阵:")
-v_2_3=vector2matrix_rref([v_2,v_3],C)  #通过rref()返回的简化的行阶梯形矩阵，判断向量集合v_2,v_3为向量无关。返回线性变换矩阵
+print("v_2,v_3 reduced row echelon form matrix:")
+v_2_3=vector2matrix_rref([v_2,v_3],C)  #The vector set v_2,v_3 are judged to be vector independent by the reduced row echelon form matrix returned by rref(). Returns the linear transformation matrix
 
-#由向量无关的向量集合v_2,v_3生成新的向量空间，相对于原向量空间下i,j,k单位向量，i,j,k新的位置
-v_1_N_matrix=Matrix([a1,a2]).T*v_2_3 #根据变换矩阵，计算系数同为a1,a2向量的位置
+
+#From the vector set v_2,v_3 that are independent of each other, a new vector space is generated, concerning the original vector space, i, j, k unit vector, i, j, k is a new position.
+v_1_N_matrix=Matrix([a1,a2]).T*v_2_3 #According to the transformation matrix, calculate the position of the vector a1,a2 with the same coefficient.
 from sympy.vector import matrix_to_vector
-v_1_N=matrix_to_vector(v_1_N_matrix,C) #向量转矩阵
-vector_plot_3d(ax,C,v_0,v_1_N,color='orange',label='v_1_N',arrow_length_ratio=0.1) #绘制新位置向量
+v_1_N=matrix_to_vector(v_1_N_matrix,C) #Convert vector to matrix
+vector_plot_3d(ax,C,v_0,v_1_N,color='orange',label='v_1_N',arrow_length_ratio=0.1) #Draw a vector with a new position
 
 ax.set_xlim3d(-7,2)
 ax.set_ylim3d(-2,7)
 ax.set_zlim3d(-2,5)
 
 ax.legend()
-ax.view_init(90,0) #可以旋转图形的角度，方便观察
+ax.view_init(90,0) #The angle of the graph can be rotated for easy observation
 plt.show()
 ```
 
-    v_2,v_3简化的行阶梯形矩阵:
+    v_2,v_3 reduced row echelon form matrix:
     __________________________________________________
     ⎛⎡1  0  0⎤        ⎞
     ⎜⎢       ⎥, (0, 1)⎟
@@ -681,11 +689,11 @@ plt.show()
 <a href=""><img src="./imgs/9_4.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.3.2 特殊的线性映射（线性变换）
-线性映射的矩阵计算方法就是将待变换的对象（向量集合），通过乘以变换矩阵，就可获得同一向量空间下新的对象。使用sympy比较方便数据量比较小的矩阵运算，方便观察矩阵形式。但是如果数据量大，则使用numpy库所提供的矩阵计算方法。在下述案例中，从[semantic3d](http://semantic3d.net/)下载城市点云数据'bildstein_station1'，并对其进行了降采样，以加快计算速度。对于点云数据的处理可参考点云部分。
+#### 1.3.2 Special linear mapping (linear transformation)
+The matrix calculation method of linear mapping obtains new objects in the same vector space by multiplying the objects to be transformed(vector set) by the transformation matrix. It is convenient to use the Sympy matrix operation with a small data size and easy to observe matrix form. However, if the amount of data is large, use the matrix calculation method provided by the Numpy library. In the following case, download the city-point cloud data 'bildstein_station1' from [semantic3d](http://semantic3d.net/), and de-sample it to speed up the computation. The processing of point cloud data can refer to the point cloud part.
 
-点云数据读取后，包括的信息由点坐标和点颜色。点坐标可以理解为在单位向量为$\vec{i},\vec{j},\vec{k}$的$C$向量空间下的向量，如果提供相应的变换矩阵，就可以对原点云数据加以空间上的变换，例如移动、旋转、缩放、透视、镜像、切变等。缩放对应的矩阵为：$ \begin{bmatrix}scale & 0&0 \\0 &scale&0\\0&0&scale \end{bmatrix} $；延z轴（$\vec{k}$）旋转对应的矩阵为：$ \begin{bmatrix} cos( \theta ) & -sin( \theta )&0 \\sin( \theta ) &cos( \theta )&0\\0&0&1\end{bmatrix} $；给定点S(x,y,z)的透视为：$ \frac{1}{- s_{z} }  \begin{bmatrix}  s_{z} & 0& s_{x}&0 \\0 &-s_{z} & s_{y} &0\\ 0&0&1&0 
- \\0&0&1&-s_{z} \end{bmatrix} $，透视变换中使用了齐次坐标（homogeneous coordinates）。
+After the point cloud data is read, the information included has some coordinates and point color. Point coordinates can be understood as vectors in the $C$ vector space with unit vectors of $\vec{i},\vec{j},\vec{k}$; if the corresponding transformation matrix is provided, spatial transformation can be performed on the origin cloud data, such as movement, rotation, scaling, perspective, mirror image, shear, etc. The matrix corresponding to scaling is: $ \begin{bmatrix}scale & 0&0 \\0 &scale&0\\0&0&scale \end{bmatrix} $；The matrix corresponding to the rotation along the z-axis($\vec{k}$) is: $ \begin{bmatrix} cos( \theta ) & -sin( \theta )&0 \\sin( \theta ) &cos( \theta )&0\\0&0&1\end{bmatrix} $；The perspective of S(x,y,z) at the given point is: $ \frac{1}{- s_{z} }  \begin{bmatrix}  s_{z} & 0& s_{x}&0 \\0 &-s_{z} & s_{y} &0\\ 0&0&1&0 
+ \\0&0&1&-s_{z} \end{bmatrix} $，Homogeneous coordinates have been used in the perspective transformation.
 
 
 ```python
@@ -696,7 +704,7 @@ cloud_pts_fp=r".\data\bildstein_station1.txt"
 cloud_pts=pd.read_csv(cloud_pts_fp)
 #cloud_pts['hex']=cloud_pts.apply(lambda row:'%02x%02x%02x' % (int(row.r/255),int(row.g/255),int(row.b/255)),axis=1)
 print("data reading completed")
-cloud_pts['hex']=cloud_pts.apply(lambda row:matplotlib.colors.to_hex([row.r/255,row.g/255,row.b/255]),axis=1) #将色彩rgb格式转换为hex格式，用于matplotlib图形打印
+cloud_pts['hex']=cloud_pts.apply(lambda row:matplotlib.colors.to_hex([row.r/255,row.g/255,row.b/255]),axis=1) #Converts the color RGB format to HEX for Matplotlib graphic printing
 ```
 
     data reading completed
@@ -716,19 +724,19 @@ axs[1,0]=fig.add_subplot(2,2,3, projection='3d')
 axs[1,1]=fig.add_subplot(2,2,4, projection='3d')
 
 axs[0,0].scatter(cloud_pts.x,cloud_pts.y,cloud_pts.z,c=cloud_pts.hex,s=0.1)
-#A - 缩放
+#A - scaling
 scale=0.5
 f_scale=np.array([[scale,0,0],[0,scale,0],[0,0,scale]])
 pts_scale=np.matmul(pts,f_scale)
 axs[0,1].scatter(pts_scale[:,0],pts_scale[:,1],pts_scale[:,2],c=cloud_pts.hex,s=0.1)
 
-#B - 旋转
-angle=math.radians(-20) #度转换为弧度
+#B - rotation
+angle=math.radians(-20) #Convert degree to radians
 f_rotate=np.array([[math.cos(angle),-math.sin(angle),0],[math.sin(angle),math.cos(angle),0],[0,0,1]])
 pts_rotate=np.matmul(pts,f_rotate)
 axs[1,0].scatter(pts_rotate[:,0],pts_rotate[:,1],pts_rotate[:,2],c=cloud_pts.hex,s=0.1)
 
-#C - 透视
+#C - perspective
 s1,s2,s3=2,2,2
 f_persp=np.array([[-s3,0,0,0],[0,-s3,0,0],[s1,s2,0,1],[0,0,0,-s3]])*1/(1-s3)
 pts_homogeneousCoordinates=np.hstack((pts,np.ones(pts.shape[0]).reshape(-1,1)))
@@ -749,7 +757,7 @@ axs[1,0].set_xlim3d(0,50)
 axs[1,0].set_ylim3d(0,100)
 axs[1,0].set_zlim3d(0,40)
 
-axs[0,0].view_init(45,0) #可以旋转图形的角度，方便观察
+axs[0,0].view_init(45,0) #The angle of the graph can be rotated for easy observation
 axs[0,1].view_init(45,0)
 axs[1,0].view_init(45,0)
 axs[1,1].view_init(90,0)
@@ -760,27 +768,28 @@ plt.show()
 <a href=""><img src="./imgs/9_5.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.3.3 秩
-$f$为从$\\R^{n} $到$\\R^{m} $的映射，被映射到零元素（$\vec 0$）的全体元素的集合，即集合$\Bigg\{\begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} \bigg\rvert_{} \begin{bmatrix}0 \\0\\ \vdots \\0\end{bmatrix} =\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
- \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} \begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix}\Bigg\}$称为映射$f$的核,一般表示为$K_{er} f$。为了与’映射$f$的核‘相呼应，则把’映射$f$的值域‘，即集合$f\Bigg\{\begin{bmatrix} y_{1}  \\y_{2} \\ \vdots \\y_{m} \end{bmatrix}   \bigg\rvert_{}   \begin{bmatrix}  y_{1}  \\y_{2} \\ \vdots \\y_{m} \end{bmatrix} =\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
- \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} \begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix}\Bigg\}$称为’映射$f$的像空间‘，一般表示为为$I_{m} f$。
+#### 1.3.3 Rank
+$f$ is the mapping from $\\R^{n} $ to $\\R^{m} $, a collection of all elements that are mapped to zero elements ($\vec 0$), namely set $\Bigg\{\begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} \bigg\rvert_{} \begin{bmatrix}0 \\0\\ \vdots \\0\end{bmatrix} =\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
+ \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} \begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix}\Bigg\}$ is called the kernel of the mapping $f$, and is generally expressed as $K_{er} f$。To correspond to the kernel of $f$, then, the value domain of mapping $f$, namely set $f\Bigg\{\begin{bmatrix} y_{1}  \\y_{2} \\ \vdots \\y_{m} \end{bmatrix}   \bigg\rvert_{}   \begin{bmatrix}  y_{1}  \\y_{2} \\ \vdots \\y_{m} \end{bmatrix} =\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
+ \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} \begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix}\Bigg\}$ is called the image space of mapping $f$, and is generally expressed as $I_{m} f$。
  
- $K_{er} f$是$\\R^{n} $的子空间，$I_{m} f$是$\\R^{m} $的子空间。在$K_{er} f$与$I_{m} f$之间，有’维数公式‘：$n- dimK_{er} f=dim I_{m}f $。
+ $K_{er} f$ is the subspace of $\\R^{n} $, $I_{m} f$ is the subspace of $\\R^{m} $. Between $K_{er} f$ and $I_{m} f$, there is 'dimension formula': $n- dimK_{er} f=dim I_{m}f $。
  
- 把向量$ \begin{bmatrix} a_{11} \\ a_{21}\\ \vdots \\ a_{m1}   \end{bmatrix},\begin{bmatrix} a_{12} \\ a_{22}\\ \vdots \\ a_{m2}   \end{bmatrix} , \ldots , \begin{bmatrix} a_{1n} \\ a_{2n}\\ \vdots \\ a_{mn}   \end{bmatrix} $中线性无关的向量的个数，即$\\R^{m} $子空间$I_{m} f$的维数称为$m \times n$矩阵$\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
- \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} $的秩，一般表示为$rank\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
+ The number of linearly independent vectors in vector $ \begin{bmatrix} a_{11} \\ a_{21}\\ \vdots \\ a_{m1}   \end{bmatrix},\begin{bmatrix} a_{12} \\ a_{22}\\ \vdots \\ a_{m2}   \end{bmatrix} , \ldots , \begin{bmatrix} a_{1n} \\ a_{2n}\\ \vdots \\ a_{mn}   \end{bmatrix} $,namely the dimension of $I_{m} f$ subspace of $\\R^{m} $ is called the rank of the $m \times n$ matrix $\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
+ \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} $，which is generally expressed as $rank\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
  \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} $,或$r(A),rank(A),rk(A)$。
  
- 用sympy计算秩（rank）方法为matrix.rank()。
+ matrix.rank() provided by Sympy is used to calculate rank.
 
-### 1.4 特征值和特征向量
-在特殊的线性映射部分，假设给定单位向量为$\vec{i},\vec{j},\vec{k}$，即$\begin{bmatrix}1& 0&0 \\0 & 1&0 \\0&0&1\end{bmatrix} $的$C$向量空间，通过变换矩阵$ \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix} $实现了对原向量集（点云数据）的缩放。为方便解释，如果仅考虑点云数据中的一个点，$c_{1}, c_{2},c_{3}=x,y,z=39,73,22$，，则该点在$C$向量空间的向量为$C_{1}i+C_{2}j+C_{3}k=C_{1} \begin{bmatrix}1\\0\\0 \end{bmatrix}+ C_{2} \begin{bmatrix}0\\1\\0 \end{bmatrix}+ C_{3} \begin{bmatrix}0\\0\\1 \end{bmatrix}$。进行线性映射和公式变换，$ \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix}\Bigg\{C_{1} \begin{bmatrix}1\\0\\0 \end{bmatrix}+ C_{2} \begin{bmatrix}0\\1\\0 \end{bmatrix}+ C_{3} \begin{bmatrix}0\\0\\1 \end{bmatrix}\Bigg\}= C_{1} \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix}\begin{bmatrix}1\\0\\0 \end{bmatrix}+C_{2} \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix}\begin{bmatrix}0\\1\\0 \end{bmatrix}+C_{3} \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix}\begin{bmatrix}0\\0\\1 \end{bmatrix}=C_{1}\begin{bmatrix}scale1\\0\\0\end{bmatrix}+C_{1}\begin{bmatrix}0\\scale2\\0\end{bmatrix}+C_{1}\begin{bmatrix}0\\0\\scale3 \end{bmatrix}=C_{1}\Bigg\{scale1 \begin{bmatrix}1\\0\\0 \end{bmatrix}  \Bigg\}+C_{2}\Bigg\{scale2 \begin{bmatrix}0\\1\\0 \end{bmatrix}  \Bigg\}+C_{3}\Bigg\{scale3 \begin{bmatrix}0\\0\\1\end{bmatrix}  \Bigg\}$，变换后的公式保持了$C$向量空间下的单位向量$\vec{i},\vec{j},\vec{k}$不变，则$scale1,scale2,scale3$为变换矩阵的特征值，而$scale1$对应的$\begin{bmatrix}1\\0\\0\end{bmatrix} $，$scale2$对应的$\begin{bmatrix}0\\1\\0\end{bmatrix} $，$scale3$对应的$\begin{bmatrix}0\\0\\1\end{bmatrix} $，为其特征向量。
+### 1.4 Eigenvalues and eigenvectors
+In the special linear mapping section, the given unit vector is $\vec{i},\vec{j},\vec{k}$, that is, the $C$ vector space of  $\begin{bmatrix}1& 0&0 \\0 & 1&0 \\0&0&1\end{bmatrix} $ , by the transformation matrix $ \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix} $, the original vector set(point cloud data) is scaled. For the convenience of explanation, if only consider a point in the point cloud data, $c_{1}, c_{2},c_{3}=x,y,z=39,73,22$, the point in the $C$ vector space is a vector $C_{1}i+C_{2}j+C_{3}k=C_{1} \begin{bmatrix}1\\0\\0 \end{bmatrix}+ C_{2} \begin{bmatrix}0\\1\\0 \end{bmatrix}+ C_{3} \begin{bmatrix}0\\0\\1 \end{bmatrix}$. Doing linear mapping and formula transformation,$ \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix}\Bigg\{C_{1} \begin{bmatrix}1\\0\\0 \end{bmatrix}+ C_{2} \begin{bmatrix}0\\1\\0 \end{bmatrix}+ C_{3} \begin{bmatrix}0\\0\\1 \end{bmatrix}\Bigg\}= C_{1} \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix}\begin{bmatrix}1\\0\\0 \end{bmatrix}+C_{2} \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix}\begin{bmatrix}0\\1\\0 \end{bmatrix}+C_{3} \begin{bmatrix}scale1 & 0&0 \\0 &scale2&0\\0&0&scale3 \end{bmatrix}\begin{bmatrix}0\\0\\1 \end{bmatrix}=C_{1}\begin{bmatrix}scale1\\0\\0\end{bmatrix}+C_{1}\begin{bmatrix}0\\scale2\\0\end{bmatrix}+C_{1}\begin{bmatrix}0\\0\\scale3 \end{bmatrix}=C_{1}\Bigg\{scale1 \begin{bmatrix}1\\0\\0 \end{bmatrix}  \Bigg\}+C_{2}\Bigg\{scale2 \begin{bmatrix}0\\1\\0 \end{bmatrix}  \Bigg\}+C_{3}\Bigg\{scale3 \begin{bmatrix}0\\0\\1\end{bmatrix}  \Bigg\}$，The transformed formula remains the unit vector $\vec{i},\vec{j},\vec{k}$ unchanged in the $C$ vector space, then  $scale1,scale2,scale3$ are the eigenvalues of the transformation matrix, and $\begin{bmatrix}1\\0\\0\end{bmatrix} $ corresponding to $scale1$, $\begin{bmatrix}0\\1\\0\end{bmatrix} $ corresponding to $scale2$, $\begin{bmatrix}0\\0\\1\end{bmatrix} $ corresponding to $scale3$ are its eigenvectors.
 
-当$\begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} $ （输入）通过$m \times n$矩阵$\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
- \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} $对应的从$\\R^{n} $到$\\R^{m} $的线性映射$f$，形成的像是$\begin{bmatrix}  y_{1} \\y_{2}\\ \vdots \\y_{n} \end{bmatrix} = \lambda \begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} $（输出），则把$、lambda $叫做方阵$\begin{bmatrix} a_{11}  & a_{12}& \ldots & a_{1n}  \\ a_{21}  & a_{22}& \ldots & a_{2n} \\ 
- \vdots & \vdots & \ddots & \vdots \\  a_{m1}  & a_{m2}& \ldots & a_{mn} \end{bmatrix} $的特征值（eigenvalue），把$\begin{bmatrix}  x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} $ 叫做与特征值$\lambda$对应的特征向量(eigenvector)。此外，零向量不能解释为特征向量。
+When $\begin{bmatrix} x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} $ (input) passes the $m \times n$ matrix $\begin{bmatrix} a_{11} & a_{12}& \ldots & a_{1n} \\ a_{21} & a_{22}& \ldots & a_{2n} \\ 
+ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2}& \ldots & a_{mn} \end{bmatrix} $, the corresponding linear mapping of $f$ from $\\R^{n} $ to $\\R^{m} $, the formed image is $\begin{bmatrix} y_{1} \\y_{2}\\ \vdots \\y_{n} \end{bmatrix} = \lambda \begin{bmatrix} x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} $(output).  $\lambda$ is called eigenvalue of the square matrix $\begin{bmatrix} a_{11} & a_{12}& \ldots & a_{1n} \\ a_{21} & a_{22}& \ldots & a_{2n} \\ 
+ \vdots & \vdots & \ddots & \vdots \\ a_{m1} & a_{m2}& \ldots & a_{mn} \end{bmatrix} $, $\begin{bmatrix} x_{1} \\x_{2}\\ \vdots \\x_{n} \end{bmatrix} $ is called the eigenvector corresponding to the eigenvalue $\lambda$. Furthermore, the zero vector cannot be interpreted as an eigenvector.
+
  
-sympy库提供了matrix.eigenvals()，matrix.eigenvects()方法直接计算特征值和特征向量。
+The eigenvalue and the eigenvector are directly calculated utilizing Sympy library, matrix.eigenvals()，matrix.eigenvects().
 
 
 ```python
@@ -808,24 +817,24 @@ pprint(M.eigenvects())
     ⎣⎝           ⎣⎣0⎦⎦⎠  ⎝           ⎣⎣0⎦⎦⎠  ⎝           ⎣⎣1⎦⎦⎠⎦
     
 
-### 1.5 要点
-#### 1.5.1 数据处理技术
+### 1.5 key point
+#### 1.5.1 data processing technique
 
-* sympy库计算矩阵、向量
+* Use the Sympy library to calculate the matrix and vector.
 
-* numpy库计算矩阵（尤其大批量数据）
+* Numpy library for computing matrices(especially large volumes of data)
 
-* 使用open3d处理点云数据
+* Use Open3D to process point cloud data.
 
-#### 1.5.2 新建立的函数
+#### 1.5.2 The newly created function tool
 
-* funciton - 转换SymPy的vector及Matrix数据格式为matplotlib可以打印的数据格式，`vector_plot_3d(ax_3d,C,origin_vector,vector,color='r',label='vector',arrow_length_ratio=0.1)`
+* funciton - Transform vector and Matrix data formats in Sympy to Matplotlib printable  data formats, `vector_plot_3d(ax_3d,C,origin_vector,vector,color='r',label='vector',arrow_length_ratio=0.1)`
 
-* function - 给定向量，及对应系数，延向量绘制，`move_alongVectors(vector_list,coeffi_list,C,ax,)`
+* function - Given the vector and the corresponding coefficient, draw along the vector, `move_alongVectors(vector_list,coeffi_list,C,ax,)`
 
-* function - 将向量集合转换为向量矩阵，并计算简化的行阶梯形矩阵，`vector2matrix_rref(v_list,C)`
+* function - The vector set is converted to a vector matrix, and the reduced row echelon form matrix is calculated,`vector2matrix_rref(v_list,C)`
 
-#### 1.5.3 所调用的库
+#### 1.5.3 The python libraries that are being imported
 
 
 ```python
@@ -836,7 +845,7 @@ from sympy.vector.coordsysrect import CoordSys3D
 from sympy.vector.vector import Vector, BaseVector
 from sympy.vector import Vector
 from sympy.vector import CoordSys3D
-from sympy.abc import a, b, c,d,e,f,g,h,o,p #相当于a,b=sympy.symbols(["a","b"])
+from sympy.abc import a, b, c,d,e,f,g,h,o,p 
 from sympy import pprint,Eq,solve
 from sympy import solve_linear_system
 from sympy.vector import matrix_to_vector
@@ -853,6 +862,6 @@ import pandas as pd
 import math
 ```
 
-#### 1.5.4 参考文献
-1. [日]高桥 信著作,Inoue Iroha,株式会社 TREND-PRO漫画制作,腾永红译.漫画线性代数[M].科学出版社.北京.2009.08；
+#### 1.5.4 Reference
+1. Shin Takahashi, Iroha Inoue.The Manga Guide to Linear Algebra.No Starch Press; 1st Edition (May 1, 2012);
 2. Gilbert Strang.Introduction to linear algbra[M].Wellesley-Cambridge Press; Fifth Edition edition (June 10, 2016)
