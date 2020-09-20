@@ -1,6 +1,6 @@
 > Created on Sat Aug  8 19/52/37 2020  @author: Richie Bao-caDesign设计(cadesign.cn)
 
-## 1. 遥感影像解译（基于NDVI），建立采样工具（GUI_tkinter），混淆矩阵
+## 1. Remote sensing image interpretation (based on NDVI), the establishment of sampling tool(GUI_tkinter), confusion matrix
 如果只是分析城市的绿地、裸地和水体，不涉及到更精细的土地覆盖分类，例如灌丛、草地、裸地、居民地、园地、耕地、河流，湖泊等等，则可以自行利用Landsat系列遥感影像通过NDVI、NDWI和NDBI等手段提取绿地（可进一步细分耕地和林地）、裸地和水体等；对于精细的分类推荐使用eCognition等平台工具解译。基于NDVI的遥感影像解译，首先是读取能够反映不同季节绿地情况的Landsate不同季节的影像，根据研究的目的范围裁切，裁切的边界可以在QGIS中完成;->然后计算不同季节的NDVI;->再通过使用交互的plotly图表，分析NDVI取值范围，判断不同土地覆盖阈值范围，解译影像；->如果要判断解译的精度需要给出采样，即随机提取的点的真实土地覆盖类型，这个过程是一个需要手工操作的过程，而python的内嵌库[tkinter](https://docs.python.org/3/library/tkinter.html)的图形用户界面(Graphical User Interface,GUI)能够方便的帮助我们快速的建立交互操作平台。从而完成采样工作；->最后计算混淆矩阵和百分比精度，判断解译的精度。
 
 ### 1.1 影像数据处理
