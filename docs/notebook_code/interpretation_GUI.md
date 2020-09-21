@@ -1,12 +1,13 @@
-> Created on Sat Aug  8 19/52/37 2020  @author: Richie Bao-caDesign设计(cadesign.cn)
+> Created on Sat Aug  8 19/52/37 2020  @author: Richie Bao-caDesign (cadesign.cn)
 
 ## 1. Remote sensing image interpretation (based on NDVI), the establishment of sampling tool(GUI_tkinter), confusion matrix
-如果只是分析城市的绿地、裸地和水体，不涉及到更精细的土地覆盖分类，例如灌丛、草地、裸地、居民地、园地、耕地、河流，湖泊等等，则可以自行利用Landsat系列遥感影像通过NDVI、NDWI和NDBI等手段提取绿地（可进一步细分耕地和林地）、裸地和水体等；对于精细的分类推荐使用eCognition等平台工具解译。基于NDVI的遥感影像解译，首先是读取能够反映不同季节绿地情况的Landsate不同季节的影像，根据研究的目的范围裁切，裁切的边界可以在QGIS中完成;->然后计算不同季节的NDVI;->再通过使用交互的plotly图表，分析NDVI取值范围，判断不同土地覆盖阈值范围，解译影像；->如果要判断解译的精度需要给出采样，即随机提取的点的真实土地覆盖类型，这个过程是一个需要手工操作的过程，而python的内嵌库[tkinter](https://docs.python.org/3/library/tkinter.html)的图形用户界面(Graphical User Interface,GUI)能够方便的帮助我们快速的建立交互操作平台。从而完成采样工作；->最后计算混淆矩阵和百分比精度，判断解译的精度。
+If the only analysis of the urban green space(which can be further subdivided cultivated land and forest land), bare land, and water, nothing to do with more detailed land cover classification, such as thickets, grassland, bare land, residential land, garden land, cultivated land, rivers, lakes, and so on, can use of Landsat series of remote sensing image to extract by NDVI, NDWI, and NDBI. The use of platform-tools like eCognition is recommended for sophisticated classification. The NDVI based remote sensing image interpretation was first to read Landsat's images with different seasons, which reflected the different seasons of green space. The cropping boundary can be completed in QGIS according to the research purpose scope; -> Then the NDVI in different seasons is calculated; -> Then, the interactive Plolyly was used to analyze the value range of NDVI, judge the range of different land cover threshold, and interpret the image. -> If needed to judge the accuracy of interpretation is given sampling, namely random extraction point real land cover types; this process is a manual process, and the embedded python library [tkinter](https://docs.python.org/3/library/tkinter.html), which build Graphical User Interface(GUI) can easily help us to establish interactive operation platform quickly, to complete the sampling work; -> Finally, the confusion matrix and percentage accuracy are calculated to judge the interpretation accuracy.
 
-### 1.1 影像数据处理
-为了方便影像的处理，通常将一些常用的工具构建为函数，例如下述的影像裁切函数`raster_clip`。影像处理最为需要关心的就是坐标投影系统，通常Landsat影像都包含对应的投影系统，例如UTM,DATUM:WGS84,UTM_ZONE16，因此最好的选择就是直接统一为该坐标投影系统，不建议转换为其它投影。对于其它地理文件而言，如果是栅格数据通常需要转换投影，即栅格文件本书通常是有自己投影的。而对于.shp的矢量地理文件，一般保持为WGS84，即EPSG:4326，通常不含投影，方便用于不同的坐标投影系统平台，以及作为中转的数据格式类型。因此，在QGIS等平台下建立裁切边界时，仅保持其坐标系为WGS84，而不配置投影。在所定义的裁切函数中，根据所读取的Landsat影像的投影系统，再进行定义，方便数据的处理。
+### 1.1 Image data processing
+Some commonly used tools are usually built as functions to facilitate image processing, such as the following image crop function `raster_clip`. The most important image processing aspect is the coordinate projection system; Landsat images usually contain corresponding projection systems, such as UTM, DATUM: WGS84, UTM_ZONE16. Therefore, the best choice is to unify the coordinate projection system directly, and conversion to other projection systems is not recommended. For other geographic files, raster data usually requires conversion projections, meaning that it has its projection. For vector geographic files .shp, they are generally kept as WGS84, that is, EPSG:4326, and usually do not contain projection, which is convenient for different coordinate projection system platforms and data format types transit. Therefore, when the cutting boundary is established under the QGIS platform, the coordinate system is only maintained as WGS84, and the projection is not configured.  In the defined cropping function, it is defined according to the projection system of the Landsat image read to facilitate data processing.
 
-影像数据一般都很大，因此影像数据的处理，尤其高分辨的影像尤其花费时间，因此有必要将处理后的数据即刻保存到硬盘空间下，当需要时直接从硬盘中读取，避免再次花费时间计算。
+
+Image data are generally very large, so image data processing, especially the high-resolution image, takes time. Therefore, it is necessary to save the processed data immediately to the hard disk space, and directly read it from the hard disk when needed, to avoid spending time on calculation again.
 
 
 ```python
@@ -14,12 +15,12 @@ import util
 import os
 workspace=r"F:\data_02_Chicago\9_landsat\data_processing"
 Landsat_fp={
-        "w_180310":r"F:\data_02_Chicago\9_landsat\LC08_L1TP_023031_20180310_20180320_01_T1", #冬季
-        "s_190820":r"F:\data_02_Chicago\9_landsat\LC08_L1TP_023031_20190804_20190820_01_T1", #夏季
-        "a_191018":r"F:\data_02_Chicago\9_landsat\LC08_L1TP_023031_20191007_20191018_01_T1" #秋季   
+        "w_180310":r"F:\data_02_Chicago\9_landsat\LC08_L1TP_023031_20180310_20180320_01_T1", #Winter
+        "s_190820":r"F:\data_02_Chicago\9_landsat\LC08_L1TP_023031_20190804_20190820_01_T1", #Summer
+        "a_191018":r"F:\data_02_Chicago\9_landsat\LC08_L1TP_023031_20191007_20191018_01_T1" #Autumn
         }
 
-w_180310_band_fp_dic,w_180310_Landsat_para=util.LandsatMTL_info(Landsat_fp["w_180310"]) #LandsatMTL_info(fp)函数，在Landsat遥感影像处理部分阐述，将其放置于util.py文件中后调用
+w_180310_band_fp_dic,w_180310_Landsat_para=util.LandsatMTL_info(Landsat_fp["w_180310"]) #LandsatMTL_info(fp) function, described in the Landsat remote sensing image processing section, is placed in the util.py file and then called.
 s_190820_band_fp_dic,s_190820_Landsat_para=util.LandsatMTL_info(Landsat_fp["s_190820"])
 a_191018_band_fp_dic,a_191018_Landsat_para=util.LandsatMTL_info(Landsat_fp["a_191018"])
 
@@ -33,21 +34,21 @@ def raster_clip(raster_fp,clip_boundary_fp,save_path):
     from pyproj import CRS
     import rasterio as rio
     '''
-    function - 给定裁切边界，批量裁切栅格数据
+    function - Given cutting boundaries, batch cropping raster data
     
     Paras:
-    raster_fp - 待裁切的栅格数据文件路径（.tif）,具有相同的坐标投影系统
-    clip_boundary - 用于裁切的边界（.shp，WGS84，无投影）
+    raster_fp - Raster data file paths(.tif) to be trimmed with the same coordinate projection system.
+    clip_boundary - The boundary for cropping(.shp, WGS84, no projection)
     
     return:
-    rasterClipped_pathList - 裁切后的文件路径列表
+    rasterClipped_pathList - The list of file paths after cropping
     '''
     clip_bound=gpd.read_file(clip_boundary_fp)
     with rio.open(raster_fp[0]) as raster_crs:
         raster_profile=raster_crs.profile
         clip_bound_proj=clip_bound.to_crs(raster_profile["crs"])
     
-    rasterClipped_pathList=es.crop_all(raster_fp, save_path, clip_bound_proj, overwrite=True) #对所有波段band执行裁切
+    rasterClipped_pathList=es.crop_all(raster_fp, save_path, clip_bound_proj, overwrite=True) #Perform crop on all bands
     print("finished clipping.")
     return rasterClipped_pathList
     
@@ -62,7 +63,8 @@ s_190820_clipped_fp=raster_clip(list(s_190820_band_fp_dic.values()),clip_boundar
     finished clipping.
     
 
-通过定义的裁切函数，直接计算冬季和秋季影像。
+The winter and autumn images are calculated directly by the defined cropping function.
+
 
 
 ```python
@@ -77,7 +79,8 @@ a_191018_clipped_fp=raster_clip(list(a_191018_band_fp_dic.values()),clip_boundar
     finished clipping.
     
 
-从美国地质调查局下载的Landsat影像，各个波段是单独的文件。为了避免每次读取单个文件，则使用earthpy的.stack方法将所有波段放置于一个文件下，即数组形式，方便数据处理。
+Landsat images downloaded from the U.S. Geographical Survey, each band is a separate file.  The .stack method provided by the Earthpy library is used to place all bands under a single file in the form of an array, for easy data processing to avoid reading a single file at a time.
+
 
 
 ```python
@@ -97,7 +100,9 @@ print("finished stacking_3...")
     finished stacking_3...
     
 
-只有将数据显示出来，才能更好的判断地理空间数据处理的结果是否正确。建立`bands_show`影像波段显示函数，查看影像。可以通过`band_num`输入参数，确定合成显示的波段。
+
+Only by displaying the data can we better judge whether the result of geospatial data processing is correct. Set up `bands_show` image band display function to view the image. The input parameter band_num can determine the band displayed in the synthesis.
+
 
 
 ```python
@@ -106,19 +111,19 @@ def bands_show(img_stack_list,band_num):
     from rasterio.plot import plotting_extent
     import earthpy.plot as ep
     '''
-    function - 指定波段，同时显示多个遥感影像
+    function - Specify the band and display multiple remote sensing images at the same time.
     
     Paras:
-    img_stack_list - 影像列表
-    band_num - 显示的层
+    img_stack_list - Image list
+    band_num - Display the layer
     '''
     
     def variable_name(var):
         '''
-        function - 将变量名转换为字符串
+        function - Converts a variable name to a string
         
         Paras:
-        var - 变量名
+        var - The variable name
         '''
         return [tpl[0] for tpl in filter(lambda x: var is x[1], globals().items())][0]
 
@@ -146,7 +151,8 @@ bands_show(img_stack_list,band_num)
 <a href=""><img src="./imgs/11_07.png" height="auto" width="auto" title="caDesign"></a>
 
 
-从上述直接显示的合成波段影像来看，显示效果偏暗，不利于细节的观察。借助[scikit-image](https://scikit-image.org/)图像处理库中的exposure方法，可以拉伸图像，调亮与增强对比度。处理时需要注意要逐波段的处理，然后再合并。
+
+From the synthetic band images directly displayed above, the display effect is dark, which is not conducive to observing details. The exposure method in the [scikit-image](https://scikit-image.org/) image processing library allows us to stretch the image, lighten, and enhance the contract. The processing needs to be done on a band by band basis and then merged.
 
 
 ```python
@@ -154,14 +160,14 @@ def image_exposure(img_bands,percentile=(2,98)):
     from skimage import exposure
     import numpy as np
     '''
-    function - 拉伸图像 contract stretching
+    function - contract stretching images
     
     Paras:
-    img_bands - landsat stack后的波段
-    percentile - 百分位数
+    img_bands - landsat The band processed by stack
+    percentile - Percentile
     
     return:
-    img_bands_exposure - 返回拉伸后的影像
+    img_bands_exposure - Returns the stretched image
     '''
     bands_temp=[]
     for band in img_bands:
@@ -181,7 +187,8 @@ a_191018_exposure=image_exposure(a_191018_array)
     finished exposure.
     
 
-显示处理后的遥感影像，对比原显示效果，可见有明显的提升。
+Compared with the original display effect, it can be seen that the processed remote sensing image has obvious improvement.
+
 
 
 ```python
@@ -194,8 +201,9 @@ bands_show(img_stack_list,band_num)
 <a href=""><img src="./imgs/11_08.png" height="auto" width="auto" title="caDesign"></a>
 
 
-### 1.2 计算NDVI，交互图像与解译
-调用在阐述影像波段计算指数时，所定义的NDVI计算函数`NDVI(RED_band,NIR_band)`，计算NDVI归一化植被指数。同时查看计算结果的最大和最小值，即值的区间，可以看到s_190820_NDVI数据（夏季），明显有错误，通过查看上述图像，也能够发现所下载的夏季的Landsat影像在城区中有很多云，初步判断可能是造成数据异常的原因。
+
+### 1.2 Computing NDVI, interactive image, and interpretation
+The NDVI calculation function `NDVI(RED_band, NIR_band)` defined in the description of the image band calculation index is called to calculate NDVI(Normalized Vegetation Index). Simultaneously, by examining the maximum and minimum values of the calculation results, namely the interval of the values, it can be seen s_190820_NDVI data(summer) has obvious errors. By viewing the above images, it can also be found that the download Landsat images in summer have a lot of clouds in the urban area, which may be the causes of the data anomaly.
 
 
 ```python
@@ -217,7 +225,7 @@ a_191018_NDVI=util.NDVI(a_191018.read(4),a_191018.read(5))
     NDVI_min:0.000000,max:15.768559
     
 
-因为NDVI的数据为一个维度数组，可以直接使用在异常值处理部分所定义的`is_outlier(data,threshold=3.5)`函数，处理异常值，并打印NDVI图像，查看处理结果，能够较为清晰的看到NDVI对绿地植被的识别，可以较好的区分水体和裸地。
+Because NDVI data is a dimensional array, we can directly use the `is_outlier(data,threshold=3.5)` function defined in the outlier processing section to process outliers and print NDVI image to see the processing results. NDVI's recognition of green vegetation can be seen more clearly, which can better distinguish the water body from bare land.
 
 
 ```python
@@ -226,9 +234,9 @@ import earthpy.plot as ep
 fig, axs=plt.subplots(1,3,figsize=(30, 12))
 ep.plot_bands(w_180310_NDVI, cbar=False, title="w_180310_NDVI", ax=axs[0],cmap='flag')
 
-s_190820_NDVI=util.NDVI(s_190820.read(4),s_190820.read(1)) #对异常值采取了原地取代的方式，因此如果多次运行异常值检测，需要重新计算NDVI，保持原始数据不变 
+s_190820_NDVI=util.NDVI(s_190820.read(4),s_190820.read(1)) #The outlier is replaced in situ. Therefore, if the outlier detection is run multiple times, NDVI must be recalculated to keep the original data unchanged.
 is_outlier_bool,_=util.is_outlier(s_190820_NDVI,threshold=3)
-s_190820_NDVI[is_outlier_bool]=0 #原地取代
+s_190820_NDVI[is_outlier_bool]=0 #In situ to replace
 ep.plot_bands(s_190820_NDVI, cbar=False, title="s_190820_NDVI", ax=axs[1],cmap='terrain')
 
 ep.plot_bands(a_191018_NDVI, cbar=False, title="a_191018_NDVI", ax=axs[2],cmap='flag')
@@ -242,9 +250,9 @@ plt.show()
 <a href=""><img src="./imgs/11_09.png" height="auto" width="auto" title="caDesign"></a>
 
 
-直接处理形式为(4900, 4604)的NDVI数组，包含$4900 \times 4604$多个数据，如果计算机硬件条件可以，保证在所能够承担的计算时间长度下，可以不用压缩数据。否则，在不影响最终计算结果对分析的影响，可以适当的压缩影像，直接使用[scikit-image](https://scikit-image.org/)图像处理库中的rescale方法，同时也调入了resize, downscale_local_mean方法，可以自行查看其功能。一般计算的方法是求取局部均值
+Directly processed in the form of (4900, 4604) NDVI array, containing $4900 \times 4604$ multiple data, if the computer hardware conditions allow, to the extent that the computation time is affordable, can not be compressed data. Otherwise, without affecting the final calculation results on the analysis, the image can be compressed appropriately. The method of 'rescale' in [scikit-image](https://scikit-image.org/) image processing library can be directly used, 'resize', 'downscale_local_mean' are also called in, and you can view their functionalities for yourself. The general method of calculation is to take the local mean.
 
-打印夏季影像计算所得的NDVI，按阈值显示颜色的图像，方便查看不同阈值区间的区域范围，便于确定阈值，从而解译土地用地分类。
+The NDVI obtained from summer image calculation is printed to display the color images according to the threshold value, which is convenient for viewing the area range of different threshold intervals and determining the threshold value to interpret the landcover. 
 
 
 ```python
@@ -257,7 +265,7 @@ fig.show()
 
 <a href=""><img src="./imgs/11_10.png" height="auto" width="800" title="caDesign"></a>
 
-所计算的NDVI值是一个无量纲，维度为1的数组，值通常为浮点型小数，在使用matplotlib，plotly，seaborn和bokeh等图表库时，一般会使用RGB，RGBA，十六进制形式，以及浮点型等表示颜色的数据格式。对于所计算的NDVI，定义函数data_division，将其按照分类的阈值转换为RGB的颜色格式方便图像打印。因为NDVI本身不是颜色数据，首先根据分类阈值计算百分位数（.percentile），然后根据其百分位数使用.digitize方法，返回数值对应区间的索引（整数）。由区间数量即唯一的索引数定义不同的位于0-255的随机整数（每个值对应三个随机整数值），代表颜色。
+The NDVI value calculated is a dimensionless array of dimensions 1, usually floating-point decimal values. Using chart libraries such as Matplotlib, Plotly, Seaborn, and Bokeh, RGB, RGBA, hexadecimal, and floating-point data formats for colors are commonly used. For the computed NDVI, the function 'data_division' is defined to convert it to RGB's color format according to the classification threshold to facilitate image printing. Because NDVI itself is not color data, a percentile is calculated based on the classification threshold. Then, based on its percentile, the .digitize method is used to return the value's corresponding interval index(integer). The number of intervals, that is, the number of unique indexes, defines different random integers between 0 and 255 (each value corresponds to three random integer values), representing the color.
 
 ```python
 from skimage.transform import rescale, resize, downscale_local_mean
@@ -265,15 +273,15 @@ def data_division(data,division,right=True):
     import numpy as np
     import pandas as pd
     '''
-    function - 将数据按照给定的百分数划分，并给定固定的值,整数值或RGB色彩值
+    function - Divide the data by a given percentile and give a fixed value, integer, or RGB color value
     
     Paras:
-    data - 待划分的numpy数组
-    division - 百分数列表
+    data - Numpy array to partition
+    division - Percentile list
     
     return：
-    data_digitize - 返回整数值
-    data_rgb - 返回RGB，颜色值
+    data_digitize - Return integer value
+    data_rgb - Returns RGB, color value
     '''
     percentile=np.percentile(data,np.array(division))
     data_digitize=np.digitize(data,percentile,right)
@@ -304,7 +312,7 @@ fig.show()
 <a href=""><img src="./imgs/11_06.png" height="auto" width="800" title="caDesign"></a>
 
 
-能够辅助解译，确定阈值，可以通过直方图（频数分布）查看NDVI的数据分布情况。因为地物的数量不同，某些转折，或断裂的位置点则可能代表不同的地物。
+The data distribution of NDVI can be viewed through the histogram(frequency distribution) to assist interpretation and determine the threshold. Because of the different number of ground objects, certain points of transition, or rupture, may represent different features.
 
 ```python
 fig, axs=plt.subplots(1,3,figsize=(20, 6))
@@ -317,7 +325,7 @@ plt.show()
 
 <a href=""><img src="./imgs/11_11.png" height="auto" width="auto" title="caDesign"></a>
 
-虽然上述代码可以打印，按阈值显示NDVI图像，但是不能够交互的操作，即通过不断的调整阈值区间，即刻的查看阈值图像，从而判断适合于分类地物的阈值。plotly图表工具提供了简单的交互式工具，可以通过增加滑条窗口工具（widgets.IntSlier），以及下拉栏（widgets.Dropdown），实现交互。这里定义了三个滑动条来定义阈值区间，一个下拉栏栏定义可选择的三个不同季节的NDVI数据，调用上述定义的`data_division`函数，按阈值区间配置颜色显示图像。通过不断调整阈值，与波段3，2，1组合的真彩色图像比较，判断三个季节土地用地分类阈值区间为[0,35,85]。注意通常不同影像的NDVI分类阈值可能不同。
+Although the above code can be printed to display NDVI images according to the threshold, the interactive operation cannot be performed; that is, through constant adjustment of the threshold interval, the threshold image can be immediately viewed to determine the threshold value suitable for the classification of ground objects. The Plotly diagram tool provides a simple interactive tool that can be interactively performed by adding a slider window tool(widgets.IntSlier) and a drop-down bar(widgets.Dropdown). Here, three sliders are defined to define the threshold interval; a drop-down bar defines optional NDVI data for three different seasons, calls the  `data_division` function defined above, and configures the color to display the image according to the threshold interval. By constantly adjusting the threshold value and comparing it with the true-color images of band 3,2 and 1, it is judged that the threshold interval of landcover classification in three seasons is [0,35,85]. Note that NDVI classification thresholds may vary from image to image.
 
 ```python
 def percentile_slider(season_dic):
@@ -328,10 +336,10 @@ def percentile_slider(season_dic):
     from IPython.display import display
     
     '''
-    function - 多个栅格数据，给定百分比，变化观察
+    function - Multiple raster data, given percentile, observe changes.
     
     Paras:
-    season_dic -  多个栅格字典
+    season_dic -  Multiple raster dictionaries
     '''
     
     p_1_slider=widgets.IntSlider(min=0, max=100, value=10, step=1, description="percentile_1")
@@ -388,7 +396,7 @@ percentile_slider(season_dic)
 
 <a href=""><img src="./imgs/11_04.png" height="auto" width="auto" title="caDesign"></a>
 
-确定[0,35,85]的阈值区间后，就可计算所有季节的NDVI土地用地分类。
+After determining the threshold interval of [0,35,85], all seasons' NDVI land classification can be calculated.
 
 ```python
 division=[0,35,85]
@@ -397,7 +405,7 @@ s_interpretation,_=data_division(s_190820_NDVI_rescaled,division,right=True)
 a_interpretation,_=data_division(a_191018_NDVI_rescaled,division,right=True)
 ```
 
-获得三个不同季节NDVI的解译结果后，根据冬季大部分农田无种植，秋季部分农田收割，夏季大部分农田生长；以及落叶树木夏季茂盛，常绿树木四季常青的特点。可以解译出农田、常绿、落叶和裸地、水体等土地覆盖类型，这里则直接将只要各季节为绿色的就划分为绿地（.logical_or），值为2；而水体中湖泊的阈值区分较好，河流的则不是很清晰，则确定只有都为水体才为水体的判断（.logical_and），值为3；其余的则为裸地，值为0和1。
+After obtaining the interpretation results of NDVI in three different seasons, because most of the farmland was no planted in winter, some of the farmland was harvested in autumn. Most of the farmland grew in summer, and deciduous trees flourish in summer. Evergreen trees remain green throughout the year, landcover types, such as farmland, evergreen, deciduous, bare land, and water body, can be interpreted. Here, as long as each season is green, it is divided into green(.logical_or) with a value of 2; However, the threshold value of lakes in water bodies is well distinguished, while that of rivers is not very clear. Therefore, it is determined that only water bodies are water bodies(.logical_and), with the value 3; The rest is bare, with values 0 and 1. 
 
 
 ```python
@@ -412,8 +420,8 @@ fig1=px.imshow(img=np.flip(w_interpretation,0),zmin=w_interpretation.min(),zmax=
 fig2=px.imshow(img=np.flip(s_interpretation,0),zmin=s_interpretation.min(),zmax=s_interpretation.max(),width=800,height=800,color_continuous_scale=px.colors.sequential.haline)
 fig3=px.imshow(img=np.flip(a_interpretation,0),zmin=a_interpretation.min(),zmax=a_interpretation.max(),width=800,height=800,color_continuous_scale=px.colors.sequential.haline)
 
-green=np.logical_or(w_interpretation==2,s_interpretation==2,a_interpretation==2) #只要为绿地（值为2），就为2
-water=np.logical_and(w_interpretation==3,s_interpretation==3,a_interpretation==3) #只有都为水体（值为3），才为3
+green=np.logical_or(w_interpretation==2,s_interpretation==2,a_interpretation==2) #As long as it is a greenfield(value 2), it is 2.
+water=np.logical_and(w_interpretation==3,s_interpretation==3,a_interpretation==3) #As long as it is a water body(value 3), it is 3.
 green_v=np.where(green==True,2,0)
 water_v=np.where(water==True,3,0)
 green_water_bareLand=green_v+water_v
@@ -435,9 +443,11 @@ fig.show()
 
 <a href=""><img src="./imgs/11_12.png" height="auto" width="auto" title="caDesign"></a>
 
-### 1.3 采样交互操作平台的建立，与精度计算
-#### 1.3.1  使用tkinter建立采样交互操作平台
-对于采样的工作，可以借助于QGIQ等平台，建立.shp点数据格式，随机生成一定数量的点，由目视确定每个点的土地覆盖类型；或者直接手工点取。然后将该采样数据在python下读取，再进行后续的精度分析。该方法需要数据在不同平台下转换，操作稍许繁琐。此处，我们来通过tkinter自行建立可交互的GUI采样工具。采样的参照底图选择了秋季的影像，将该影像单独保存，方便调用。
+### 1.3 Establishment of sampling interactive operation platform and precision calculation
+#### 1.3.1  Use Tkinter to set up sampling interactive operation platform
+For sampling, the data format of .shp points can be established with QGIS and other platforms to randomly generate a certain number of points. The landcover type of each point can be determined visually or do it by hand. The sampled data is then read under python for subsequent precision analysis. This method requires data conversion on different platforms, and the operation is a little tedious. Here, let's build our own interactive GUI sampling tool through Tkinter. The autumn image was selected as a base map reference, and the image is saved separately for easy invocation.
+
+
 
 
 ```python
@@ -464,9 +474,11 @@ np.save(os.path.join(save_path,'a_191018_exposure_rescaled.npy'),a_191018_exposu
 
 <a href=""><img src="./imgs/11_13.png" height="auto" width="auto" title="caDesign"></a>
 
-* 样本的大小
+* Sample size
 
-使用抽样方法进行精度估计，样本愈小，产生的总体估计量误差就愈大。在应用时需要计算在允许的误差范围内，一组样本应包含的最少样本个数。其公式为：$n= \frac{pq z^{2} }{ d^{2} }$，其中$p$和$q$分别为解译图判读正确和错误的百分比，或表示为$p(1-p)$;z为对应于置信水平的双侧临界值；$d$误差允许范围。一般情况下，先假定解译精度为90%，置信水平为95%，并通过scipy.stats的norm工具计算置信水平为95%时双侧临界值为1.95996，带入公式可求得样本数约为138。
+
+
+Using the sampling method to estimate the accuracy, the smaller the sample, the larger the overall estimator error. The minimum number of samples a set of samples should contain should be calculated within the application's permissible error range. Its formula is ：$n= \frac{pq z^{2} }{ d^{2} }$, where $p$ and $q$ are the percentages of correct and incorrect interpretation respectively, or expressed as $p(1-p)$; z is the bilateral critical value corresponding to the confidence level; $d$ is the error allowed range. The interpretation accuracy is assumed to be 90%, and the confidence level is 95%. And the critical bilateral value is 1.95996, when the confidence level is 95% by using the norm tool of scipy.stats. The sample number can be calculated as about 138 when substituted into the formula.
 
 
 ```python
@@ -474,37 +486,38 @@ from scipy.stats import norm
 import math
 val=norm.ppf((1+0.95)/2)
 n=val**2*0.9*0.1/0.05**2
-print("样本数量为：",n)
+print("The sample size is:",n)
 ```
 
-    样本数量为： 138.2925175449885
+    The sample size is: 138.2925175449885
 
-采样交互平台的代码结构（在markdown中显示）
+The code structure of the sample interactive platform(shown in Markdown)
+
 
 ```mermaid
 classDiagram
 
-GUI包含功能 --> 5_影像数据处理 : a.数据读取与预处理
-5_影像数据处理 : 1. 数组格式图像(numpy-array)
-5_影像数据处理 : 2. 图片数据(.jpg,.png...)
-5_影像数据处理 --> class_main_window : a.
+The_functionalities_contained_in_the_GUI --> 5_Image_data_processing : a.Data reading and preprocessing
+5_Image_data_processing : 1_ Array image(numpy-array)
+5_Image_data_processing : 2_Image data(.jpg,.png...)
+5_Image_data_processing --> class_main_window : a.
 
-GUI包含功能 : b. 显示背景影像，可缩放
-GUI包含功能 : c. 选择分类，在图像中采样
-GUI包含功能 : d. 显示当前采样分类状态
-GUI包含功能 : e. 计算采样位置坐标
-GUI包含功能 : a. 影像数据处理()
-GUI包含功能 : -. python控制台信息打印()
+The_functionalities_contained_in_the_GUI : b_Display_background_image_zoomable
+The_functionalities_contained_in_the_GUI : c_Select_the_category_and_sample_in_the_image
+The_functionalities_contained_in_the_GUI : d_Displays_the_current_sample_classification_status
+The_functionalities_contained_in_the_GUI : e. Calculate_the_sampling_position_coordinates
+The_functionalities_contained_in_the_GUI : a. 5_Image_data_processing()
+The_functionalities_contained_in_the_GUI : -. Python_console_information_print()
 
-GUI包含功能 --> 1_显示背景影像_可缩放 : b.图像显示
-1_显示背景影像_可缩放 --> 显示背景影像_可缩放部分 : b.
-1_显示背景影像_可缩放 : 1. 在画布（canvas）中显示影像
-1_显示背景影像_可缩放 : 2. 增加滚动条
-1_显示背景影像_可缩放 : 3. 鼠标滚轮缩放
+The_functionalities_contained_in_the_GUI --> 1_Display_background_image_zoomable : b.Image display
+1_Display_background_image_zoomable --> Display_background_image_zoomable : b.
+1_Display_background_image_zoomable : 1_Display_an_image_on_the_canvas
+1_Display_background_image_zoomable : 2. Add_scroll_bars
+1_Display_background_image_zoomable : 3. Mouse_wheel_zoom
 
 class_CanvasImage o-- class_main_window
 class_CanvasImage --o class_AutoScrollbar
-class_CanvasImage : 基本包括所有功能处理函数
+class_CanvasImage : A_handler_that_basically_includes_all_functions
 class_CanvasImage : def __init__()
 class_CanvasImage : def compute_samplePosition()
 class_CanvasImage : def click_xy_collection()
@@ -515,85 +528,89 @@ class_CanvasImage : def __move_to()
 class_CanvasImage : def __wheel()
 class_CanvasImage : def show_image()
 
-class_CanvasImage <|-- 显示背景影像_可缩放部分: b.
-显示背景影像_可缩放部分 : 滚动条拖动
-显示背景影像_可缩放部分 : 左键拖动
-显示背景影像_可缩放部分 : 鼠标滚动
+class_CanvasImage <|-- Display_background_image_zoomable: b.
+Display_background_image_zoomable : Scroll_bar_drag
+Display_background_image_zoomable : Click_and_drag
+Display_background_image_zoomable : Mouse_wheel
 
-显示背景影像_可缩放部分 : 
-显示背景影像_可缩放部分 :  def __scroll_x()
-显示背景影像_可缩放部分 : def _scroll_y()
-显示背景影像_可缩放部分 : def __move_from()
-显示背景影像_可缩放部分 :  def __move_to()
-显示背景影像_可缩放部分 : def __wheel()
-显示背景影像_可缩放部分 : def show_image()
+Display_background_image_zoomable : 
+Display_background_image_zoomable :  def __scroll_x()
+Display_background_image_zoomable : def _scroll_y()
+Display_background_image_zoomable : def __move_from()
+Display_background_image_zoomable :  def __move_to()
+Display_background_image_zoomable : def __wheel()
+Display_background_image_zoomable : def show_image()
 
-class_main_window *-- 外部调用
-class_main_window : 主程序
-class_main_window : 图像读取与预处理
+class_main_window *-- Outside_calls
+class_main_window : The_main_program
+class_main_window : Image_reading_and_preprocessing
 class_main_window : def __init__()
 class_main_window : def landsat_stack_array2img()
 
-外部调用 : 定义工作空间-workspace
-外部调用 : 实例化调用-app=main_window
-外部调用 : 保存采样数据-pickle
+Outside_calls : Define_the_workspace-workspace
+Outside_calls : Instantiate_the_call-app=main_window
+Outside_calls : Save_sampled_data-pickle
 
-class_AutoScrollbar : 滚动条默认隐藏配置
-class_AutoScrollbar : 异常处理
+class_AutoScrollbar : The_scroll_bar_defaults_to_a_hidden_configuration
+class_AutoScrollbar : Exception_handling
 class_AutoScrollbar : def set()
 class_AutoScrollbar : def pack()
 class_AutoScrollbar : def place)
-class_AutoScrollbar -- 显示背景影像_可缩放部分 : b.
+class_AutoScrollbar -- Display_background_image_zoomable : b.
 
-GUI包含功能 --> 2_选择分类_在图像中采样 : c.分类采样
-2_选择分类_在图像中采样 : 1. 布局3个单选按钮-Radiobutton
-2_选择分类_在图像中采样 --> 左键点击采样 : c.
+The_functionalities_contained_in_the_GUI --> 2_Select_classification_to_sample_in_the_image : c.Classification_of_the_sample
+2_Select_classification_to_sample_in_the_image : 1. Layout_3_radio_buttons-Radiobutton
+2_Select_classification_to_sample_in_the_image --> Left_click_on_sample : c.
 
-GUI包含功能 --> 3_显示当前采样分类状态 : d.分类状态
-3_显示当前采样分类状态 : 1. 布局1个标签-Label
+The_functionalities_contained_in_the_GUI --> 3_Displays_the_current_sample_classification_status : d.Classification_state
+3_Displays_the_current_sample_classification_status : 1. Layout_1_label-Label
 
-2_选择分类_在图像中采样 --> 3_显示当前采样分类状态 : c-d
+2_Select_classification_to_sample_in_the_image --> 3_Displays_the_current_sample_classification_status : c-d
 
-class_CanvasImage <|-- 左键点击采样 : c.
-左键点击采样 : def click_xy_collection()
-左键点击采样 : 根据分类存储点击坐标
+class_CanvasImage <|-- Left_click_on_sample : c.
+Left_click_on_sample : def click_xy_collection()
+Left_click_on_sample : Store_click_coordinates_by_category
 
-class_CanvasImage <|-- 初始化 : 综合
-初始化 : 所有处理在此汇总
-初始化 : def __init__()
-3_显示当前采样分类状态 --> 初始化 : d.
-2_选择分类_在图像中采样 --> 初始化 : c.
-1_显示背景影像_可缩放 --> 初始化 : b.
-class_main_window --> 初始化 : a.
+class_CanvasImage <|-- Initialize : comprehensive
+Initialize : All_processing_is_summarized_here
+Initialize : def __init__()
+3_Displays_the_current_sample_classification_status --> Initialize : d.
+2_Select_classification_to_sample_in_the_image --> Initialize : c.
+1_Display_background_image_zoomable --> Initialize : b.
+class_main_window --> Initialize : a.
 
-GUI包含功能 --> 4_计算采样位置坐标 : e.采样坐标变换
-4_计算采样位置坐标 : 1. 还原画布移动缩放后采样点的坐标
+The_functionalities_contained_in_the_GUI --> 4_Calculate_the_sampling_position_coordinates : e.Sampling_coordinate_transformation
+4_Calculate_the_sampling_position_coordinates : 1. Restores_the_sampling_point_coordinates_after_the_canvas_has_been_moved_and_scaled
 
-4_计算采样位置坐标 --> 坐标变换 : e.
-坐标变换 : def compute_samplePosition()
-class_CanvasImage <|-- 坐标变换 : e.
-4_计算采样位置坐标 --> 初始化 : e.
+4_Calculate_the_sampling_position_coordinates --> Coordinate_transformation : e.
+Coordinate_transformation : def compute_samplePosition()
+class_CanvasImage <|-- Coordinate_transformation : e.
+4_Calculate_the_sampling_position_coordinates --> Initialize : e.
 
 ```
 
-完成一个能够处理一个或者多个任务的综合性代码，一般是要结合类来梳理代码结构，如果仅依靠函数，虽然一样能完成任务，但是代码结构松散，不方便代码的编写，以及代码查看。在开始一个任务之前最好先捋清楚所要实现的功能，例如采样GUI工具需要实现如下功能：
 
-1. 影像数据处理
-2. 显示背景影像，可缩放
-3. 选择分类，在图像中采样
-4. 显示当前采样分类状态
-5. 计算采样位置坐标
-6. python控制台信息打印
 
-对于一个不大的功能开发，例如可能一开始只是想实现一个采样的工具，对于一些细节也许考虑的并不清晰，在开始任务后，随着代码编写的深入再做出调整。不过，如果一开始，尤其功能复杂的工具开发，就将可能的问题尽量考虑清晰，尤其细节上的实现，和综合结构，那么会提升代码编写的效率，并避免由于考虑不周带来的代码调整，甚至造成的重新编写。当然即使考虑的再清晰，尤其对于新手来讲，问题仍旧会层出不穷，因为代码本身就是一个不断调试的过程。
+To complete a comprehensive code that can handle one or more tasks, it is generally necessary to combine classes to comb the code structure. If you only rely on functions, you can still complete the task, but the code structure is loose, not convenient for code writing and code viewing. Before starting a task, it is a good idea to have a clear idea of what you want to do. For example, a sampling GUI tool needs to do the following:
 
-写代码的过程要不断的调试，而读代码则要捋清楚代码的结构，尤其各项功能实现的先后顺序，以及之间的数据关联。上述代码的结构图，能够很好的帮助我们识别代码的结构，如果没有这个结构图，则需要一步步从头运行程序，结合print()打印需要查看的变量数据，推导出整个代码的流程。首先确定“GUI包含功能”，由所要实现的功能出发，捋清楚脉络。按照实现的顺序，由a,b,c,d,e字母标识，可以延着字母标识顺序查看所调用的类和函数。这个图表并没有给出对应的具体代码行，不过根据这个顺序已经能够把握住整个代码的结构流程。对应的代码行，根据给出的对应函数，可以方便找到。
+1. Image data processing
+2. Display the background image, which can be scaled
+3. Select the classification and sample the images
+4. Display the current sampling classification staus
+5. Calculate the coordinates of sampling position
+6. Python console information printing
 
-这个随手工具的开发，有两个关键点需要注意。一个是，图像缩放功能；另一个是，采样点坐标变换。对于第一个问题，迁移了[stack overflow-tkinter canvas zoom+ move/pan](https://stackoverflow.com/questions/41656176/tkinter-canvas-zoom-move-pan)给出的代码，因为原代码是直接读取图像文件，而这里需要读取数组结构的遥感影像波段文件，因此需要增加图像处理的部分代码，并修改源代码适应增加的部分。源代码图像缩放的核心部分不需要做出调整，包括滚动条配置，左键拖动配置和鼠标滚动缩放部分，而最为核心的则是图像显示函数`show_image(self, event=None)`部分。因为图像移动和缩放引发了画布（canvas）的比例缩放，滚动条（_scroll_x/__scroll_y）和鼠标拖动（_move_from/__move_to）引发的是移动，而鼠标滑轮（__wheel）引发了画布的缩放。缩放需要控制图像的大小，当缩小到一定程度，图像不再缩小，这个由图像缩放比例因子（imscale）参数控制，初始值为1.0。而滚轮每滚动一次的缩放比例则由delta参数控制。可以尝试修改不同的参数值，观察图像变化情况。因为画布的移动缩放，图像显示需要对应做出调整，读取当前图像位置（bbox1），画布可视区域位置(bbox2)，计算滚动条区域(bbox)，确定图像是部分还是整个位于画布可视区域，如果部分则计算可视区域图像的平铺坐标（$ x_{1} , y_{1} , x_{2} , y_{2}$），并裁切图像，否则为整个图像。图像是随画布缩放`self.canvas.scale('all', x, y, scale, scale) `，即缩放画布及画布上所有物件。对于该部分的理解最好的方法是运行代码，打印相关变量，查看数据变化。
 
-因为图像移动缩放，引发了第2个问题，采样点坐标的变换。采样的基本思想是，确定所要采样的类别，由3个单选按钮控制，点击鼠标触发`click_xy_collection`函数，绘制点（实际上是圆形），并按照类别保存点的索引至字典xy。而采样点的坐标是由当前画布确定，画布是移动和缩放的，采样点的坐标随画布的变化而变化，那么如何获得对应实际图像大小下（图像是数组，由行列表示，那么一个像素的坐标可以表示为$(  x_{i}, y_{j}   )$，注意图像$x_{i}$为列，$y_{j}$为行，与numpy数组正好相反，即numpy数组$x_{i}$为行，$y_{j}$为列），采样点的坐标？图像的缩放实际上正是在‘线性代数基础的代码表述’部分所阐述的内容，直接线性变换就可以返回到原始坐标。要实现线性变换，需要获得比例缩放因子，即scale参数。为了确定该参数，也可以在画布未移动缩放时，自动生成两个点，计算其坐标，即为实际的坐标，以其为参照。这两个点随后会随其它采样点跟着画布移动缩放，坐标值也发生了变换。在新的画布空间下，获取当前坐标，计算这两个点前后的距离比值，即为缩放比例，其中与scale参数保持一致。因此，可以将1/scale作为线性变换的比例因子，返回缩放前的状态。采用点坐标变换，通过点击按钮（button_computePosition）调用函数`compute_samplePosition`(GUI中显示的文本为，calculate sampling position)实现。线性变换用np.matmul()计算，即两个矩阵之积。最好将计算的采样点坐标根据给定的文件位置保存。用于后续精度分析。
+For example, you may want to implement a sampling tool initially for a small functional development, but some details may not be considered. After you start the task, you can make adjustments as the code is written further. However, suppose you start with a tool that is particularly complex in function. In that case, you will improve your code writing efficiency by considering possible problems as clearly as possible, especially the implementation of details and the comprehensive structure, and avoid the code adjustment or even rewriting caused by poor consideration. Of course, even with the clarity of thought, problems will continue to crop up, especially for novices, because the code itself is a process of constant debugging.
 
-> 注意，tkinter编写的GUI不能在Jupyter（Lab）下运行，需要在spyder等解释器下打开运行。可以新建.py文件，将下述代码复制于该文件，再运行。如果自行编写基于tkintet开发的GUI工具，也需要在spyder等解释其下编写调试。
+The writing code process requires constant debugging, and reading the code is about figuring out the structure of the code, particularly the sequence of function implementation and the correlation between the data. The structure diagram of the above code can well help us identify the structure of the code. If there is no such structure diagram, we need to run the program step by step from the beginning and print() the variable data that needs to be viewed to deduce the whole code process. First, determine the "GUI contains functionality", from the function to be implemented, clear the context. According to the implementation order, identified by a,b,c,d,e, you can follow the alphabetical identification order to see the classes and functions. This diagram does not show the specific code lines, but the sequence gives you a sense of the entire code structure. The corresponding line of code can be easily found according to the corresponding function given.
+
+
+There are two key points to note in the development of this handy tool. One is image scaling; The other one is the transformation of the sample point coordinates. For the first problem, the code given by [stack overflow-tkinter canvas zoom+ move/pan](https://stackoverflow.com/questions/41656176/tkinter-canvas-zoom-move-pan) is transferred. Because the original code is to read the image file directly, but, the remote sensing image band file with an array structure needs to be read here, the image processing code part needs to be added, and the source code needs to be modified to adapt to the added part. The core of the source code for image zooming does not need to be adjusted, including scroll bar configuration, left-drag configuration, and mouse scroll zooming, while the core is the image display function `show_image(self, event=None)`. Because the image movement and scaling cause the scaling of the canvas, the scroll bar(_scroll_x/__scroll_y), and the mouse drag(_move_from/__move_to) cause the movement, and the mouse wheel (__wheel) causes the scaling of the canvas.  Scaling needs to control the image size. When the image is reduced to a certain extent, the image will no longer be shrunk, controlled by the image scaling factor (_wheel) parameter with the initial value of 1.0. The delta parameter controls the scale of each scroll wheel. We can try to modify different parameter values to observe the change of the image. Because of the movement and scaling of the canvas, the image display needs to be adjusted accordingly, read the current image position(bbox1), the canvas visual area(bbox2), calculate the scroll bar area(bbox), and determine whether the image is partially or completely located in the canvas area. If it is part, calculate the tiled coordinates ($ x_{1} , y_{1} , x_{2} , y_{2}$) of the image visible region, and crop the image, otherwise the entire image. The image is scaled with the canvas `self.canvas.scale('all', x, y, scale, scale)`, that is, scaled the canvas and all objects on the canvas. The best way to understand this part is to run the code, print the relevant variable, and see how the data changes.
+
+The second problem of the sampling point transformation arises because the image is zoomed in and out and moved. The basic idea of sampling is to determine the category to be sampled, controlled by three radio buttons, click the mouse to trigger the `click_xy_collection` function, draw points(actually circles), and save points by category to the dictionary(xy). And the coordinates of the sample point is determined by the current canvas; the canvas is move and scale, the coordinates of the sample point changes over the canvas, then how to obtain the coordinates of the sample point corresponding to the actual image size(An image is an array, represented by rows and columns, so the coordinate of a pixel can be represented as $( x_{i}, y_{j} )$. Note that the image $x_{i}$ is the column, $y_{j}$ is the row; it is the opposite of Numpy array.  For a Numpy array,  $x_{i}$ is the row, and $y_{j}$ is the column)? The image's scaling is described in the section "A code representation of the linear algebra basis", where can be returned to the original coordinates by a linear transformation directly. The scaling factor, namely 'scale' parameter, needs to be obtained to achieve the linear transformation. Two points can also be automatically generated when the canvas is not moved or scaled to determine this parameter. Their coordinates are calculated; that is, the actual coordinates are taken as references. These two points are then scaled along with the rest of the sample points, and the coordinates are transformed.  In the new canvas space, get the current coordinates and calculate the distance ratio before and after these two points changes: the scaling scale, which is consistent with the scale parameter.  Therefore, 1/scale can be used as the scaling factor of a linear transformation to return the state before scaling. The function `compute_samplePosition`(text displayed in GUI is 'calculate sampling position') is implemented using point coordinate transformation by clicking the button(button_computePosition). The linear transformation is computed using np.matmul(), that is, the product of two matrices. It is better to save the calculated sample point coordinates according to the given file location for subsequent precision analysis.
+
+> Note that the GUI written by Tkinter cannot run under Jupyter(Lab), need to open, and run under the interpreter such as Spyder. You can create a .py file and copy the following code to it before running it. If you write your own GUO tools based on Tkinter development, you also need to write and debug under the Spyder and other interpreters.
 
 ```python
 import math,os,random
@@ -605,7 +622,7 @@ from PIL import Image, ImageTk
 from skimage.util import img_as_ubyte
 
 class AutoScrollbar(ttk.Scrollbar):
-    '''滚动条默认时隐藏'''
+    '''Scrollbars are hidden by default'''
     def set(self,low,high):
         if float(low)<=0 and float(high)>=1.0:
             self.grid_remove()
@@ -623,45 +640,45 @@ class AutoScrollbar(ttk.Scrollbar):
 
 ```python
 class CanvasImage(ttk.Frame):
-    '''显示图像，可缩放'''
+    '''Display image,can be scaled'''
     def __init__(self,mainframe,img):
-        '''初始化Frame框架'''
+        '''Initialize the Frame'''
         ttk.Frame.__init__(self,master=mainframe)
         self.master.title("pixel sampling of remote sensing image")  
         self.img=img
         self.master.geometry('%dx%d'%self.img.size) 
         self.width, self.height = self.img.size
 
-        #增加水平、垂直滚动条
+        #Add horizontal and vertical scroll bars
         hbar=AutoScrollbar(self.master, orient='horizontal')
         vbar = AutoScrollbar(self.master, orient='vertical')
         hbar.grid(row=1, column=0,columnspan=4, sticky='we')
         vbar.grid(row=0, column=4, sticky='ns')
-        #创建画布并绑定滚动条
+        #Create the canvas and bind the scroll bar
         self.canvas = tk.Canvas(self.master, highlightthickness=0, xscrollcommand=hbar.set, yscrollcommand=vbar.set,width=self.width,height=self.height)        
         self.canvas.config(scrollregion=self.canvas.bbox('all')) 
         self.canvas.grid(row=0,column=0,columnspan=4,sticky='nswe')
-        self.canvas.update() #更新画布
-        hbar.configure(command=self.__scroll_x) #绑定滚动条于画布
+        self.canvas.update() #Update the canvas
+        hbar.configure(command=self.__scroll_x) #Bind the scroll bar to the canvas
         vbar.configure(command=self.__scroll_y)
      
-        self.master.rowconfigure(0,weight=1) #使得画布（显示图像）可扩展
+        self.master.rowconfigure(0,weight=1) #Makes the canvas (display image) extensible
         self.master.columnconfigure(0,weight=1)              
         
-        #于画布绑定事件（events）
-        self.canvas.bind('<Configure>', lambda event: self.show_image())  #调整画布大小
-        self.canvas.bind('<ButtonPress-1>', self.__move_from) #原画布位置
-        self.canvas.bind('<B1-Motion>', self.__move_to) #移动画布到新的位置
-        self.canvas.bind('<MouseWheel>', self.__wheel) #Windows和MacOS下缩放，不适用于Linux
-        self.canvas.bind('<Button-5>', self.__wheel) #Linux下，向下滚动缩放
-        self.canvas.bind('<Button-4>',   self.__wheel) #Linux下，向上滚动缩放
-        #处理空闲状态下的击键，因为太多击键，会使得性能低的电脑运行缓慢
+        #Bind events to the canvas
+        self.canvas.bind('<Configure>', lambda event: self.show_image())  #Resize the canvas
+        self.canvas.bind('<ButtonPress-1>', self.__move_from) #Original canvas position
+        self.canvas.bind('<B1-Motion>', self.__move_to) #Move the canvas to a new position
+        self.canvas.bind('<MouseWheel>', self.__wheel) #Zoom on Windows and macOS, not on Linux
+        self.canvas.bind('<Button-5>', self.__wheel) #Under Linux, scroll down to zoom
+        self.canvas.bind('<Button-4>',   self.__wheel) #Under Linux, scroll up to zoom
+        #Handle idle keystrokes, because too many keystrokes can slow down a low-performance computer
         self.canvas.bind('<Key>', lambda event: self.canvas.after_idle(self.__keystroke, event))
         
-        self.imscale=1.0 #图像缩放比例
-        self.delta=1.2 #滑轮，画布缩放量级        
+        self.imscale=1.0 #Image scaling
+        self.delta=1.2 #Wheel, canvas scale factor       
         
-        #将图像置于矩形容器中，宽高等于图像的大小
+        #Place the image in a rectangular container with the width and height equal to the size of the image
         
         self.container = self.canvas.create_rectangle(0, 0, self.width, self.height, width=0)
       
@@ -672,7 +689,7 @@ class CanvasImage(ttk.Frame):
 
         self.xy_rec={"water":[],"vegetation":[],"bareland":[]}
         
-        #配置按钮，用于选择样本，以及计算样本位置
+        #Configure buttons to select samples and calculate sample positions
         button_frame=tk.Frame(self.master,bg='white', width=5000, height=30, pady=3).grid(row=2,sticky='NW')
         button_computePosition=tk.Button(button_frame,text='calculate sampling position',fg='black',width=25, height=1,command=self.compute_samplePosition).grid(row=2,column=0,sticky='w')
         
@@ -684,7 +701,7 @@ class CanvasImage(ttk.Frame):
         self.info=tk.Label(self.master,bg='white',textvariable=self.info_class,fg='black',text='empty',font=('Arial', 12), width=10, height=1).grid(row=0,padx=5,pady=5,sticky='nw')
         self.scale_=1
         
-        #绘制一个参考点
+        #Draw a reference point
         self.ref_pts=[self.canvas.create_oval((0,0,1.5,1.5),fill='white'), self.canvas.create_oval((self.width,self.height,self.width-0.5, self.height-0.5),fill='white')] 
         
         self.ref_coordi={'ref_pts':[((self.canvas.coords(i)[2]+self.canvas.coords(i)[0])/2,(self.canvas.coords(i)[3]+self.canvas.coords(i)[1])/2) for i in self.ref_pts]}
@@ -706,7 +723,7 @@ class CanvasImage(ttk.Frame):
         print("scale_byDistance:",scale_byDistance)
         print("scale_by_self.scale_:",self.scale_)
         
-        #缩放回原始坐标系
+        #Scale back to the original coordinate system
         
         #x_distance=sample_coordi['ref_pts'][0][0]-self.ref_coordi['ref_pts'][0][0]
         #y_distance=sample_coordi['ref_pts'][0][1]-self.ref_coordi['ref_pts'][0][1]
@@ -724,7 +741,7 @@ class CanvasImage(ttk.Frame):
     
     def click_xy_collection(self,event):
         multiple=self.imscale
-        length=1.5*multiple #根据图像缩放比例的变化调节所绘制矩形的大小，保持大小一致
+        length=1.5*multiple #Adjust the size of the drawn rectangle according to the change of image scale to keep the same size
         
         event2canvas=lambda e,c:(c.canvasx(e.x),c.canvasy(e.y)) 
         cx,cy=event2canvas(event,self.canvas) #cx,cy=event2canvas(event,self.canvas)        
@@ -747,85 +764,85 @@ class CanvasImage(ttk.Frame):
         print("total:",sum([len(self.xy_rec[key]) for key in self.xy_rec.keys()]) )
         
     def __scroll_x(self,*args,**kwargs):
-        '''水平滚动画布，并重画图像'''
-        self.canvas.xview(*args,**kwargs)#滚动水平条
-        self.show_image() #重画图像
+        '''Scroll the canvas horizontally and redraw the image'''
+        self.canvas.xview(*args,**kwargs)#Rolling horizontal bar
+        self.show_image() #Redraw the image
         
     def __scroll_y(self, *args, **kwargs):
-        """ 垂直滚动画布，并重画图像"""
-        self.canvas.yview(*args,**kwargs)  #垂直滚动
-        self.show_image()  #重画图像      
+        """ Scroll the canvas vertically and redraw the image"""
+        self.canvas.yview(*args,**kwargs)  #Vertical scroll
+        self.show_image()  #Redraw the image    
 
     def __move_from(self, event):
-        ''' 鼠标滚动，前一坐标 '''
+        ''' Mouse scroll, the previous coordinate '''
         self.canvas.scan_mark(event.x, event.y)
 
     def __move_to(self, event):
-        ''' 鼠标滚动，下一坐标'''
+        ''' Mouse scroll, the next coordinate'''
         self.canvas.scan_dragto(event.x, event.y, gain=1)
-        self.show_image()  #重画图像 
+        self.show_image()  #Redraw the image 
 
     def __wheel(self, event):
-        ''' 鼠标滚轮缩放 '''
+        ''' Mouse wheel zoom '''
         x=self.canvas.canvasx(event.x)
         y=self.canvas.canvasy(event.y)
-        bbox = self.canvas.bbox(self.container)  # 图像区域
-        if bbox[0] < x < bbox[2] and bbox[1] < y < bbox[3]: pass  #鼠标如果在图像区域内部
-        else: return  # 只有鼠标在图像内才可以滚动缩放
+        bbox = self.canvas.bbox(self.container)  # The image area
+        if bbox[0] < x < bbox[2] and bbox[1] < y < bbox[3]: pass  #If the mouse is inside the image area
+        else: return  # Scrolling and zooming is only possible if the mouse is inside the image
         scale=1.0
-        # 响应Linux (event.num)或Windows (event.delta)滚轮事件
-        if event.num==5 or event.delta == -120:  # 向下滚动
+        # Response to Linux (event.num) or Windows (event.delta) wheel events
+        if event.num==5 or event.delta == -120:  # Scroll down
             i=min(self.width, self.height)
-            if int(i * self.imscale) < 30: return  # 图像小于30 pixels
+            if int(i * self.imscale) < 30: return  # The image size is less than 30 pixels
             self.imscale /= self.delta
             scale/= self.delta
-        if event.num==4 or event.delta == 120:  # 向上滚动
+        if event.num==4 or event.delta == 120:  # Scroll up
             i=min(self.canvas.winfo_width(), self.canvas.winfo_height())
-            if i < self.imscale: return  # 如果1个像素大于可视图像区域
+            if i < self.imscale: return  # If 1 pixel is larger than the visible image area
             self.imscale *= self.delta
             scale*= self.delta
-        self.canvas.scale('all', x, y, scale, scale)  # 缩放画布上的所有对象
+        self.canvas.scale('all', x, y, scale, scale)  # Scale all the objects on the canvas
         self.show_image()
         self.scale_=scale*self.scale_
 
     def show_image(self, event=None):
-        ''' 在画布上显示图像'''
-        bbox1=self.canvas.bbox(self.container)  #获得图像区域
-        # 在bbox1的两侧移除1个像素的移动
+        ''' Display the image on the canvas'''
+        bbox1=self.canvas.bbox(self.container)  #Get image region
+        # Remove 1-pixel movement on both sides of 'bbox 1'
         bbox1 = (bbox1[0] + 1, bbox1[1] + 1, bbox1[2] - 1, bbox1[3] - 1)
-        bbox2 = (self.canvas.canvasx(0),  # 获得画布上的可见区域
+        bbox2 = (self.canvas.canvasx(0),  # Gets the visible area of the canvas
                  self.canvas.canvasy(0),
                  self.canvas.canvasx(self.canvas.winfo_width()),
                  self.canvas.canvasy(self.canvas.winfo_height()))
-        bbox = [min(bbox1[0], bbox2[0]), min(bbox1[1], bbox2[1]),  #获取滚动区域框
+        bbox = [min(bbox1[0], bbox2[0]), min(bbox1[1], bbox2[1]),  #Gets the scroll box
                 max(bbox1[2], bbox2[2]), max(bbox1[3], bbox2[3])]
-        if bbox[0] == bbox2[0] and bbox[2] == bbox2[2]:  # 整个图像在可见区域
+        if bbox[0] == bbox2[0] and bbox[2] == bbox2[2]:  # The entire image is in the visible region
             bbox[0] = bbox1[0]
             bbox[2] = bbox1[2]
-        if bbox[1] == bbox2[1] and bbox[3] == bbox2[3]:  # 整个图像在可见区域
+        if bbox[1] == bbox2[1] and bbox[3] == bbox2[3]:  # The entire image is in the visible region
             bbox[1] = bbox1[1]
             bbox[3] = bbox1[3]
-        self.canvas.configure(scrollregion=bbox)  # 设置滚动区域
-        x1 = max(bbox2[0] - bbox1[0], 0)  # 得到图像平铺的坐标(x1,y1,x2,y2)
+        self.canvas.configure(scrollregion=bbox)  # Set the scrolling area
+        x1 = max(bbox2[0] - bbox1[0], 0)  # Get the tiled coordinates (x1,y1,x2,y2)
         y1 = max(bbox2[1] - bbox1[1], 0)
         x2 = min(bbox2[2], bbox1[2]) - bbox1[0]
         y2 = min(bbox2[3], bbox1[3]) - bbox1[1]
-        if int(x2 - x1) > 0 and int(y2 - y1) > 0:  # 显示图像，如果它在可见的区域
-            x = min(int(x2 / self.imscale), self.width)   # 有时大于1个像素...
-            y = min(int(y2 / self.imscale), self.height)  # ...有时不是
+        if int(x2 - x1) > 0 and int(y2 - y1) > 0:  # Display the image if it is in the visible area
+            x = min(int(x2 / self.imscale), self.width)   # Sometimes more than 1 pixel...
+            y = min(int(y2 / self.imscale), self.height)  # ...Sometimes not
             image = self.img.crop((int(x1 / self.imscale), int(y1 / self.imscale), x, y))
             imagetk = ImageTk.PhotoImage(image.resize((int(x2 - x1), int(y2 - y1))))
             imageid = self.canvas.create_image(max(bbox2[0], bbox1[0]), max(bbox2[1], bbox1[1]),anchor='nw', image=imagetk)
-            self.canvas.lower(imageid)  # 将图像设置为背景
+            self.canvas.lower(imageid)  # Set the image as the background
             self.canvas.imagetk=imagetk  # keep an extra reference to prevent garbage-collection
 
 ```
 
 ```python
 class main_window:    
-    '''主窗口类'''
+    '''The main window class'''
     def __init__(self,mainframe,rgb_band,img_path=0,landsat_stack=0,):
-        '''读取图像'''
+        '''Read the image'''
         if img_path:
             self.img_path=img_path
             self.__image=Image.open(self.img_path)
@@ -839,8 +856,8 @@ class main_window:
  
     def landsat_stack_array2img(self,landsat_stack,rgb_band):
         r,g,b=self.rgb_band
-        landsat_stack_rgb=np.dstack((landsat_stack[r],landsat_stack[g],landsat_stack[b]))  #合并三个波段
-        landsat_stack_rgb_255=img_as_ubyte(landsat_stack_rgb) #使用skimage提供的方法，将float等浮点型色彩，转换为0-255整型
+        landsat_stack_rgb=np.dstack((landsat_stack[r],landsat_stack[g],landsat_stack[b]))  #Combine three bands
+        landsat_stack_rgb_255=img_as_ubyte(landsat_stack_rgb) #Convert float-point colors to integers from 0 to 255 using methods provided by Skimage
         landsat_image=Image.fromarray(landsat_stack_rgb_255)
         return landsat_image
 
@@ -860,7 +877,7 @@ if __name__ == "__main__":
     #app=main_window(mainframe, rgb_band=rgb_band,img_path=img_path)
     mainframe.mainloop()
     
-    #保存采样点
+    #Save sample points
     import pickle as pkl
     with open(os.path.join(workspace,r'sampling_position.pkl'),'wb') as handle:
         pkl.dump(app.MW.sample_coordi_recover,handle)
@@ -868,12 +885,12 @@ if __name__ == "__main__":
 
 <a href=""><img src="./imgs/11_03.png" height="auto" width="800" title="caDesign"></a>
 
-#### 1.3.2 分类精度计算
-混淆矩阵（confusion matrix），每一行（列）代表一个类的实例预测，而每一列（行）代表一个实际的类的实例，是一种特殊的，具有两个维度（实际值和预测值）的列联表（contingency table），并且两个维度中都有着一样的类别的集合。例如：$\begin{bmatrix}&&预测的类别 & &\\&&baraland&vegetation&water\\实际的类别 &bareland &51&2&0\\&vegetation&10&54&0\\ &water&0&2&19  \end{bmatrix} $，可以解读为，总共138个样本（采样点），真实裸地为53个，误判为绿地的2个；真实绿地为64个，误判为裸地的10个；真实水体为21个，误判为绿地的2个。混淆矩阵的计算使用Sklearn库提供的'confusion_matrix'方法计算。
+#### 1.3.2 Classification accuracy calculation
+The confusion matrix, where each row(column) represents an instance prediction of a class, and each column(row) represents an instance of an actual class, is a special contingency table with two dimensions(actual and predicted values), and a set of identical categories in both dimensions. For example, $\begin{bmatrix}&&predicted categories & &\\&&baraland&vegetation&water\\actual categories &bareland &51&2&0\\&vegetation&10&54&0\\ &water&0&2&19 \end{bmatrix} $, it can be interpreted as: a total of 138 samples(sampling points), of which 53 are real bare ground and 2 are misjudged as green space; of which 64 are real green space and 10 were misjudged as bare ground; of which 21 are real water bodies and 2 were misjudged as green space. The confusion matrix is calculated using the 'confusion_matrix' method provided by the Sklearn library.
 
-通过计算混淆矩阵，分析获知绿地中误判为裸地的相对较多，一方面是在解译过程中，%35的阈值界限可以适当调大，使部分绿地划分到裸地类别；另一方面，可能是在采样过程中，采样点设置的比较大，同时覆盖了绿地和裸地，不能确定最终坐标是落于绿地还是落于裸地，造成采样上的错误，此时可以调小采样点直径，更精确的定位。
+By calculating the confusion matrix and analyzing it, it is known that there is relatively more green land misjudged as bare land. On the one hand, in the interpretation process, the threshold boundary of 35% can be appropriately enlarged, so that part of green space can be divided into the category of bare land. On the other hand, it may be that in the process of sampling, the sampling points are set to a large extent, covering both green land and bare land, and the final coordinate cannot be determined whether if falls on green land or bare land, resulting in sampling errors. At this point, the diameter of the sampling point can be reduced for more accurate positioning.
 
-除了计算混淆矩阵，同时计算百分比精度，即正确的分类占总样本数的比值。
+In addition to calculating the confusion matrix, the percentage accuracy, that is, the ratio of the correct classification to the total sample number, is also calculated.
 
 
 ```python
@@ -890,7 +907,7 @@ for key in sampling_position_int.keys():
     for j in sampling_position_int[key]:
         sampling_position_int_.update({i:[j.tolist(),key]})
         i+=1
-sampling_position_df=pd.DataFrame.from_dict(sampling_position_int_,columns=['coordi','category'],orient='index') #转换为pandas的DataFrame数据格式，方便数据处理
+sampling_position_df=pd.DataFrame.from_dict(sampling_position_int_,columns=['coordi','category'],orient='index') #Convert to Pandas DataFrame data format for ease of data processing
 sampling_position_df['interpretation']=[green_water_bareLand[coordi[1]][coordi[0]] for coordi in sampling_position_df.coordi]
 interpretation_mapping={1:"bareland",2:"vegetation",3:"water",0:"bareland"}
 sampling_position_df.interpretation=sampling_position_df.interpretation.replace(interpretation_mapping)
@@ -911,32 +928,32 @@ precision - confusion Matrix:
  [ 0  2 19]]
 precision - percent: 0.8985507246376812
 
-### 1.4 要点
-#### 1.4.1 数据处理技术
+### 1.4 key point
+#### 1.4.1 data processing technique
 
-* 配合使用rasterio,geopandas, earthpy处理遥感影像
+* Work with rasterio, geopandas, earthpy on remote sensing images
 
-* 使用plotly构建可交互图表
+* Use Plotly to build an interactive diagram.
 
-* 使用tkinter构建交互的GUI采样工具
+* Build interactive GUI sampling tools using Tkinter
 
-#### 1.4.2 新建立的函数
+#### 1.4.2 The newly created function tool
 
-* function - 给定裁切边界，批量裁切栅格数据，`raster_clip(raster_fp,clip_boundary_fp,save_path)`
+* function - Given cutting boundaries, batch cropping raster data, `raster_clip(raster_fp,clip_boundary_fp,save_path)`
 
-* function - 指定波段，同时显示多个遥感影像，`w_180310_array(img_stack_list,band_num)`
+* function - Specify the band and display multiple remote sensing images at the same time, `bands_show(img_stack_list,band_num)`
 
-* function - 将变量名转换为字符串， `variable_name(var)`
+* function -Converts a variable name to a string,  `variable_name(var)`
 
-* function - 拉伸图像 contract stretching，`image_exposure(img_bands,percentile=(2,98))`
+* function - contract stretching images,`image_exposure(img_bands,percentile=(2,98))`
 
-* function - 将数据按照给定的百分数划分，并给定固定的值,整数值或RGB色彩值，`data_division(data,division,right=True)`
+* function - Divide the data by a given percentile and give a fixed value, integer, or RGB color value,`data_division(data,division,right=True)`
 
-* function - 多个栅格数据，给定百分比，变化观察，`percentile_slider(season_dic)`
+* function - Multiple raster data, given percentile, observe changes, `percentile_slider(season_dic)`
 
-* 基于tkinter，开发交互式GUI采样工具
+* Based on Tkinter, an interactive GUI sampling tool is developed
 
-#### 1.4.3 所调用的库
+#### 1.4.3 The python libraries that are being imported
 
 ```python 
 import os,random
@@ -975,5 +992,5 @@ import pickle as pkl
 from sklearn.metrics import confusion_matrix
 ```
 
-#### 1.4.4 参考文献
+#### 1.4.4 Reference
 -
