@@ -3,6 +3,10 @@ In line with people's learning habits, the book's chapter structure will make th
 
 ### Knowledge point distribution
 
+<style>
+svg[id^="mermaid-"] { min-width: 200; max-width:100%;  overflow: visible;}
+</style>
+
 ```mermaid
 classDiagram
 
@@ -67,6 +71,7 @@ OSM数据处理 : 读取、转换.osm数据
 回归公共健康数据 --|> 数据分析
 
 ```
+
 
 ### Knowledge associated
 
