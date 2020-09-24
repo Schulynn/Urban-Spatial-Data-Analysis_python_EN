@@ -3,9 +3,7 @@ In line with people's learning habits, the book's chapter structure will make th
 
 ### Knowledge point distribution
 
-<style>
-svg[id^="mermaid-"] { min-width: 200; max-width:100%;  overflow: visible;}
-</style>
+
 
 ```mermaid
 classDiagram
