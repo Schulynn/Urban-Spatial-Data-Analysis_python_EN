@@ -2,36 +2,36 @@
 > __+updated on Fri Aug 14 21/20/01 2020 by Richie Bao
 
 ## 1. Point cloud data(Lidar) processing——classified data, DSM, building height extraction, interpolation
-点云（point cloud）是使用三维扫描仪获取的资料，当然设计的三维模型也可以转换为点云数据据。其中三维对象以点的形式记录，每个点即为一个三维坐标，同时可能包含颜色信息（RGB），或物体反射面的强度（intensity）。强度信息是激光扫描仪接受装置采集到的回波强度，与目标的表面材质、粗糙度、入射角方向以及仪器的发射能量，激光波长有关。点云数据的数据格式比较丰富，常用的包括.xyz(.xyzn，.xyzrgb)，.las，.ply，.pcd，.pts等，也包括一些关联格式的存储类型，例如基于numpy存储的array数组.numpy(.npu)，基于matlab格式存储的.matlab数组格式，当然也有基于文本存储的.txt文件。注意虽然有些存储类型后缀名不同，也许实际上，数据格式相同。在地理空间数据中，常使用.las格式的数据。LAS（LASer）格式是由美国摄影测量和遥感协会（American Society for Photogrammetry and Remote Sensing，ASPRS）制定的激光雷达点云数据的交换和归档文件格式，被认为是激光雷达数据的行业标准。LAS格式点云数据包括多个版本，最近的为LAS 1.4（2011.11.14），不同的版本点云数据包括的信息也许不同，需要注意这点。LAS通常包括由整数值标识的分类信息（LAS1.1及之后的版本），其1.1-1.4LAS类别代码如下：
+Point Cloud is the data obtained using a 3D scanner; of course, the designed 3D model can also be converted into point cloud data. The three-dimensional object is recorded in the form of points, each of which is a three-dimensional coordinate and may contain color information(RGB) or intensity of the object's reflective surface. Intensity information is the echo intensity collected by the laser scanner receiver, which is related to the target surface material, roughness, incidence angle direction, instrument emission energy, and laser wavelength. Point cloud data format is relatively rich, commonly used, including .xyz(.xyzn, .xyzrgb), .las, .ply, .pcd, .pts and so on, also includes some associated format storage types, such as array .numpy(.npu) based on Numpy storage, Matlab array .matlab format,  as well as .txt files based on text storage. Note that although some storage types have different suffix names, the data format may be the same. In geospatial data, .las format is often used. LAS(LASer) format is a file format for exchanging and archiving lidar point cloud data established by the American Society for Photogrammetry and Remote Sensing(ASPRS). It is considered the industry standard for lidar data. LAS format point cloud data includes multiple versions, most recently LAS 1.4(2011.11.14); it is important to note that different point cloud data versions may contain different information. LAS generally includes the classification information identified by the integer value (LAS 1.1 and later versions). Its 1.1-1.4LAS classification is as follows:
 
-|  分类值/classification value | 类别  |   
+|  classification value | classification  |   
 |---|---|
-|0   | 不被用于分类/Never classified   |      
-|1   | 未被定义/unassigned  |      
-|2   | 地面/ground  |      
-|3  | 低矮树木/low vegetation  | 
-|4  | 中等树木/medium vegetation  | 
-|5  | 高的树木/high vegetation  | 
-|6  | 建筑/building  | 
-|7  | 低的点/low point  | 
-|8  | 保留/reserved  | 
-|9  | 水体/water  | 
-|10  | 铁路/rail  | 
-|11  | 道路表面/road surface  | 
-|12  | 保留/reserved  | 
-|13  | 金属丝防护（屏蔽）/wire-guard(shield)  | 
-|14  | 导线（相）/wire-conductor(phase)  | 
-|15  | 输电杆塔/transmission tower  | 
-|16  | 电线连接器（绝缘子）/wire-structure connector(insulator)  | 
-|17  | 桥面/bridge deck  | 
-|18  | 高噪音/high noise  | 
-|19-63  |保留/reserved   | 
-|64-255  |用户定义/user definable   | 
+|0   | Never classified   |      
+|1   | unassigned  |      
+|2   | ground  |      
+|3  | low vegetation  | 
+|4  | medium vegetation  | 
+|5  | high vegetation  | 
+|6  | building  | 
+|7  | low point  | 
+|8  | reserved  | 
+|9  | water  | 
+|10  | rail  | 
+|11  | road surface  | 
+|12  | reserved  | 
+|13  | wire-guard(shield)  | 
+|14  | wire-conductor(phase)  | 
+|15  | transmission tower  | 
+|16  | wire-structure connector(insulator)  | 
+|17  | bridge deck  | 
+|18  | high noise  | 
+|19-63  |reserved   | 
+|64-255  |user definable   | 
 
 
-处理点云数据的python库也比较多，常用的包括[PDAL](https://pdal.io/)，[PCL](https://pointclouds.org/)，[open3D](http://www.open3d.org/docs/release/introduction.html)等。其中PDAL可以处理.las格式数据，当然读取后可以存储为其它格式数据，使用其它库的功能处理也未尝不可。
+Many python libraries deal with point cloud data, commonly used, including [PDAL](https://pdal.io/)，[PCL](https://pointclouds.org/)，[open3D](http://www.open3d.org/docs/release/introduction.html) etc. Among them, PDAL can handle the data in .las format. The data can be read and stored in other formats and can be processed using other libraries' capabilities.
 
-此次实验数据为伊利诺斯州草原地质调查研究所（Illinois state geological survey - prairie research institute）,发布的伊利诺伊州[.las格式的激光雷达数据](https://www.arcgis.com/apps/webappviewer/index.html?id=44eb65c92c944f3e8b231eb1e2814f4d)。研究的目标区域为芝加哥城及其周边，因为分辨率为1m，研究区域部分数据量高达1.4T，其中每一单元（tile）基本为$2501 \times 2501$，大约1G左右，最小的也有几百M。对于普通的计算机配置，处理大数据，通常要判断内存所能支持的容量（很多程序在处理数据时，可以不将其全部读入内存，例如h5py格式数据的批量写入和批量读取；rasterio库提供由windows功能，可以分区读取单独的栅格文件）；以及CPU的计算速度，分批的处理可以避免因为处理中断造成全部数据丢失。在阐述点云数据处理时，并不处理芝加哥城所有区域数据，仅以IIT（Illinois Institute of Technology）校园为核心，一定范围内的数据处理为例。下载的点云数据包括的单元编号（文件）有(总共73个单元文件，计26.2GB)：
+The experimental data of Illinois[.las format of the lidar data](https://www.arcgis.com/apps/webappviewer/index.html?id=44eb65c92c944f3e8b231eb1e2814f4d) is published by the Illinois state geological survey - prairie research institute. The research target area is the City of Chicago and its surrounding areas; due to the 1m resolution, some data volume in the research area is as high as 1.4t. Each tile is  $2501 \times 2501$, about 1G. The smallest one is hundreds of M. For ordinary computer configurations, processing big data usually involves determining how much memory can support it(many programs can process data without reading it all into memory, such as batch writing and batch reading of data in h5py format; The Rasterio library provides windows functionality to partition to read individual raster files). As well as CPU speed, batch processing can avoid the loss of all data due to processing interruption. In the elaboration of point cloud data processing, it does not process all regional data of the City of Chicago. It only takes the data processing within a certain range of the IIT(Illinois Institute of Technology) campus as the core. The unit Number(files) included in the downloaded point cloud data are(a total of 73 cell files, accounting for 26.2GB):
 
 |   |   |   |   |   ||||||
 |---|---|---|---|---||||||
@@ -45,30 +45,32 @@
 |LAS_16758725.las|LAS_17008725.las|LAS_17258725.las|LAS_17508725.las|LAS_17758725.las|LAS_18008725.las|LAS_18258725.las|LAS_18508725.las|LAS_18758725.las|LAS_19008725.las|
 |LAS_16758700.las|LAS_17008700.las|LAS_17258700.las|LAS_17508700.las|LAS_17758700.las|LAS_18008700.las|LAS_18258700.las|LAS_18508700.las|LAS_18758700.las|LAS_19008700.las|
 
-### 1.1 点云数据处理（.las）
-#### 1.1.1 查看点云数据信息
+### 1.1 Point cloud data processing(.las)
+#### 1.1.1 Views point cloud data information
 
-* PDAL的主要参数配置：（具体可以查看PDAL官网，或者'PDAL:Point cloud Data Abstraction Library' 手册）
+* Main parameter configuration of PDAL(see the official website of PDAL or 'PDAL: Point cloud Data Abstraction Library')
 
-1. [Dimensions](https://pdal.io/dimensions.html)，维度，该参数给出了可能存储的不同信息，可以基于维度配置“type”类型，例如维度配置为"dimension": "X"，可以配置"type": "filters.sort"，即依据给出的维度，排序返回的点云。常用的包括'Classification'，分类数据；'Density'，点密度估计；'GpsTime'，获取该点的GPS时间；'Intensity'，物体反射面的强度；X,Y,Z，坐标。下述代码pipeline.arrays返回的列表数组中，包含有` dtype=[('X', '<f8'), ('Y', '<f8'), ('Z', '<f8'), ('Intensity', '<u2'), ('ReturnNumber', 'u1'), ('NumberOfReturns', 'u1'), ('ScanDirectionFlag', 'u1'), ('EdgeOfFlightLine', 'u1'), ('Classification', 'u1'), ('ScanAngleRank', '<f4'), ('UserData', 'u1'), ('PointSourceId', '<u2'), ('GpsTime', '<f8'), ('ScanChannel', 'u1'), ('ClassFlags', 'u1')])]`，可以明确.las点云包括哪些维度。
+1. [Dimensions](https://pdal.io/dimensions.html)，Dimension, this parameter gives different information that might be stored, "type" can be configured based on a dimension; for example, the dimension can be configured as "dimension": "X", then "type": "filters.sort", that is, the point cloud returned by sorting according to the given dimension. Common ones include 'Classification'(data classification), 'Density'(point density),  'GpsTime'(to obtain the GPS time of this point), 'Intensity'(the intensity of the object's reflective surface), X,Y,Z(coordinates). The following code pipeline.arrays return a list array containing: ` dtype=[('X', '<f8'), ('Y', '<f8'), ('Z', '<f8'), ('Intensity', '<u2'), ('ReturnNumber', 'u1'), ('NumberOfReturns', 'u1'), ('ScanDirectionFlag', 'u1'), ('EdgeOfFlightLine', 'u1'), ('Classification', 'u1'), ('ScanAngleRank', '<f4'), ('UserData', 'u1'), ('PointSourceId', '<u2'), ('GpsTime', '<f8'), ('ScanChannel', 'u1'), ('ClassFlags', 'u1')])]`,It can be clear which dimensions are included in .las point cloud.
 
-2. [Filters](https://pdal.io/stages/filters.html)，过滤器，给定操作数据的方式，可以删除、修改、重组数据流。有些过滤器需要在对应的维度上实现，例如在XYZ坐标上实现重投影等。常用的过滤器有：create部分：filters.approximatecoplanar，基于k近邻估计点平面性；filters.cluster，利用欧氏距离度量提取和标记聚类；filters.dbscan，基于密度的空间聚类；filters.covariancefeatures，基于一个点邻域的协方差计算局部特征；filters.eigenvalues，基于k最近邻计算点特征值；filters.nndistance，根据最近邻计算距离指数;filters.radialdensity，给定距离内的点的密度。Order部分：filters.mortonorder，使用Morton排序XY数据；filters.randomize，随机化视图中的点；filters.sort，基于给定的维度排序数据。Move部分：filters.reprojection，使用GDAL将数据从一个坐标系重新投影到另一个坐标系；filters.transformation，使用4x4变换矩阵变换每个点。Cull部分：filters.crop，根据边界框或一个多边形，过滤点；filters.iqr，剔除给定维度上，四分位范围外的点；filters.locate，给定维度，通过min/max返回一个点；filters.sample，执行泊松采样并只返回输入点的一个子集；filters.voxelcenternearestneighbor，返回每个体素内最靠近体素中心的点；filters.voxelcentroidnearestneighbor，返回每个体素内最接近体素质心的点。Join部分：filters.merge，将来自两个不同读取器的数据合并到一个流中。Mesh部分：使用Delaunay三角化创建mesh; filters.gridprojection，使用网格投影方法创建mesh; filters.poisson，使用泊松曲面重建算法创建么事。Languages部分：filters.python，在pipeline中嵌入python代码。Metadata部分：filters.stats，计算每个维度的统计信息(均值、最小值、最大值等)。
+2. [Filters](https://pdal.io/stages/filters.html)，can delete, modify, or reorganize data streams by given the way data is manipulated. Some filters need to be implemented on the corresponding dimensions, such as reprojection on XYZ coordinates. Commonly used filters are:   create part:   filters.approximatecoplanar, based on k nearest neighbor, the planarity is estimated; filters.cluster, euclidean distance measurement is used to extract and label clustering; filters.dbscan, density-based spatial clustering; filters.covariancefeatures, local features are calculated based on the covariance of a point neighborhood; filters.eigenvalues, the point's eigenvalue is calculated based on k-nearest neighbor; filters.nndistance, calculate the distance exponent according to the nearest neighbor; filters.radialdensity, the density of the points at a given distance. Order part: filters.mortonorder, using Morton to sort XY data; filters.randomize, randomized points in a view; filters.sort, sort data based on a given dimension. Move part: filters.reprojection, use GDAL to re-project data from one coordinate system to another; filters.transformation, use the 4x4 transformation matrix to transform each point. Cull part: filters.crop, according to the bounding box or a polygon, filter points; filters.iqr, to eliminate points outsides the quartile range on a given dimension; filters.locate, given a dimension, a point is returned by min/max; filters.sample, perform poisson sampling and return only a subset of the input points; filters.voxelcenternearestneighbor, returns the point within each voxel closest to the center of the voxel; filters.voxelcentroidnearestneighbor, returns the point within each voxel closest to the center of the voxel mass. Join part: filters.merge, merge data from two different readers into a single stream. Mesh part: creat mesh using Delaunay  triangulation; filters.gridprojection, mesh projection method is used to create mesh; filters.poisson, create an object using the Poisson surface reconstruction algorithm. Languages part: filters.python, embed python code in the pipeline. Metadata part: filters.stats, calculate statistics for each dimension(mean, minimum, maximum, and so on).
 
-3. type-[readers](https://pdal.io/stages/readers.html)-[writers](https://pdal.io/stages/writers.html)，读写类型，例如通过`"type":"writers.gdal"`，可以使用`"gdaldriver":"GTiff`驱动，使用差值算法从点云创建栅格数据。常用保存的数据类型有，writers.gdal，writers.las，writers.ogr，writers.pgpointcloud，writers.ply，writers.sqlite，writers.text等。
+3. type-[readers](https://pdal.io/stages/readers.html)-[writers](https://pdal.io/stages/writers.html)，For example, by `"type":"writers.gdal"`, using `"gdaldriver":"GTiff` drive, the raster data can be created from the point cloud based on the difference algorithm. Common types of data saved are: writers.gdal，writers.las，writers.ogr，writers.pgpointcloud，writers.ply，writers.sqlite，writers.text, and so on.
 
-4. type，通常配合Filters过滤器使用。例如如果配置"type":"filters.crop",则可以设置"bounds":"([0,100],[0,100])"边界边界框进行裁切。
+4. type, usually used with Filters. For example, if you configure "type":"filters.crop", you can set "bounds":"([0,100],[0,100])" boundary box to crop.
 
-5. output_type, 是给出数据计算的方式，例如mean,min,max,idx,count,stdev,all,idw等。
+5. output_type, is the manner in which data calculation is given, such as mean,min,max,idx,count,stdev,all,idw, etc.
 
-6. resolution，指定输出栅格的精度，例如1，10等。
+6.  resolution, specifies the accuracy of the output raster, such as 1,10, etc.
 
-7. filename，指定保存文件的名称。
+7. filename，specified a name to save the file.
 
-8. [data_type](https://pdal.io/types.html)，保存的数据类型，例如int8,int16,unint8,float,double等。
+8. [data_type](https://pdal.io/types.html)，type of data saved, for example int8,int16,unint8,float,double, etc. 
 
-9. limits, 数据限制，例如配置过滤器为"type":"filters.range", 则"limits":"Z[0:],Classification[6:6]"，仅提取标识为6，即建筑分类的点，和建筑的Z值。
+9. limits, data restrictions, such as configuring filters to "type":"filters.range", 则"limits":"Z[0:],Classification[6:6]"，only extract points with mark 6, namely the point of building classification, and the z value of the building is extracted
 
-pdal是命令行工具，在Anaconda中打开对应环境的终端，输入下述命令，会获得一个点的信息。命令行操作模式可以避免大批量数据读入内存，造成溢出，只是不方便查看数据，因此采用何种方式，可以依据具体情况确定。
+
+PDAL is a command-line utility. Open the terminal on Anaconda and enter the following command to get the point information. The command-line operation mode can avoid large quantities of data read into memory, causing an overflow. However, it is not convenient to view the data, so which way to use can be determined according to the specific situation.
+
 pdal info F:\GitHubBigData\IIT_lidarPtClouds\rawPtClouds\LAS_16758900.las -p 0{
   "file_size": 549264685,
   "filename": "F:\\GitHubBigData\\IIT_lidarPtClouds\\rawPtClouds\\LAS_16758900.las",
@@ -100,9 +102,9 @@ pdal info F:\GitHubBigData\IIT_lidarPtClouds\rawPtClouds\LAS_16758900.las -p 0{
 }
 * pipeline
 
-通常点云数据处理过程中，包括读取、处理、写入等操作，为了方便处理流程，PDAL引入pipeline概念，可以将多个操作堆叠在一个由JSON数据格式定义的数据流中。这尤其对于复杂的处理流程而言，具有更大的优势。同时，PDAL也提供了python模式，可以在python中调入PDAL库，以及定义pipeline操作流程。例如如下官网提供的一个简单案例，包括读取.las文件（"%s"%separate_las），配置维度为点云x坐标（"dimension": "X"），并依据x坐标排序返回的数组（"type": "filters.sort"）等操作。执行pipeline（`pipeline.execute()`）之后，pipeline对象返回点云具有维度的值，其dtypes项返回了点云具有的维度，对应返回的数组信息。这一个单元包含点的数量为count=18721702个点。
+In point cloud data processing, it usually includes reading, processing, writing, and other operations. To facilitate the process, PDAL introduces a pipeline concept that stacks multiple operations into a data flow defined by a JSON data format; this is especially advantageous for complex processing processes. PDAL also provides the python schema, which enables the PDAL library to be called into python, and defines the pipeline operation flow. For example, a simple case provided by the official website includes reading the .las file("%s"%separate_las), configuring the dimension as the point cloud coordinate("dimension": "X"), and sorting the returned array according to the x coordinate("type": "filters.sort"), etc. After executing pipeline（`pipeline.execute()`, the pipeline object returns the point cloud with the dimension value. Its 'dtypes' item returns the point cloud's dimension, corresponding to the returned array information. The number of points in this cell is count=18721702 points.
 
-metadata元数据，可以自信打印查看，包括有坐标投影信息。
+The metadata can be self-printed for viewing, including coordinate projection information.
 
 
 ```python
