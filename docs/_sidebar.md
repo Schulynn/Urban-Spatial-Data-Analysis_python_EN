@@ -17,7 +17,7 @@
     * [2.10 Landsat remote sensing image processing, digital elevation, principal component analysis](./notebook_code/landsat_pca.md)
     * [2.11 Remote sensing image interpretation (based on NDVI), the establishment of sampling tool(GUI_tkinter), confusion matrix](./notebook_code/interpretation_GUI.md)
     * [2.12 Point cloud data(Lidar) processing——classified data, DSM, building height extraction, interpolation](./notebook_code/lidarData.md)
-    * [2.13 卷积，SIR传播模型，成本栅格与物种散布，SIR空间传播模型](./notebook_code/convolution_SIR.md)
+    * [2.13 Convolution, SIR propagation model,  cost raster and species dispersal, SIR spatial propagation model](./notebook_code/convolution_SIR.md)
 
 * index
     * [code tool index](./markdown/codeToolIdx.md)

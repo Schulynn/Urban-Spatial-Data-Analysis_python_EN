@@ -115,7 +115,7 @@ las_paths=util.filePath_extraction(dirpath,fileType)
 
 s_t=util.start_time()
 import pdal,os
-separate_las=os.path.join(list(las_paths.keys())[0],list(las_paths.values())[0][32]).replace("\\","/") #注意文件名路径中"\"和"/"，不同库支持的类型可能有所不同，需自行调整
+separate_las=os.path.join(list(las_paths.keys())[0],list(las_paths.values())[0][32]).replace("\\","/") #Note that "\" and "/" in the filename path may vary in the types supported by different libraries and need to be adjusted.
 
 json="""
 [
@@ -153,7 +153,7 @@ util.duration(s_t)
     Total time spend:0.53 minutes
     
 
-PDAL处理后，可以读取'pipeline'对象的属性，因为一个点包含多个信息，为方便查看，可以将点云数组转换为DataFrame格式数据。
+After PDAL processing, the properties of the 'pipeline' object can be read. Because a point contains more than one piece of information, we can convert the point cloud array to DataFrame format data for easy viewing.
 
 
 ```python
@@ -282,7 +282,7 @@ util.print_html(pts_df)
 
 
 
-除了直接查看数据内容，可以借助open3d库打印三维点云，互动观察。但是因为最初使用PDAL读取.las点云（open3d目前不支持读取.las格式点云数据），需要将读取的点云数据转换为open3d支持的格式。显示的色彩代表点云的高度信息。
+In addition to directly viewing the data content, The open3D library can print 3d point cloud for interactive observation. However, since PDAL was originally used to read .las format point cloud(Open3D does not currently support reading .las format point cloud data), the read point cloud data needs to be converted to the open3D supported format. The displayed colors represent the height information of the point cloud.
 
 
 ```python
@@ -294,18 +294,19 @@ o3d.visualization.draw_geometries([o3d_pts])
 
 <<a href=""><img src="./imgs/12_01.png" height="auto" width="auto" title="caDesign"></a>
 
-#### 1.1.2 建立DSM(Digital Surface Model)，与分类栅格
-三维点云数据是三维格式数据，可以提取信息将其转换为对应的二维栅格数据，方便数据分析。对三维点云数据的分析会在相关章节中继续探索。点云数据转二维栅格数据最为常用的包括生成分类栅格数据，即地表覆盖类型；二是，提取地物高度，例如提取建筑物高度信息，植被高度信息等；三是生成DEM（Digital Elevation Model），DTM（Digital Terrain Model）等。
+#### 1.1.2 Establish DSM(Digital Surface Model) and classification raster
+The 3D point cloud is 3d format data, which can be extracted and converted into corresponding 2D raster data for convenient data analysis. The analysis 3D point cloud data will be further explored in relevant chapters.  The most commonly used transformation of point cloud data into 2d rater data includes the generation of classification raster data, namely, land cover type; Secondly, the height of ground objects is extracted, such as the height of buildings and the height of vegetation; Third, Digital Elevation Model(DEM) is generated, and so on.
 
-DEM-数字高程模型，为去除自然和建筑对象的裸地表面高程；
+DEM-The digital elevation model is the surface elevation of bare ground that removed natural and architectural objects；
 
-DTM-数字地形（或地面）模型，在DEM基础上增加自然地形的矢量特征，如河流和山脊。DEM和DTM很多时候并不明确区分，具体由数据所包含的内容来确定；
+DTM-The digital terrain model adds vector features of natural terrains, such as rivers and ridges, to DEM. DEM and DTM are not clearly distinguished in many cases, determined by the data's content.
 
-DSM-数字表面模型，同时捕捉地面，自然（例如树木），以及人造物（例如建筑）特征。
+DSM-The digital surface model captures both ground, natural(such as trees), and human-made (such as buildings) features.
 
-将对点云数据所要处理的内容定义在一个函数中，每一处理内容为一个pipeline，由json格式定义。下述代码定义了三项内容，一是，提取地物覆盖分类信息，用于建立分类栅格；二是，提取高程信息，用于建立DSM；三是，仅提取ground地表类型的高程，可以建立DEM。为了方便函数内日后不断增加新的提取内容，定义输入参数json_combo管理和判断所要计算的pipleline，从而能够灵活处理函数，以后增加新pipeline时避免较大的改动。
+The content to be processed by point cloud data is defined in a function. Each processing content is a pipeline, defined in JSON format. The following code defines three contents. One is to extract land cover classification information for establishing a classification raster; Secondly, extract elevation information to establish DSM; Third, only the elevation of ground surface type can be extracted to establish DEM. The input parameter json_combo is defined to manage and judge the pipeline to be calculated to facilitate the continuous addition in the function of new extraction content in the future, to flexibly handle the function and avoid big changes when a new pipeline is added in the future.
 
-对于文件很大的地理空间信息数据，通常在处理过程中，完成一个主要的数据处理后就将其置于硬盘，使用时再读取。因此处理完一个点云单元（tile）之后，即刻将其保存到硬盘中，并不驻留于内存里，避免内存溢出。
+Geospatial data with large files are usually placed on the hard disk after a major data processing is completed during the processing process, and then read when used. So after processing a point cloud unit(tile), it is immediately saved to the hard disk instead of residing in memory to avoid memory overflow.
+
 
 
 ```python
@@ -314,16 +315,16 @@ import os
 def las_info_extraction(las_fp,json_combo):
     import pdal
     '''
-    function - 转换单个.las点云数据为分类栅格数据，和DSM栅格数据等
+    function - Convert single .las point cloud data into classification raster data and DSM raster data, etc.
     
     Paras:
-    las_fp - .las格式文件路径
-    save_path - 保存路径列表，分类DSM存储与不同路径下
+    las_fp - .las format file path
+    save_path - Saved path list, classification, and DSM storage under different paths
     
     '''
     pipeline_list=[]
     if 'json_classification' in json_combo.keys():
-        #pipeline-用于建立分类栅格
+        #pipeline-Used to create a classification raster
         json_classification="""
             {
             "pipeline": [
@@ -341,7 +342,7 @@ def las_info_extraction(las_fp,json_combo):
         pipeline_list.append(json_classification)
         
     elif 'json_DSM' in json_combo.keys():
-        #pipeline-用于建立DSM栅格数据
+        #pipeline-Used to build DSM raster data
         json_DSM="""
             {
             "pipeline": [
@@ -358,7 +359,7 @@ def las_info_extraction(las_fp,json_combo):
         pipeline_list.append(json_DSM)
         
     elif 'json_ground' in json_combo.keys():
-        #pipelin-用于提取ground地表
+        #pipelin-Used to extract the ground surface
         json_ground="""
             {
             "pipeline": [
@@ -381,14 +382,14 @@ def las_info_extraction(las_fp,json_combo):
     
     for json in pipeline_list:
         pipeline=pdal.Pipeline(json)
-        pipeline.loglevel=8 #日志级别配置
-        if pipeline.validate(): #检查json选项是否正确
+        pipeline.loglevel=8 #Log level configuration
+        if pipeline.validate(): #Check that if the JSON option is correct.
             #print(pipeline.validate())
             try:
                 count=pipeline.execute()
             except:
                 print("\n An exception occurred,the file name:%s"%las_fp)
-                print(pipeline.log) #如果出现错误，打印日志查看，以便修正错误代码
+                print(pipeline.log) #If an error occurs, print the log to view it so we can fix the error code.
                 
         else:
             print("pipeline unvalidate!!!")
@@ -397,14 +398,14 @@ def las_info_extraction(las_fp,json_combo):
 dirpath=r"F:\GitHubBigData\IIT_lidarPtClouds\rawPtClouds"            
 las_fp=os.path.join(dirpath,'LAS_17508825.las').replace("\\","/")
 workspace=r'F:\GitHubBigData\IIT_lidarPtClouds'
-json_combo={"json_classification":os.path.join(workspace,'classification_DSM\LAS_17508825_classification.tif').replace("\\","/"),"json_DSM":os.path.join(workspace,'classification_DSM\LAS_17508825_DSM.tif').replace("\\","/")} #配置输入参数
+json_combo={"json_classification":os.path.join(workspace,'classification_DSM\LAS_17508825_classification.tif').replace("\\","/"),"json_DSM":os.path.join(workspace,'classification_DSM\LAS_17508825_DSM.tif').replace("\\","/")} #Configure input parameters
 las_info_extractio(las_fp,json_combo)
 ```
 
     finished conversion...
     
 
-读取保存的DSM栅格文件，用earthpy库打印查看，因为数据中可能存在异常值，造成显示上的灰度，因此可以用分位数（np.quantile）的方法配置vmin和vmax参数。
+The saved DSM raster files were read and printed with the Earthpy library for viewing. There might be outliers in the data, resulting in grayscale on display; vmin and vmax parameters could be configured by quantile(np.quantile) method.
 
 
 ```python
@@ -431,7 +432,7 @@ ep.plot_bands(DSM_array, cmap="turbo", cols=1, title=titles, vmin=np.quantile(DS
 
 
 
-同样读取保存的分类栅格数据，但是需要自行定义打印显示函数，从而根据整数指示的类别打印。其中类别由LAS格式给定的分类标识确定，颜色可以根据显示所要达到的效果自行定义。并增加了图例，方便查看颜色所对应的分类。
+The saved category-raster data is also read, but we need to define our print-display function to print according to the categories indicated by the integers. The category is determined by the classification identifier given by LAS format, and the color can be defined by itself according to the effect to be achieved by the display. Add added legend, convenient to see the color of the corresponding classification.
 
 
 ```python
@@ -444,10 +445,10 @@ def las_classification_plotWithLegend(las_fp):
     from matplotlib import colors
     from matplotlib.patches import Rectangle
     '''
-    function - 显示由.las文件生成的分类栅格文件，并显示图例
+    function - Displays the classification raster file generated by the .las file and displays the legend.
     
     Paras:
-    las_fp - 分类文件路径
+    las_fp - Category file path
     '''    
     with rio.open(las_fp) as classi_src:
         classi_array=classi_src.read(1)
@@ -463,7 +464,7 @@ def las_classification_plotWithLegend(las_fp):
         fontsize=14,
     )
 
-    #增加图例
+    #Add the legend
     color_legend=pd.DataFrame(las_classi_colorName.items(),columns=["id","color"])
     las_classi_name={0:'never classified',1:'unassigned',2:'ground',3:'low vegetation',4:'medium vegetation',5:'high vegetation',6:'building',7:'low point',8:'reserved',9:'water',10:'rail',11:'road surface',12:'reserved',13:'wire-guard(shield)',14:'wire-conductor(phase)',15:'transimission',16:'wire-structure connector(insulator)',17:'bridge deck',18:'high noise',9999:'null'}
     color_legend['label']=las_classi_name.values()
@@ -483,8 +484,9 @@ las_classification_plotWithLegend(las_fp)
 <<a href=""><img src="./imgs/12_03.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.1.3批量处理.las点云单元
-通过一个点云单元的代码调试，完成对一个单元的点云数据处理，为了能够批量处理所有点云单元，建立批量处理点云数据的函数。该函数直接调用上述单个点云单元处理函数，仅梳理所有点云单元文件的读取和保存路径。为了查看计算进度，使用tqdm库可以将循环计算过程以进度条的方式显示，明确完成所有数据计算大概所要花费的时间。同时以调用了在OpenStreetMap部分定义的start_time()和duration(s_t)方法，计算具体的时长。
+#### 1.1.3Batch processing .las point cloud unit(tile)
+The point cloud data processing of a unit is completed through the code debugging of a point cloud unit. A batch processing function of point cloud data is established to batch processing all point cloud units; This function directly calls the above single unit processing function of point cloud and only combs the read and save path of all point unit files. The tqdm library allows us to display the loop calculation as a progress bar to see the calculation's processing,  specifying the approximate time it will take to complete all the data calculations. Meanwhile, start_time() and duration(s_t) methods defined in the OpenStreetMap section were called to calculate the specific duration.
+
 
 
 ```python
@@ -493,29 +495,29 @@ def las_info_extraction_combo(las_dirPath,json_combo_):
     import util,os,re
     from tqdm import tqdm
     '''
-    function - 批量转换.las点云数据为DSM和分类栅格
+    function - Batch conversion .las point cloud data into DSM and classification raster.
     
     Paras:
-    las_dirPath - LAS文件路径
-    save_path - 保存路径
+    las_dirPath - LAS file path
+    save_path - save path
     
     return:
         
     '''
     file_type=['las']
     las_fn=util.filePath_extraction(las_dirPath,file_type)
-    '''展平列表函数'''
+    '''Flattening list function'''
     flatten_lst=lambda lst: [m for n_lst in lst for m in flatten_lst(n_lst)] if type(lst) is list else [lst]
     las_fn_list=flatten_lst([[os.path.join(k,las_fn[k][i]) for i in range(len(las_fn[k]))] for k in las_fn.keys()])
     pattern=re.compile(r'[_](.*?)[.]', re.S) 
     for i in tqdm(las_fn_list):  
-        fn_num=re.findall(pattern, i.split("\\")[-1])[0] #提取文件名字符串中的数字
-        #注意文件名路径中"\"和"/"，不同库支持的类型可能有所不同，需自行调整
+        fn_num=re.findall(pattern, i.split("\\")[-1])[0] #Extract the number in the filename string
+        #Note that "\" and "/" in the file name path may vary in the types by different libraries and need to be adjusted.
         json_combo={key:os.path.join(json_combo_[key],"%s_%s.tif"%(os.path.split(json_combo_[key])[-1],fn_num)).replace("\\","/") for key in json_combo_.keys()}        
         util.las_info_extraction(i.replace("\\","/"),json_combo)
     
 dirpath=r"F:\GitHubBigData\IIT_lidarPtClouds\rawPtClouds"    
-json_combo_={"json_classification":r'F:\GitHubBigData\IIT_lidarPtClouds\classification'.replace("\\","/"),"json_DSM":r'F:\GitHubBigData\IIT_lidarPtClouds\DSM'.replace("\\","/")} #配置输入参数
+json_combo_={"json_classification":r'F:\GitHubBigData\IIT_lidarPtClouds\classification'.replace("\\","/"),"json_DSM":r'F:\GitHubBigData\IIT_lidarPtClouds\DSM'.replace("\\","/")} #Configure input parameters
 
 s_t=util.start_time()S
 las_info_extraction_combo(dirpath,json_combo_)  
@@ -536,11 +538,11 @@ util.duration(s_t)
     
     
 
-* 合并栅格数据
+* Merge raster data
 
-以点云单元形式批量处理完所有的点云数据，即生成同点云单元数量的多个DSM文件，和多个分类文件后，需要将其合并成一个完整的栅格文件。合并的方法主要使用rasterio库提供的merge方法。同时需要注意，要配置压缩，以及保存类型，否则合并后的栅格文件可能非常大，例如本次合并所有的栅格后，文件大小约为4.5GB，但是配置`"compress":'lzw',`和`"dtype":get_minimum_int_dtype(mosaic), `后，文件大小仅为201MB，大幅度压缩了文件大小，从而有利于节约硬盘空间，以及存读速度。
+After batch processing of all point cloud data in point cloud units, that is, generating multiple DSM files and multiple classification files with the same number of point cloud units, it is necessary to merge them into a complete raster file. The merge method provided by the Rasterio library is mainly used. It is also important to configure the compression and the saving type; otherwise the merged raster file may be very large. For example, the size of the file is about 4.5GB after merging all the raters. However, with `"compress":'lzw' and `"dtype":get_minimum_int_dtype(mosaic), `, the file size is only 201MB, which reduces the size of the file to save disk space and memory speed.
 
-在配置文件保存类型时，迁移了rasterio库给出的函数`get_minimum_int_dtype(values)`，自行依据数组数值确定所要保存的文件类型，从而避免了自行定义。
+When the configuration file is saved, the function `get_minimum_int_dtype(values)` given by the Rasterio library is transferred to determine the file type to be saved based on the array value, thus avoiding self-definition.
 
 
 ```python
@@ -548,17 +550,17 @@ def raster_mosaic(dir_path,out_fp,):
     import rasterio,glob,os
     from rasterio.merge import merge
     '''
-    function - 合并多个栅格为一个
+    function - Merge multiple rasters into one
     
     Paras:
-    dir_path - 栅格根目录
-    out-fp - 保存路径
+    dir_path - Raster root directory
+    out-fp - Saving path
     
     return:
-    out_trans - 返回变换信息
+    out_trans - Return transfermation informaiton
     '''
     
-    #迁移rasterio提供的定义数组最小数据类型的函数
+    #Transfer the function provided by Rasterio that defines the data type with the minimum array size. 
     def get_minimum_int_dtype(values):
         """
         Uses range checking to determine the minimum integer data type required
@@ -583,24 +585,24 @@ def raster_mosaic(dir_path,out_fp,):
         elif min_value >= -2147483648 and max_value <= 2147483647:
             return rasterio.int32
     
-    search_criteria = "*.tif" #搜寻所要合并的栅格.tif文件
+    search_criteria = "*.tif" #Search for the .tif raster to be merged
     fp_pattern=os.path.join(dir_path, search_criteria)
-    fps=glob.glob(fp_pattern) #使用glob库搜索指定模式的文件
+    fps=glob.glob(fp_pattern) #Use the glob library to search for files with the specified pattern.
     src_files_to_mosaic=[]
     for fp in fps:
         src=rasterio.open(fp)
         src_files_to_mosaic.append(src)    
-    mosaic,out_trans=merge(src_files_to_mosaic)  #merge函数返回一个栅格数组，以及转换信息   
+    mosaic,out_trans=merge(src_files_to_mosaic)  #The merge function returns an array of rasters and conversion information.
     
-    #获得元数据
+    #Get metadata
     out_meta=src.meta.copy()
-    #更新元数据
+    #Update metadata
     data_type=get_minimum_int_dtype(mosaic)
     out_meta.update({"driver": "GTiff",
                      "height": mosaic.shape[1],
                      "width": mosaic.shape[2],
                      "transform": out_trans,
-                     #通过压缩和配置存储类型，减小存储文件大小
+                     #Reduce the storage file size by compressing and configuring the storage type
                      "compress":'lzw',
                      "dtype":get_minimum_int_dtype(mosaic), 
                       }
@@ -623,7 +625,7 @@ util.duration(s_t)
     Total time spend:0.95 minutes
     
 
-依据上述同样的方法，读取、打印和查看合并后的DSM栅格。
+Read, print, and view the merged DSM raster in the same manner as described above.
 
 
 ```python
@@ -648,7 +650,7 @@ ep.plot_bands(mosaic_DSM_array, cmap="turbo", cols=1, title=titles, vmin=np.quan
 
 
 
-同样合并单个的分类栅格为一个文件。
+Also merges a single classification raster into a single file
 
 
 ```python
@@ -695,28 +697,28 @@ util.las_classification_plotWithLegend_(mosaic_classi_array_rescaled)
 <<a href=""><img src="./imgs/12_05.png" height="auto" width="auto" title="caDesign"></a>
 
 
-### 1.2 建筑高度提取
-建筑高度提取的流程为：将DSM栅格重投影为该区域（芝加哥）Landsat所定义的坐标投影系统，统一投影坐标系；-->从[Chicago Data Portal，CDP](https://data.cityofchicago.org/)获取'Building Footprints (current)'.shp格式的Polygon建筑分布-->依据DSM栅格的范围（extent）裁切.shp格式的建筑分布矢量数据，并定义投影同重投影后的DSM栅格文件；-->PSAL提取地面（ground）信息，并存储为栅格；-->插值所有单个的ground栅格，并合并，重投影同DSM投影后保存；-->根据分类栅格数据，从DSM中提取建筑区域的高程数据-->用裁切后的建筑矢量数据，使用'rasterstats'库提供的'zonal_stats'方法，分别提取DSM和ground栅格数据高程信息，统计方式为median（中位数）；-->用区域统计提取的DSM-ground，即为建筑高度数据；-->将建筑高度数据写入GeoDataFrame，并保存为.shp文件，备日后分析使用。
+### 1.2 Building height extraction
+The process of building height extraction is as follows: DSM raster is re-projected into the coordinate projection system defined by Landsat in this area(Chicago), and the projection coordinate system is unified; -> The .shp format(Polygon) buildings distribution data 'Building Footprints (current)' is obtained from  [Chicago Data Portal，CDP](https://data.cityofchicago.org/); -> .shp format building distribution Polygon is cropped according to the DSM raster extent, and projected as the same as the DSM raster re-projected; -> Extracts the ground information using PSAL, and save as raster; -> Interpolates all single ground raster, merge them, re-projected them as the same as the DSM projection, and then save them after projection; ->The elevation data of the building area is extracted from DSM according to the classified raster data; ->The 'zonal_stats' method provided by the 'rasterstats' library was used to extract elevation information of DSM and ground raster respectively, with the statistical methods such as median; -> DSM-ground is extracted using zone statistics, namely, the building height data; ->  Write the building height data into GeoDataFrame and save it as .shp file for later analysis.
 
-#### 1.2.1 定义获取栅格投影函数，以及栅格重投影函数
+#### 1.2.1 Defines the get raster projection function and the raster reprojection function
 
-投影和重投影的方法在Landsat遥感影像处理部分使用过，可以结合查看。
+Projection and reprojection methods have been used in Landsat remote sensing image processing, which can be viewed in combination.
 
 
 ```python
 def get_crs_raster(raster_fp):
     import rasterio as rio
     '''
-    function - 获取给定栅格的投影坐标-crs.
+    function - Gets the projected coordinates of the given raster-crs.
     
     Paras:
-    raster)fp - 给定栅格文件的路径
+    raster)fp - The path for a given raster file
     '''
     with rio.open(raster_fp) as raster_crs:
         raster_profile=raster_crs.profile
         return raster_profile['crs']
     
-ref_raster=r'F:\data_02_Chicago\9_landsat\data_processing\DE_Chicago.tif'  # 使用的为Landsat部分处理的遥感影像，可以自行下载对应区域的Landsat，作为参数输入，获取其投影
+ref_raster=r'F:\data_02_Chicago\9_landsat\data_processing\DE_Chicago.tif'  # For remote sensing images processed in the Landsat section, Landsat of the corresponding region can be downloaded and used as an input parameter to obtain its projection. 
 dst_crs=get_crs_raster(ref_raster)
 print("dst_crs:",dst_crs)
 ```
@@ -730,12 +732,12 @@ def raster_reprojection(raster_fp,dst_crs,save_path):
     from rasterio.warp import calculate_default_transform, reproject, Resampling
     import rasterio as rio
     '''
-    function - 转换栅格投影
+    function - Transform raster projection
     
     Paras:
-    raster_fp - 待转换投影的栅格
-    dst_crs - 目标投影
-    save_path - 保存路径
+    raster_fp - The raster to be transformed
+    dst_crs - Target projection
+    save_path - Saving path
     '''
     with rio.open(raster_fp) as src:
         transform, width, height = calculate_default_transform(src.crs, dst_crs, src.width, src.height, *src.bounds)
@@ -767,9 +769,9 @@ raster_reprojection(DTM_fp,dst_crs,DTM_reprojection_fp)
     finished reprojecting...
     
 
-#### 1.2.2 按照给定的栅格，获取栅格的范围来裁切.shp格式文件（Polygon）
+#### 1.2.2 Get the extent of the raster given to crop .shp format file(Polygon)
 
-在使用'gpd.clip(vector_projection_,poly_gdf)  '方法裁切矢量数据时，需要清理数据，包括`vector.dropna(subset=["geometry"], inplace=True)`清理空值；以及`polygon_bool=vector_projection.geometry.apply(lambda row:True if type(row)==type_Polygon and row.is_valid else False)`清理无效的Polygon对象，和不为'shapely.geometry.polygon.Polygon'格式的数据。只有清理完数据后才能够执行裁切，否则会提示错误。
+In the case of vector data cropping with 'gpd.clip(vector_projection_,poly_gdf) ' method, data need to ben cleaned up, including 'gpd.clip(vector_projection_,poly_gdf) ' to cleanse the null values; And `polygon_bool=vector_projection.geometry.apply(lambda row:True if type(row)==type_Polygon and row.is_valid else False)` to cleanse invalid Polygon object, and not for 'shapely.geometry.polygon.Polygon' format.  Only after the data has been cleaned up can the crop be performed, otherwise an error will occur.
 
 
 ```python
@@ -781,15 +783,15 @@ def clip_shp_withRasterExtent(vector_shp_fp,reference_raster_fp,save_path):
     from shapely.geometry import Polygon
     import shapely
     '''
-    function - 根据给定栅格的范围，裁切.shp格式数据，并定义投影同给定栅格
+    function - Crop data in .shp format to the extent of a given raster and define a projection as the same as the raster.
     
     Paras:
-    vector_shp_fp - 待裁切的vector文件路劲
-    reference_raster_fp - 参考栅格，extent及投影
-    save_path - 保存路径
+    vector_shp_fp - Vector file path to be cropped
+    reference_raster_fp - Reference raster, extent and projection
+    save_path - Save the path
     
     return:
-    poly_gdf - 返回裁切边界
+    poly_gdf - Returns the cropped boundary
     '''
     vector=gpd.read_file(vector_shp_fp)
     print("before dropna:",vector.shape)
@@ -806,7 +808,7 @@ def clip_shp_withRasterExtent(vector_shp_fp,reference_raster_fp,save_path):
         poly_gdf=gpd.GeoDataFrame({'name':[1],'geometry':[polygon]},crs=crs)  
         vector_projection=vector.to_crs(crs)
      
-    #移除非Polygon类型的行，和无效的Polygon(用.is_valid验证)，否则无法执行.clip
+    #Remove row with a non-Polygon type and invalid Polygon(validated with .is_valid), or the clip cannot be performed.
     type_Polygon=shapely.geometry.polygon.Polygon
     polygon_bool=vector_projection.geometry.apply(lambda row:True if type(row)==type_Polygon and row.is_valid else False)
     vector_projection_=vector_projection[polygon_bool]
@@ -866,9 +868,9 @@ poly_gdf=clip_shp_withRasterExtent(vector_shp_fp,DTM_reprojection_fp,save_path)
 
 
 
-* 查看处理后的.shp格式建筑矢量数据
+* View the processed .shp format building vector data
 
-可以叠加打印DSM的栅格数据，和建筑矢量数据，确定二者在地理空间坐标保持一致的条件下，相互吻合。说明数据处理正确，否则需要返回查看之前的代码，确定出错的位置，调整代码重新计算。
+It is possible to overlay print DSM raster data and building vector data, which determine that they are consistent under the consistent geospatial coordinates system to show that the data processing is correct; otherwise, we need to go back to see the previous code, determine the location of the error, adjust the code to recalculate.
 
 
 ```python
@@ -908,9 +910,9 @@ plt.show()
 <<a href=""><img src="./imgs/12_06.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.2.3 根据分类栅格数据，从DSM中提取建筑区域的高程数据
+#### 1.2.3 The elevation data of the building area is extracted from DSM according to the classified raster data.
 
-因为建筑矢量数据每个建筑polygon并不一定仅包括分类为建筑的DSM栅格，可能包括其它分类数据，因此需要DSM仅保留建筑高程信息，避免计算误差。配合使用np.where()实现。
+Because each building polygon in the building vector data does not necessarily include only the DSM raster classified as a building, it may include other classified data. Therefore, DSM is required only to retain building elevation information to avoid calculation errors. It is implemented with np.where(). 
 
 
 ```python
@@ -934,7 +936,7 @@ with rio.open(classi_reprojection_fp) as classi_src:
     classi_reprojection=classi_src.read(1)
     out_meta=classi_src.meta.copy()
     
-building_DSM=np.where(classi_reprojection==6,mosaic_DTM_array,np.nan) #仅保留建筑高程信息
+building_DSM=np.where(classi_reprojection==6,mosaic_DTM_array,np.nan) #Only building elevation information is retained.
 building_DSM_fp=r'F:\GitHubBigData\IIT_lidarPtClouds\mosaic\building_DSM.tif'
 with rio.open(building_DSM_fp, "w", **out_meta) as dest:
     dest.write(building_DSM.astype(rio.uint16),1)     
@@ -946,9 +948,9 @@ util.duration(s_t)
     Total time spend:0.75 minutes
     
 
-* 提取ground，并插值，合并、以及重投影，查看数据
+* Extract the ground and interpolate, merge, re-project, and see the data. 
 
--提取
+-Extract
 
 
 ```python
@@ -961,9 +963,9 @@ util.las_info_extraction_combo(las_dirPath,json_combo_)
     100%|██████████| 73/73 [07:44<00:00,  6.37s/it]
     
 
--插值
+-Interpolate
 
-插值使用了rasterio库提供的fillnodata方法。该方法是对每个像素，在四个方向上以圆锥形搜索值，根据反向距离加权计算插值。一旦完成所有插值，可以使用插值像素上的3x3平均过滤器迭代，平滑数据。这种算法通常适宜于连续变化的栅格，例如DEM，以及填补小的空洞。
+The interpolation uses the 'fillnodata' method provided by the Rasterio library; this method is to search the values conically in four directions for each pixel and calculate interpolation based on the weighted inverse distance. Once all the interpolation is completed, the 3x3 averaging filter can be used to iterate over the interpolating pixels, smoothing the data; This algorithm is usually suitable for continuously changing raster, such as DEM, and for filling small holes.
 
 
 ```python
@@ -973,21 +975,21 @@ def rasters_interpolation(raster_path,save_path,max_search_distance=400,smoothin
     import glob
     from tqdm import tqdm
     '''  
-    function - 使用rasterio.fill的插值方法，补全缺失的数据
-    
+    function - The interpolation method 'rasterio.fill' is used to complete the missing data. 
+
     Paras:
-    raster_path - 栅格根目录
-    save_path - 保持的目录
+    raster_path - Raster root directory
+    save_path - Saved directory
     '''
-    search_criteria = "*.tif" #搜寻所要合并的栅格.tif文件
+    search_criteria = "*.tif" #Search for the .tif raster file to be merged
     fp_pattern=os.path.join(raster_path, search_criteria)
-    fps=glob.glob(fp_pattern) #使用glob库搜索指定模式的文件
+    fps=glob.glob(fp_pattern) #Use the glob library to search for files with the specified pattern.
     
     for fp in tqdm(fps):
         with rasterio.open(fp,'r') as src:
             data=src.read(1, masked=True)
             msk=src.read_masks(1) 
-            #配置max_search_distance参数，或者多次执行插值，补全较大数据缺失区域
+            #Configure the 'max_search_distance' parameter or perform interpolation multiple times to complete large missing data areas.
             fill_raster=fillnodata(data,msk,max_search_distance=max_search_distance,smoothing_iterations=0) 
             out_meta=src.meta.copy()   
             with rasterio.open(os.path.join(save_path,"interplate_%s"%os.path.basename(fp)), "w", **out_meta) as dest:            
@@ -1013,7 +1015,7 @@ util.duration(s_t)
     
     
 
--合并
+-Merge
 
 
 ```python
@@ -1031,12 +1033,12 @@ util.duration(s_t)
     Total time spend:0.33 minutes
     
 
--重投影
+-Re-project
 
 
 ```python
 import util
-ref_raster=r'F:\data_02_Chicago\9_landsat\data_processing\DE_Chicago.tif'  # 使用的为Landsat部分处理的遥感影像，可以自行下载对应区域的Landsat，作为参数输入，获取其投影
+ref_raster=r'F:\data_02_Chicago\9_landsat\data_processing\DE_Chicago.tif'  # The remote sensing images processed in the Landsat section, the Landsat data corresponding region, can be downloaded and used as the input parameter to obtain its projection.
 dst_crs=util.get_crs_raster(ref_raster)
 print("dst_crs:",dst_crs)
 
@@ -1049,9 +1051,9 @@ util.raster_reprojection(ground_fp,dst_crs,ground_reprojection_fp)
     finished reprojecting...
     
 
--查看数据
+-See the data
 
-为了方便栅格数据的打印查看，将其定义为一个函数，方便调用。
+It is defined as a function to be called to facilitate the printing of raster data. 
 
 
 ```python
@@ -1060,11 +1062,11 @@ def raster_show(raster_fp,title='raster',vmin_vmax=[0.25,0.95],cmap="turbo"):
     import earthpy.plot as ep
     import numpy as np
     '''
-    function - 使用earthpy库显示遥感影像（一个波段）
+    function - Display remote sensing images(one band) using the Earthpy library.
     
     Paras:
-    raster_fp - 输入栅格路径
-    vmin_vmax -调整显示区间
+    raster_fp - The raster path input
+    vmin_vmax -Adjust display interval
     '''   
     
     with rio.open(raster_fp) as src:
@@ -1080,9 +1082,9 @@ raster_show(raster_fp)
 <<a href=""><img src="./imgs/12_07.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.2.4 区域统计，计算建筑高度
+#### 1.2.4 Zonal statistics, calculating the building height
 
-使用rasterstats库的zonal_stats方法，提取DSM和ground栅格高程数据。
+DSM and ground elevation data are extracted using the 'zonal_stats' method of the Rasterstats library.
 
 
 ```python
@@ -1103,7 +1105,7 @@ util.duration(s_t)
     Total time spend:4.53 minutes
     
 
-建筑高度=DSM提取的高程-ground提取的高程。为方便计算将其转换为pandas的DataFrame数据格式应用.apply及lambda函数进行计算。并将计算结果增加到建筑矢量数据的GeoDataFrame中，另存为.shp格式数据。
+Building height = elevation extracted by DSM - elevation extracted by ground. To facilitate the computation, convert it to the DataFrame data format provided by pandas, and apply '.apply' and lambda function to perform the computation. Moreover, add the calculation results to the GeoDataFrame of the building vector data, save as .shp format data.
 
 
 ```python
@@ -1135,7 +1137,7 @@ print("finished computation and save...")
     finished computation and save...
     
 
-打开，与打印查看计算结果。
+Open and print to view the results.
 
 
 ```python
@@ -1164,34 +1166,34 @@ building_footprints_height.plot(column='height',ax=ax,cax=cax_1,legend=True,cmap
 <<a href=""><img src="./imgs/12_08.png" height="auto" width="auto" title="caDesign"></a>
 
 
-### 1.3 要点
-#### 1.3.1 数据处理技术
+### 1.3 key point
+#### 1.3.1 data processing technique
 
-* 使用PDAL、open3d和PCL等库处理点云数据
+* Use libraries such as PDAL、open3d and PCL to process point cloud data.
 
-#### 1.3.2 新建立的函数
+#### 1.3.2 The newly created function tool
 
-* function - 转换单个.las点云数据为分类栅格数据，和DSM栅格数据等，`las_info_extraction(las_fp,json_combo)`
+* function - Convert single .las point cloud data into classification raster data and DSM raster data, etc, `las_info_extraction(las_fp,json_combo)`
 
-* function - 显示由.las文件生成的分类栅格文件，并显示图例， `las_classification_plotWithLegend(las_fp)`
+* function - Displays the classification raster file generated by the .las file and displays the legend, `las_classification_plotWithLegend(las_fp)`
 
-* function - 批量转换.las点云数据为DSM和分类栅格，`las_info_extraction_combo(las_dirPath,json_combo_)`
+* function - Batch conversion .las point cloud data into DSM and classification raster, `las_info_extraction_combo(las_dirPath,json_combo_)`
 
-* function - 合并多个栅格为一个， `raster_mosaic(dir_path,out_fp,)`
+* function - Merge multiple rasters into one, `raster_mosaic(dir_path,out_fp,)`
 
-* function - 迁移rasterio提供的定义数组最小数据类型的函数， `get_minimum_int_dtype(values)`
+* function - Transfer the function provided by Rasterio that defines the data type with the minimum array size, `get_minimum_int_dtype(values)`
 
-* function - 获取给定栅格的投影坐标-crs.， `get_crs_raster(raster_fp)`
+* function -  Gets the projected coordinates of the given raster-crs, `get_crs_raster(raster_fp)`
 
-* function - 转换栅格投影，`raster_reprojection(raster_fp,dst_crs,save_path)`
+* function - Transform raster projection,`raster_reprojection(raster_fp,dst_crs,save_path)`
 
-* function - 根据给定栅格的范围，裁切.shp格式数据，并定义投影同给定栅格，`clip_shp_withRasterExtent(vector_shp_fp,reference_raster_fp,save_path)`
+* function - Crop data in .shp format to the extent of a given raster and define a projection as the same as the raster, `clip_shp_withRasterExtent(vector_shp_fp,reference_raster_fp,save_path)`
 
-* function - 使用rasterio.fill的插值方法，补全缺失的数据，`rasters_interpolation(raster_path,save_path,max_search_distance=400,smoothing_iteration=0)`
+* function - The interpolation method 'rasterio.fill' is used to complete the missing data,`rasters_interpolation(raster_path,save_path,max_search_distance=400,smoothing_iteration=0)`
 
-* function - 使用earthpy库显示遥感影像（一个波段），`raster_show(raster_fp,title='raster',vmin_vmax=[0.25,0.95],cmap="turbo")`
+* function - Display remote sensing images(one band) using the Earthpy library,`raster_show(raster_fp,title='raster',vmin_vmax=[0.25,0.95],cmap="turbo")`
 
-#### 1.3.3 所调用的库
+#### 1.3.3 The python libraries that are being imported
 
 
 ```python
@@ -1220,6 +1222,6 @@ from rasterstats import zonal_stats
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 ```
 
-#### 1.3.4 参考文献
+#### 1.3.4 Reference
 
 -
