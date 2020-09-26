@@ -25,7 +25,7 @@
     * [libray classification summary](./markdown/libraryClassiSummary.md)
     * [reference](./markdown/reference.md)
     * [experiment index](./markdown/experimentIdx.md)
-    * [缩写](./markdown/abbreviation.md)
+    * [abbreviation](./markdown/abbreviation.md)
     * [note](./markdown/note.md)
 
 
