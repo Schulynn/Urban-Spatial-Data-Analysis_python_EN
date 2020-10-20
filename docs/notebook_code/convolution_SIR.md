@@ -550,52 +550,53 @@ Two-dimensional convolution is widely used in image processing to achieve partic
 5. blur：box filter, averaging $\begin{bmatrix}1 & 1&1 \\1 & 1&1\\1 & 1&1 \end{bmatrix} \times  \frac{1}{9} $， $\begin{bmatrix}0. & 0.2&0. \\0.2 & 0.&0.2\\0. & 0.2&0. \end{bmatrix} $， $\begin{bmatrix}0&0&1&0&0 \\0&1&1&1&0  \\1&1&1&1&1  \\0&1&1&1&0 \\0&0&1&0&0  \end{bmatrix}$；gaussian blur,approximation$\begin{bmatrix}1 & 2&1 \\2 & 4&2\\1 & 2&1 \end{bmatrix} \times  \frac{1}{16} $；motion blur$\begin{bmatrix}1&0&0&0&0&0&0&0&0 \\0&1&0&0&0&0&0&0&0 \\0&0&1&0&0&0&0&0&0  \\0&0&0&1&0&0&0&0&0 \\0&0&0&0&1&0&0&0&0\\0&0&0&0&0&1&0&0&0\\0&0&0&0&0&0&1&0&0\\0&0&0&0&0&0&0&1&0\\0&0&0&0&0&0&0&0&1\end{bmatrix}$
 
 ### 1.2 SIR propagation model
-开始数学模型的建立，先确定自变量(independent variables)和因变量(dependent variables)。自变量为时间$t$，以天为单位。考虑两组相关的因变量。
+To start the establishment of mathematical models, determine independent variables and dependent variables. The independent variable is time $t$, in days. Consider two sets of related dependent variables.
 
-第一组因变量计算每一组（归类）中的人数，均为时间的函数。$\begin{cases}S=S(t) &易感（susceptible）人数 \\I=I(t) & 受感（infected）人数\\R=R(t) & 恢复（recovered）人数\end{cases} $。第二组因变量表示这三种类型中每一种占总人口数的比例，假设$N$为总人口数，$\begin{cases}s(t)=S(t)/N &易感（susceptible）人群比例 \\i(t)=I(t)/N & 感染（infected）人群比例\\r(t)=R(t)/N & 恢复（recovered）人群比例\end{cases} $，因此$s(t)+i(t)+r(t)=1$。使用总体计数可能看起来更自然，但是如果使用分数替代，则会是计算更简单。这两组因变量是成比例的，所以任何一组都能给我们病毒传播的相同信息。
+The first group of dependent variables calculates the number of people in each group(categorization), all as a function of time. $\begin{cases}S=S(t) &susceptible number \\I=I(t) &infected  number\\R=R(t) & recovered number\end{cases} $. The second group of dependent variables represents each proportion of the three types in the total population, assuming that $N$ is the total population. $\begin{cases}s(t)=S(t)/N &proportion of susceptible people\\i(t)=I(t)/N & proportion of infected people\\r(t)=R(t)/N & proportion of recovered people\end{cases} $，so $s(t)+i(t)+r(t)=1$. Using a total count may seem more natural, but using fractions instead makes the calculation easier. The two sets of dependent variables are proportional, so either set gives us the same information about how the virus spreads.
 
-* 因为忽略了出生率和移民等改变总体人口数据的因素，“易感人群”中的个体被感染，则会进入“受感人群”，而“受感人群”中的个体恢复（或死亡）则进入“恢复人群”。假设$S(t)$的时间变化率，“易感人群”的人口数量取决于已经感染的人数，以及易感染者和被感染者接触的数量。特别是，假设每个被感染的人每天有固定数量（$b$）的接触者，这足以传播疾病。同时，并不是所有的接触者都是“易感人群”，如果假设人群是均匀混合的，接触者中易感染者的比例是$s(t)$，那么，平均而言，每个感染者每天产生$bs(t)$个新的被感染者。（由于“易感人群”众多，而“受感人群”相对较少，可以忽略一些较为棘手的计算情况，例如一个易感个体同一天遭遇多个受感个体）。
+* Because factors that change the overall population, such as birth rates and migration, are ignored, infected individuals in the 'susceptible' move into the 'infected' people. In contrast, individuals in the 'infected' recover(or die) into the 'recovered' people. Assuming the rate of time change of $S(t)$, the number of people in the 'susceptible population' depends on the number of people already infected and the number of contacts between the susceptible and the infected. In particular, assuming that each infected person has a fixed number of contacts per day($b$), this is sufficient to transmit the disease. Simultaneously, not all contacts are 'susceptible.' Assuming that the population is evenly mixed and that the proportion of susceptible contacts is $s(t)$, on average, per infected person, produces $bs(t)$ newly infected person per day. (Since there are many 'susceptible' people and relatively few 'infected' people, some trickier calculation can be ignored, such as one susceptible individual encountering multiple susceptible individuals on the same day).
 
-* 同时假设在任何给定的一天内，受感人群有固定比例（k）的人恢复（或死亡），进入“恢复人群”。
+* It is also assumed that in any given day, a fixed percentage(k) of the infected population recovers(or dies) and enters the 'recovered population.'
 
-**易感人群微分方程**,根据上述假设，可以得到，$\frac{dS}{dt}=-bs(t)I(t) $，为了方便理解可以假设总人口数$N=10$，当前时刻$t$下，易感人数$S=4$(则，$s=4/10$)，受感人数$I=3$（则，$i=3/10$），恢复人数$R=3$(则，$r=3/10$)，在变化时间$\triangle t$下，因为参数$b$为“受感人群”中每个人的固定数量接触者,假设$b=2$，那么对于整个“受感人群”的接触者为$bI(t)=2 \times 3=6$,而因为并不是所有接触者都是“易感人群”，假设了人群为均匀混合，则接触者中易感染者的比例即是$s(t)=4/10$，因此$\triangle S=bI(t)s(t)=2 \times 3 \times 4/10=2.4$，因为“易感人群”中的个体接触了“受感人群”中的个体而转换为“受感人群”中新的个体，“易感人群”中个体的数量是减少的，因此要加上符号。最终当变化时间$\triangle t$后（未考虑I到R的转换），$S=1.6，I=5.4，R=3$。依据上述微分方程，根据总体计数和分数（或百分比）替代是成比例的，因此最终得到易感人群$\triangle t$变化下单位微分方程为：$\frac{ds}{dt}=-bs(t)i(t)$。
-
-**恢复人群微分方程**，根据上述假设，可以得到，$\frac{dr}{dt}=ki(t) $，其中$k$是“受感人群”到“恢复人群的转换比例”，同样应用上述假设，如果$k=0.2$，则$\triangle R=0.2*3=0.6$，最终，$S=1.6，I=4.8,R=3.6$。
-
-**受感人群微分方程**，因为$s(t)+i(t)+r(t)=1$，可以得到$\frac{ds}{dt} + \frac{di}{dt} + \frac{dr}{dt} $，因此$\frac{di}{dt} =bs(t)i(t)-ki(t)$。
-
-最终的SIR传播模型为：$\begin{cases}\frac{ds}{dt}=-bs(t)i(t) \\\frac{di}{dt} =bs(t)i(t)-ki(t)\\\frac{dr}{dt}=ki(t) \end{cases} $
+**Differential equations for susceptible populations**,Based on the above assumptions, get $\frac{dS}{dt}=-bs(t)I(t) $. To facilitate understanding can assume that the total population $N=10$, under the current moment $t$, the number of susceptible is $S=4$($s=4/10$), the number of infected is $I=3$($i=3/10$), and the number of recovered is $R=3$($r=3/10$). Under the change time $\triangle t$, because the parameter $b$ is the fixed number of contacts of each person in the 'infected population,' assume $b=2$, then the contacts of the whole 'infected population' is $bI(t)=2 \times 3=6$. Since not all the contacts are 'susceptible population', assuming that the population is evenly mixed, the proportion of susceptible people in the contacts is $s(t)=4/10$, so $\triangle S=bI(t)s(t)=2 \times 3 \times 4/10=2.4$. Because the individuals in the 'susceptible population' have contacted the individuals in the 'infected population,' they changed to the new individuals in the 'infected population.' The number of individuals in the 'susceptible population' is reduced, so symbols are added. Finally, after the change time, $\triangle t$(without considering the conversion of I to R), $S=1.6，I=5.4，R=3$. According to the above differential equation, the overall count and fraction(or percentage) substitution is proportional; finally, the unit differential equation under the change of susceptible group $\triangle t$ is $\triangle t$. 
 
 
-> 对于SIR模型的解释参考来自于[MAA](https://www.maa.org/)(Mathematical Association of America)，[The SIR Model for Spread of Disease - The Differential Equation Model](https://www.maa.org/press/periodicals/loci/joma/the-sir-model-for-spread-of-disease-the-differential-equation-model)<作者：David Smith and Lang Moore>; 代码参考[The SIR epidemic model](https://scipython.com/book/chapter-8-scipy/additional-examples/the-sir-epidemic-model/)
+**Differential equations for recovered populations**，According to the above assumptions, $\frac{dr}{dt}=ki(t) $, where $k$ is the conversion ratio of 'infected population' to 'recovered population'. Applied the same assumption, if $k=0.2$, then $\triangle R=0.2*3=0.6$, in the end, $S=1.6，I=4.8,R=3.6$.
+
+**Differential equations for infected populations**，Because $s(t)+i(t)+r(t)=1$, get $\frac{ds}{dt} + \frac{di}{dt} + \frac{dr}{dt} $, so $\frac{ds}{dt} + \frac{di}{dt} + \frac{dr}{dt} $.
+
+The final SIR propagation model is：$\begin{cases}\frac{ds}{dt}=-bs(t)i(t) \\\frac{di}{dt} =bs(t)i(t)-ki(t)\\\frac{dr}{dt}=ki(t) \end{cases} $
+
+
+> The explanatory reference for the SIR model comes from[MAA](https://www.maa.org/)(Mathematical Association of America)，[The SIR Model for Spread of Disease - The Differential Equation Model](https://www.maa.org/press/periodicals/loci/joma/the-sir-model-for-spread-of-disease-the-differential-equation-model)<Author：David Smith and Lang Moore>; Code reference [The SIR epidemic model](https://scipython.com/book/chapter-8-scipy/additional-examples/the-sir-epidemic-model/)
 
 
 ```python
 import numpy as np
-#参数配置
-N=1000 #总人口数
-I_0,R_0=1,0 #初始化受感人群，及恢复人群的人口数
-S_0=N-I_0-R_0 #有受感人群和恢复人群，计算得易感人群人口数
-beta,gamma=0.2,1./10 #配置参数b(即beta)和k(即gamma)
-t=np.linspace(0,160,160) #配置时间序列
+#Parameter configuration
+N=1000 #Total population
+I_0,R_0=1,0 #Initialize the affected population and recovered population
+S_0=N-I_0-R_0 #The population of susceptible populations is calculated from the infected population and the recovered population.
+beta,gamma=0.2,1./10 #Configure parameters b(beta) and k(gamma)
+t=np.linspace(0,160,160) #Configure time series
 
-#定义SIR模型微分方程函数
+#Define the SIR model, the differential function
 def SIR_deriv(y,t,N,beta,gamma,plot=False):   
     import numpy as np
     from scipy.integrate import odeint
     import matplotlib.pyplot as plt
     '''
-    function - 定义SIR传播模型微分方程
+    function - Define the SIR model, the differential function
     
     Paras:
-    y - S,I,R初始化值（例如，人口数）
-    t - 时间序列
-    N - 总人口数
-    beta - 易感人群到受感人群转化比例
-    gamma - 受感人群到恢复人群转换比例
+    y - S,I,R Initialization values(for example, population)
+    t - time series
+    N - total population
+    beta - The conversion rate from the susceptible population to the infected population
+    gamma -The conversion rate from the infected population to the recovered population
     
     return:
-    SIR_array - S, I, R数量
+    SIR_array - S, I, R number
     '''
     def deriv(y,t,N,beta,gamma):
         S,I,R=y
@@ -638,8 +639,8 @@ SIR_array=SIR_deriv(y_0,t,N,beta,gamma,plot=True)
 <a href=""><img src="./imgs/13_07.png" height="auto" width="auto" title="caDesign"></a>
 
 
-### 1.3 卷积扩散，成本栅格与物种散步
-#### 1.3.1 卷积扩散
+### 1.3 Convolution diffusion, cost raster, and species dispersal
+#### 1.3.1 Convolution diffusion
 如果配置卷积核为$\begin{bmatrix}0.5 & 1&0.5 \\1 & -6&1\\0.5 & 1&0.5 \end{bmatrix} $，假设存在一个传播（传染）源，如下述程序配置一个栅格（.bmp图像），其值除了源为1（R值）外，其它的单元均为0。每次卷积，值都会以源为中心，向四周扩散，并且四角的值（绝对值）最小，水平垂直向边缘值（绝对值）稍大，越向内部值（绝对值）越大，形成了一个逐步扩散的趋势，并且具有强弱，即越趋向于传播源，其绝对值越大。同时，达到一定阶段后，扩散开始逐步消失，恢复为所有单元值为0的阶段。观察卷积扩散可以通过打印每次卷积后的值查看，也可以记录每次的结果最终存储为.gif文件，动态的观察图像的变化。
 
 
