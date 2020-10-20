@@ -2,25 +2,25 @@
 > __+updated on Thu Aug 27 09/23/03 2020   
 
 ## 1. Convolution, SIR propagation model,  cost raster and species dispersal, SIR spatial propagation model
-从生物体角度研究的生态学家发现，区别生物体生活在哪里与生物体在做什么是很有用的。生物体的栖息地（habitat）是指它们生活的地方。栖息地的特征要用清晰的物理特征来进行描述，这常常是植物或动物主要的生活型。例如森林栖息地、荒漠栖息地和珊瑚栖息地等。因为栖息地概念强调了生物所暴露的条件，为生物环境保护及栖息条件营造提供参考。生物的生态位（niche）代表生物能够耐受的条件范围，它们的生活方式，即在生态学系统中的作用。每个物种都具有一个独特的生态位。生物的独特形态和生理特征决定它们的耐受条件，例如如何取食，逃避天敌等。没有一种生物具备在地球上任何条件下存活的能力。在空间变化上，不同地方的环境条件是有区别的，气候、地形和土壤类型的变化导致大尺度的异质性（从数米到几百公里）。小尺度上的异质性一般是由于植物结构、动物活动和土壤内含物引起的。特定的空间尺度变化可能对于一种动物重要，而对于另一种不重要。当一个个体穿行于空间不断变化着的环境时，个体移动越快，空间变化的尺度越小，就更快的遇到新的环境条件。地形和地质能够改变其它方面相同气候区域内的局部环境。例如多山区域，坡度倾斜和阳光方向影响着土壤的温度和湿度，这同样适用于城市区域，建筑的高度以及分布形成了城市的多样局地微气候环境。
+Ecologists who study biology have found it useful to distinguish between where an organism lives and what it does. The habitat of an organism is the place where it lives. The habitat characteristics are described in terms of evident physical characteristics, which are often the dominant life forms of plants or animals. Examples include forest habitats, desert habitats, and coral habitats. Because the concept of habitat emphasizes biological exposure conditions, it provides a reference for protecting the biological environment and constructing habitat conditions. The niche represents the range of conditions that an organism can tolerate, their way of life, their role in the ecological system. Each species has a unique niche. The unique morphological and physiological characteristics of organisms determine their tolerance conditions, such as feeding and escaping from predators. No living thing is capable of surviving under any conditions on earth. Environmental conditions vary from place to place in terms of spatial variation, with variations in climate, topography, and soil types leading to large-scale heterogeneity(from meters to hundreds of kilometers). Heterogeneity at small scales is generally due to plant structure, animal activity, and soil inclusions. Specific spatial scales may be necessary to one animal, not to another. When an individual moves through the continually changing environment of space, the faster the individuals move, and the smaller the scale of space changes, the faster it will encounter new environmental conditions. Topography and geology can alter local environments in otherwise homogeneous climates.  For example, in mountain areas, slope inclination and sunlight affect soil temperature and humidity, which is also applicable to urban areas. The height and distribution of buildings form the diverse local microclimate environment of cities. 
 
-虽然植物对于生活在哪里具有相对小的选择性，但是仍然向着高浓度的土壤矿物质等适合生长的环境中趋向。而动物则能够自主的在环境中四处移动，并选择其栖息地。即使在栖息地内，温度、湿度、盐度和其它因子也有明显不同，能够进一步区分位微栖息地（microhabitats）或微环境（microenvironments）。例如荒漠中灌木丛下的树荫比暴露在直射阳光下的地区更凉快，潮湿。由于动物生活在各式各样的和变化的环境中，它们经常需要做出如何决策的行动。这些决策中很多涉及到食物，到哪里寻找食物，在某些板块栖息地中进食多长时间，吃哪一种食物类型等。动物期望获取选择获利最大的行为，即以最适摄食（optimal foraging）理论试图阐释，例如中心摄食，鸟类饲喂巢穴中的子女时，以巢穴位中心，在远处自由搜索食物；风险-敏感摄食，取决于个体能够搜索食物的速率，及这个地区的相对安全性；猎物选择，每种类型的食物基于其营养和能量，以及处理难度和毒素的潜在危险，形成固有的价值；以及混合食物，以满足所必需的营养。
+Although plants have a relatively small selection of where they live, they still tend to grow in environments suitable for growth, such as high soil mineral concentrations. Animals, on their own, can move around their environment and choose their habitat. Even within the habitats, there are significant differences in temperature, humidity, salinity, and other factors. Moreover, it is possible to differentiate microhabitats or microenvironments further. For example, the shade from a shrub in a desert is cooler and moisture than in an area exposed to direct sunlight. As animals live in various and changing environments, they often need to take action to make decisions. Many of these decisions involve food, looking for food, how long to eat in particular plate habitats, and what type of food to eat. The optimal foraging theory explains the animals' behavior to obtain the most profit from a selection. For example, when the birds feed their offspring in the nest, they can search for food freely in the distance from the nest's center. Risk-sensitive feeding, depending on the rate at which an individual can search for food and the area's relative safety. Prey selection, the intrinsic value of each type of food based on its nutrition and energy, and the difficulty of dealing with toxins and the potential dangers; And mixing foods to meet the necessary nutrients.
 
-涉及地理空间因素，除了满足适宜的栖息地（生态位）、以及生物的行动决策，还有个体移动可以保持种群的空间连接。种群生物学家把种群内的个体移动称为散布（dispersal），指的是个体在各亚种群之间的移动。在规划领域为了保护某一物种，常为使用的方法是生物栖息地的适宜性评价；或综合考虑生物、水安全、历史价值、地价、风景价值、游憩价值、居住价值，计算成本栅格来规划城市布局，道路选线等内容。上述的法方法广泛应用于规划、风景园林、生态规划等领域，而[SIR（Susceptible Infected Recovered Model）](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SIR_model)模型是一种传播模型，典型的应用于传染病传播路径模拟中，也包括估计如何传播，感染总数，流行病持续时间，和相关参数等。
+Geospatial factors are involved, in addition to satisfying suitable habitats(niches) and biological action decisions, as well as individual movements that maintain spatial connections of populations. Population biologists call the movement of individuals within a population dispersal, which refers to the movement of individuals between subpopulations. In the planning field, the method often used to protect a species is habitat suitability assessment. Alternatively, calculate the cost raster to plan the urban layout, road line selection, and other contents by comprehensively considering the biology, water security, historical value, land price, landscape value, recreation value, and residential value. The above method is widely applied in fields such as planning, landscape architecture, ecological planning. Furthermore, [SIR（Susceptible Infected Recovered Model）](https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SIR_model) model is a kind of communication model, typical applications in infectious disease transmission path simulation, including estimates how to spread, the total number of infections, duration of the epidemic, and related parameters.
 
-因为SIR模型所涉及易感染着的空间阻力分布与规划中适宜性评价的成本栅格如出一辙，而感染源，以及病毒的蔓延类似于生态学中物种的迁移，同时SIR模型也是最为简单的分区模型（compartmental models）之一，许多模型都是这种基本形式的衍生物。因此为了进一步拓展成本栅格（cost raster）已有研究成果，尝试将其引入规划领域。
+Because the spatial resistance distribution involved in the SIR model is similar to the cost raster of suitability evaluation in planning, the spread of infection sources and viruses is similar to the migration of species in ecology. The SIR model is also one of the simplest compartmental models, many of which are derivatives of this basic form; therefore, further to expand the current research results of cost raster, an attempt was made to introduce it into the planning field.
 
-在SIR模型实现过程中，使用到卷积的方法，而卷积是深度学习中卷积神经网络的基础，亦是图像处理或特征提取的基础，这两方面内容都是城市空间数据分析方法中重要的内容，因此首先解释卷积及其代码的实现。
+In the implementation of the SIR model, the convolution method is used, and convolution is the basis of the convolutional neural network in deep learning and image processing or feature extraction. Both of these aspects are essential contents in urban spatial data analysis methods. Therefore, the implementation of convolution and its code is explained first.
 
-> 参考文献
-> 1. Robert E.Ricklefs著. 孙儒泳等译.生态学/The economy of nature[M].高度教育出版社.北京.2004.7 第5版.  ------非常值得推荐的读物(教材)，图文并茂
+> Reference
+> 1. Robert E.Ricklefs.The economy of nature[M].W. H. Freeman; 6th Edition (December 17, 2008).  ------Very recommended reading materials(textbooks), illustrated with pictures.
 
-### 1.1 卷积
-在泛函分析中，卷积（又称叠积或褶积，convolution），是透过两个函数$f$和$g$生成第3个函数的一种数学算子。如果把一个函数看作区间的指示函数（系统响应函数,$g$），另一个为待处理的输入函数（输入信号函数，$f$），卷积可以看作“滑动平均”的拓展。设$f(x)$，$g(x)$是$\mathbb{R}$上两个可积函数，作积分：$\int_ { - \infty} ^ \infty  f( \tau )g(x- \tau )d \tau $，可以证明，关于几乎所有的$x \in (- \infty , \infty )$，上述积分是存在的。这样，随着$x$的不同取值，这个积分就定义了一个新的函数$h(x)$，称为$f$与$g$的卷积，记为$h(x)=(f*g)(x)$。对于上述公式的理解，需要具备积分方面的知识（具体参考积分部分的阐述），并且需要注意，为方便理解，将指示函数和输入函数看作一个时间区段上的曲线函数，固定$f( \tau )$在$T$时间点上(横坐标表示为时间点)，翻转$g(\tau)$为$g(-\tau)$，并平移对齐$f(\tau)$的时间点，结果为$g(T-\tau)$。
+### 1.1 Convolution
+In functional analysis, convolution is a mathematical operator which generates the third function through two functions $f$ and $g$. If one function is regarded as an indicator of an interval(system response function, $g$) and the other as an input function to be processed(input signal function, $f$), convolution can be regarded as an extension of the "smoothing average." Let $f(x)$, $g(x)$ be two integrable functions on $\mathbb{R}$, take the integral: $\int_ { - \infty} ^ \infty f( \tau )g(x- \tau )d \tau $, and prove that integral exists for almost all $x \in (- \infty , \infty )$. As the different values of the $x$, this integral defines a new function $h(x)$, called $f$ and $g$ convolution, as $h(x)=(f*g)(x)$. To understand the above formula, it is necessary to have the knowledge of integration(refer to the elaboration of integration section for details). It should also be noted that, for the convenience of understanding, the indicator function and the input function are regarded as curve functions in a time segment. Fix $f( \tau )$ at the time point of $T$(the x-coordinate is time point), flip $g(\tau)$ as $g(-\tau)$, and align the time point of $f(\tau)$ by translation, and the result is $g(T-\tau)$.
 
-对于卷积计算的解释，可以通过下述图表理解。其中需要注意的一个关键点是T时刻时，例如T=20时，20时刻是最新进入的信号，之前的时刻越小，信号进入的时间越久，例如0时刻时的信号已经历经了20个时间点，1时刻，经历了19个时间点。而指示函数则在0时刻时作用于输入函数的新进入信号即20时刻时的值，指示函数1时刻作用于输入函数19时刻的值，以此类推，正好是一个反向的过程，也因此出现了对响应函数进行翻转、移动等操作。实际上如果固定指示函数，而随时间逐步的移动输入函数的值进入，则不会有上述操作，也更容易理解。
+The interpretation of convolution computation can be understood in the following diagram. A key point to pay attention to is that at time T, for example, when T=20, time 20 is the newly entered signal. The smaller the last moment is, the longer the signal enters. For example, at time 0, the signal has gone through 20-time points, and at time 1, it has gone through 19-time points. The indicator function acts on the new entry signal of the input function at time 0, that is, the value at time 20; at time 1, the indicator function acts on the value at time 19 of the input function, and so on. It is just a reverse process, so the operation such as flipping and moving the response function appears. If the indicator function is fixed, and the input function's value is moved in step by step over time, this will not happen and will be easier to understand.
 
-> 泛函分析（Functional Analysis）研究主要对象是函数构成的函数空间。使用泛函一词作为表述，代表作用于函数的函数，意味着，一个函数的参数是函数。
+> The main object of functional analysis is the function space composed of functions. Using the term functional as a representation, the representative use of functions of functions means that the functions' arguments are functions.
 
 
 ```python
@@ -29,34 +29,34 @@ import sympy
 from sympy import pprint,Piecewise
 t,t_=sympy.symbols('t t_')
 
-'''定义指示函数'''
+'''Define indicator function'''
 e=sympy.E
-g_t=-1*((e**t-e**(-t))/(e**t+e**(-t)))+1 #参考Hyperbolic tangent function 即双曲正切函数  y=tanh x
+g_t=-1*((e**t-e**(-t))/(e**t+e**(-t)))+1 #Refer to Hyperbolic tangent function which is the hyperbolic tangent function  y=tanh x
 g_t_=sympy.lambdify(t,g_t,"numpy")
 
-'''定义输入函数'''
+'''Define input function'''
 f_t=1*sympy.sin(4*np.pi*0.05*t_)+2.5 #+np.random.randn(1)
 f_t_=sympy.lambdify(t_,f_t,"numpy")
 
-'''定义时间段'''
-T=20 #时间点
+'''Define time period'''
+T=20 #time point
 t_bucket=np.linspace(0, T, T+1, endpoint=True)
 
-'''绘制图形'''
-#函数原始位置
+'''Drawing graphics'''
+#The original position of function
 fig, axs=plt.subplots(1,3,figsize=(30,3))
 axs[0].plot(t_bucket,g_t_(t_bucket),'o',c='r',label='g_t')
 axs[0].plot(t_bucket,f_t_(t_bucket),'o',c='b',label='f_t')
 axs[0].plot([t_bucket,np.flip(t_bucket)],[g_t_(t_bucket),np.flip(f_t_(t_bucket))],'--',c='gray')
 axs[0].set_title('original position')
 
-#翻转响应函数
+#Flip response function
 axs[1].plot(-t_bucket,g_t_(t_bucket),'o',c='r',label='g_t')
 axs[1].plot(t_bucket,f_t_(t_bucket),'o',c='b',label='f_t')
 axs[1].plot([np.flip(-t_bucket),t_bucket],[np.flip(g_t_(t_bucket)),f_t_(t_bucket)],'--',c='gray')
 axs[1].set_title('flip g(t)')
 
-#移动响应函数
+#move response function
 axs[2].plot(-t_bucket+T,g_t_(t_bucket),'o',c='r',label='g_t')
 axs[2].plot(t_bucket,f_t_(t_bucket),'o',c='b',label='f_t')
 axs[2].plot([np.flip(-t_bucket+T),t_bucket],[np.flip(g_t_(t_bucket)),f_t_(t_bucket)],'--',c='gray')
@@ -72,8 +72,8 @@ plt.show()
 <a href=""><img src="./imgs/13_01.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.1.1 一维卷积与曲线分割
-对于一维卷积给出一个简单的例子：指示函数的一组结果[1,1,1]，输入函数的一组结果[0,0,1,1,1,1,1,0,0]，为了方便计算，固定输入函数（通常固定指示函数，而滑动输入函数），滑动指示函数，对应位置求积，最后求和，所有时刻的结果即为卷积结果。通过使用`np.convolve(mode='full')`计算结果同为`array([0, 0, 1, 2, 3, 3, 3, 2, 1, 0, 0])`。
+#### 1.1.1 One dimensional convolution and curve segmentation
+A simple example of one-dimensional convolution is given: the result of one set of indicator functions is [1,1,1], and the result of one set of input functions is [0,0,1,1,1,1,1,0,0]. The convolution result is obtained utilizing the fixed input function(usually the fixed indicator function, but the sliding input function), the sliding indicator function, the quadrature at the corresponding position, and the final sum to facilitate the calculation. Through calculation using `np.convolve(mode='full')`, its results are also `array([0, 0, 1, 2, 3, 3, 3, 2, 1, 0, 0])`.
 
 |moment/step| step-0  |step-1   | step-2  | step-3  |step-4|step-5|step-6|step-7|step-8|step-sum|
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -91,11 +91,11 @@ plt.show()
 |t-11|  -*0  | -*0 |-*1 | -*1 |-*1 |-*1|-*1|-*0|__1__*0|*0*|
 |t-12|  -*0  | -*0 |-*1 | -*1 |-*1 |-*1|-*1|-*0|-*0|*0*|
 
-基于上述的例子，更容易从信号分析的角度来理解卷积，因此对应指示函数（$g(x)$）名称为系统系统响应函数（或简称为响应函数），对应输入函数（$f(x)$）为输入信号函数（或简称为信号函数），定义一个可以给定响应函数和信号函数，输出动态卷积的类。在类的定义过程中，使用matplotlib库中给出的animation方法定义动态图表，并通过继承`animation.TimedAnimation`父类，实现多个子图的动画。类的配置实现了三个图表功能，第一个是定义的响应函数，响应函数通常为固定的时间段一段变化的曲线，用于作用于信号函数，增强、或特定变化信号函数的值；第2个子图是动态的信号函数，信号函数随时间而变化，可以理解为信号在不同时间上的'位置'变化，例如途中的-4时刻，信号位于子图的左侧，即开始进入，而在4时刻，信号位于子图的右侧，即开始出去。或理解为信号随时间的流逝；第3个子图则为计算的卷积，响应函数是固定的，整个作用域，即有值的区间均作用于指定时间区段信号函数的每一时刻，因此卷积的位置变化随信号函数而变化，但是并不完全对齐。
+Based on the above examples, it is easier to understand convolution from the perspective of signal analysis. Hence, the name of the corresponding indicator function($g(x)$) is the system response function(or simply the response function), and the corresponding input function($f(x)$) is the input signal function(or simply the signal function). Define a class that outputs dynamic convolution given a response function and a signal function. In the process of the class definition, the animation method given in the Matplotlib library was used to define the dynamic diagram, and the animation of multiple subgraphs was realized by inheriting the `animation.TimedAnimation` parent class. Class configuration implements three graph functions: the first is the defined response function; usually a variable curve over a fixed period, applied to the signal function, enhanced, or the value of a specific variable signal function. The second sub-graph is a dynamic signal function. The signal function changes with time, which can be understood as the 'position' change of the signal at different times. For example, at time -4 in the figure, the signal is on the left side of the subgraph, i.e., it starts to enter, while at time 4, the signal is on the right side of the subgraph, i.e., it starts to go out. It can be interpreted as the signal passing over time. The third subgraph is the convolution of the calculation, and the response function is fixed. The entire scope is the valued interval, at every moment of the signal function at the specified time interval, so the convolution's position varies with the signal function but is not perfectly aligned.
 
-类的输入参数包括'G_T_fun'响应函数；'F_T_fun'信号函数；以及't'时间的开始（'s'）与结束（'t'）点。时间段的步幅'step'用于配置帧（frame），步幅越小，时间点更新越小，时间精度越高。'linespace'为时间段的划分，用于图表的x轴坐标，以及信号函数和响应函数的输入参数;mode参数是对应`np.convolve(mode='')`，其模式包括'same'，'full'和'valid'，该类的定义中未处理'valid'模式。
+The input parameters of the class include the 'G_T_fun' response function; 'F_T_fun' signal function;  and the beginning ('s') and end ('t') of 't' time. The 'step' of the time is used to configure the frame. The smaller the step, the smaller the time point update, and the higher the time accuracy. 'linespace' is the division of the time used for the x-axis coordinates of the chart and the signal's input parameters function and response function. The 'mode' parameter corresponds to `np.convolve(mode='')`, its modes includes 'same'，'full' and 'valid'. The definition of this class has not processed the 'valid' mode.
 
-所定义的类中，'F_T_fun'输入参数，即信号函数的定义比较特殊，包括一个函数的输入参数'timing'（`f_t_sym=self.f_t_(i)`），用于保持信号随时间变化值的移动，应用到sympy库提供的Piecewise多段函数的方法；以及函数内部所定义sympy公式的输入参数（`f_t_val=f_t_sym(self.t)`）。
+In the defined classed, the input parameters of 'F_T_fun', i.e., signal function, are specific in their definition, including the input parameter of a function, 'timing'(`f_t_sym=self.f_t_(i)`), to keep signals moving over time, applied to a Piecewise multisegment function supplied by Sympy library. And the input parameters(`f_t_val=f_t_sym(self.t)`) in Sympy formula defined in the function.
 
 
 ```python
@@ -112,13 +112,13 @@ from sympy import pprint,Piecewise
 
 class dim1_convolution_SubplotAnimation(animation.TimedAnimation):
     '''
-    function - 一维卷积动画解析，可以自定义系统函数和信号函数   
+    function - One dimensional convolution animation analysis to customize the system function and signal function  
     
     Paras:
-    G_T_fun - 系统响应函数
-    F_T_fun - 输入信号函数
-    t={"s":-10,"e":10,'step':1,'linespace':1000} -  时间开始点、结束点、帧的步幅、时间段细分
-    mode='same' - numpy库提供的convolve卷积方法的卷积模式
+    G_T_fun - System response function
+    F_T_fun - Input signal function
+    t={"s":-10,"e":10,'step':1,'linespace':1000} -  Time start-point, end-point, frame step, time division
+    mode='same' - The Numpy library provides 'convolve' convolution method
     '''    
     def __init__(self,G_T_fun,F_T_fun,t={"s":-10,"e":10,'step':1,'linespace':1000},mode='same'):  
         self.mode=mode
@@ -129,16 +129,16 @@ class dim1_convolution_SubplotAnimation(animation.TimedAnimation):
         self.t=np.linspace(self.start, self.end, self.linespace, endpoint=True)
         
         fig, axs=plt.subplots(1,3,figsize=(24,3))
-        #定义g(t)，系统响应函数
+        #define g(t)，system response function
         self.g_t_=G_T_fun        
         g_t_val=self.g_t_(self.t)
         self.g_t_graph,=axs[0].plot(self.t,g_t_val,'--',label='g(t)',color='r')        
         
-        #定义f(t)，输入信号函数
+        #define f(t)，input signal function
         self.f_t_=F_T_fun
         self.f_t_graph,=axs[1].plot([],[],'-',label='f(t)',color='b')
         
-        #卷积（动态-随时间变化）
+        #Convolution(dynamic - changing with time)
         self.convolution_graph,=axs[2].plot([],[],'-',label='1D convolution',color='g')
 
         axs[0].set_title('g_t')
@@ -157,20 +157,20 @@ class dim1_convolution_SubplotAnimation(animation.TimedAnimation):
         axs[2].set_ylim(-1.2*100,1.2*100)
 
         plt.tight_layout()
-        animation.TimedAnimation.__init__(self, fig, interval=500, blit=True) #interval配置更新速度        
+        animation.TimedAnimation.__init__(self, fig, interval=500, blit=True) #interval configure update speed   
            
-    #更新图形
+    #Update the figure
     def _draw_frame(self,framedata):    
         import math
         i=framedata
       
-        f_t_sym=self.f_t_(i) #1-先输入外部定义的F_T_fun函数的输入参数
-        f_t_val=f_t_sym(self.t) #2-再定义F_T_fun函数内部由sympy定义的公式的输入参数
+        f_t_sym=self.f_t_(i) #1-Start by entering the input parameters of the externally defined 'F_T_fun' function.
+        f_t_val=f_t_sym(self.t) #2-Input parameters for a formula defined  in Sympy within the 'F_T_fun' function
         
         self.f_t_graph.set_data(self.t,f_t_val)    
         
         g_t_val=self.g_t_(self.t)
-        g_t_val=g_t_val[~np.isnan(g_t_val)] #移除空值，仅保留用于卷积部分的数据       
+        g_t_val=g_t_val[~np.isnan(g_t_val)] #Removes null values, leaving only the data for the convolution portion
         
         if self.mode=='same':           
             conv=np.convolve(g_t_val,f_t_val,'same') #self.g_t_(t)
@@ -185,20 +185,20 @@ class dim1_convolution_SubplotAnimation(animation.TimedAnimation):
         else:
             print("please define the mode value--'full' or 'same' ")
         
-    #配置帧frames    
+    #configure frames    
     def new_frame_seq(self):
         return iter(np.arange(self.start,self.end,self.step))
     
-    #初始化图形
+    #Initialize the figure
     def _init_draw(self):     
         graphs=[self.f_t_graph,self.convolution_graph,]
         for G in graphs:
             G.set_data([],[])        
 ```
 
-* 一个简单的响应函数与信号函数的定义实现。
+* A simple response function and signal function definition implementation
 
-响应函数为时间长度为1，值为1的函数。信号函数为给定时间点（'timing'），及该时间点后长度为1时间段内值为1，其它时间值为0的函数(实际上是保持每一时间点持续的产生一段信号)。将该响应函数作用于信号函数，结果为值先增加数倍后落回的三角形坡度。
+The response function is a function of time length 1 and value 1. The signal function is a function whose value is 1 in a period with a length of 1 after the given time point('timing'), and the value of other times is 0(In effect, a continuous signal is generated at each point in time).  The response function is applied to the signal function, and the result is the triangle slope that the value first increases several times and then falls back.
 
 
 ```python
@@ -206,14 +206,14 @@ def G_T_type_1():
     import sympy
     from sympy import pprint,Piecewise
     '''
-    function - 定义系统响应函数.类型-1
+    function - Define system response functions. Type-1
     
     return:
-    g_t_ - sympy定义的函数
+    g_t_ - sympy defined functions
     '''
     t,t_=sympy.symbols('t t_')
     g_t=1
-    g_t_piecewise=Piecewise((g_t,(t>=0)&(t<=1))) #定义位分段函数，系统响应函数在区间[0,1]之间作用。
+    g_t_piecewise=Piecewise((g_t,(t>=0)&(t<=1))) #A bit-piecewise function is defined. The system response function acts between the interval [0,1].
     g_t_=sympy.lambdify(t,g_t_piecewise,"numpy")
     #print("g_t=")
     #pprint(g_t)
@@ -223,22 +223,22 @@ def F_T_type_1(timing):
     import sympy
     from sympy import pprint,Piecewise
     '''
-    function - 定义输入信号函数，类型-1
+    function - Define the input signal function. Type-1
 
     return:
-    函数计算公式
+    Function calculation formula
     '''
     t,t_=sympy.symbols('t t_')
     f_t=1
-    f_t_piecewise=Piecewise((f_t,(t>timing)&(t<timing+1)),(0,True)) #定义位分段函数，系统响应函数在区间[0,1]之间作用
+    f_t_piecewise=Piecewise((f_t,(t>timing)&(t<timing+1)),(0,True)) #A bit-piecewise function is defined. The system response function acts between the interval [0,1].
     f_t_=sympy.lambdify(t,f_t_piecewise,"numpy")
     #print("f_t=")
     #pprint(f_t)
     return f_t_   
 
-G_T_fun=G_T_type_1() #系统响应函数
-F_T_fun=F_T_type_1 #输入信号函数
-t={"s":-5,"e":5,'step':0.1,'linespace':1000,'frame':1} #时间参数配置
+G_T_fun=G_T_type_1() #system response function
+F_T_fun=F_T_type_1 #input signal function
+t={"s":-5,"e":5,'step':0.1,'linespace':1000,'frame':1} #Time parameter configuration
 ani=dim1_convolution_SubplotAnimation(G_T_fun,F_T_fun,t=t,mode='same') #mode:'full','same'
 HTML(ani.to_html5_video())  #conda install -c conda-forge ffmpeg  
 ```
@@ -247,15 +247,15 @@ HTML(ani.to_html5_video())  #conda install -c conda-forge ffmpeg
 <a href=""><img src="./imgs/13_02.gif" height="auto" width="auto" title="caDesign"></a>
 
 ```python
-#保存动画为.gif文件
+#Save the animation as a .gif file
 from matplotlib.animation import FuncAnimation, PillowWriter 
 writer=PillowWriter(fps=25) 
 ani.save(r"./imgs/convolution_a.gif", writer=writer)
 ```
 
-* 一个稍微复杂一些的响应函数与信号函数
+* A slightly more complex response function and signal function
 
-这里借助tanh双曲正切函数的一段作为响应函数，值快速下降到趋于平缓逐渐降低的一个过程。而信号函数是参考给定时间点上，两段时间区间上值为1，其它时候值为0的函数。卷积后的结果在上升和下降段均产生一定的弧度曲张(凸形爬升，凹形回落)。
+Here, with a segment of the tanh hyperbolic tangent function as the response function, the value rapidly declines to a gradual decline. The signal function refers to a function whose value is 1 at a given time interval and 0 at other times. The convolution result produces a specific curvature of radian in ascending and descending sections(convex climbing, concave falling).
 
 
 ```python
@@ -263,15 +263,15 @@ def G_T_type_2():
     import sympy
     from sympy import pprint,Piecewise
     '''
-    function - 定义系统响应函数.类型-2
+    function - Define system response functions. Type-2
     
     return:
-    g_t_ - sympy定义的函数
+    g_t_ - sympy defined functions
     '''
     t,t_=sympy.symbols('t t_')
     e=sympy.E
-    g_t=-1*((e**t-e**(-t))/(e**t+e**(-t)))+1 #参考Hyperbolic tangent function 即双曲正切函数  y=tanh x
-    g_t_piecewise=Piecewise((g_t,(t>=0)&(t<3))) #定义位分段函数，系统响应函数在区间[0,3]之间作用
+    g_t=-1*((e**t-e**(-t))/(e**t+e**(-t)))+1 #refer to Hyperbolic tangent function  y=tanh x
+    g_t_piecewise=Piecewise((g_t,(t>=0)&(t<3))) #A bit-piecewise function is defined. The system response function acts between the interval [0,3].
     g_t_=sympy.lambdify(t,g_t_piecewise,"numpy")
     
     #print("g_t=")
@@ -282,14 +282,14 @@ def F_T_type_2(timing):
     import sympy
     from sympy import pprint,Piecewise
     '''
-    function - 定义输入信号函数，类型-2
+    function - Define the input signal function. Type-2
 
     return:
-    函数计算公式
+    Function calculation formula
     '''
     t,t_=sympy.symbols('t t_')
     f_t=1
-    f_t_piecewise=Piecewise((f_t,(t>timing)&(t<timing+1)) ,(f_t,(t>timing-2)&(t<timing-1)) ,(0,True)) #定义位分段函数，系统响应函数在区间[0,1]之间作用
+    f_t_piecewise=Piecewise((f_t,(t>timing)&(t<timing+1)) ,(f_t,(t>timing-2)&(t<timing-1)) ,(0,True)) #A bit-piecewise function is defined. The system response function acts between the interval [0,1].
     f_t_=sympy.lambdify(t,f_t_piecewise,"numpy")
     #print("f_t=")
     #pprint(f_t)
@@ -297,13 +297,13 @@ def F_T_type_2(timing):
 
 G_T_fun=G_T_type_2() 
 F_T_fun=F_T_type_2
-t={"s":-5,"e":5,'step':0.1,'linespace':1000,'frame':1} #时间参数配置
+t={"s":-5,"e":5,'step':0.1,'linespace':1000,'frame':1} #Time parameter configuration
 ani=dim1_convolution_SubplotAnimation(G_T_fun,F_T_fun,t=t,mode='same') #mode:'full','same'
 HTML(ani.to_html5_video())  #conda install -c conda-forge ffmpeg   
 ```
 
 ```python
-#保存动画为.gif文件
+#Save the animation as a .gif file
 from matplotlib.animation import FuncAnimation, PillowWriter 
 writer=PillowWriter(fps=25) 
 ani.save(r"./imgs/convolution_b.gif", writer=writer)
@@ -312,11 +312,11 @@ ani.save(r"./imgs/convolution_b.gif", writer=writer)
 <a href=""><img src="./imgs/13_03.gif" height="auto" width="auto" title="caDesign"></a>
 
 
-* 基于1维卷积曲线跳变点识别切分
+* Recognition and segmentation based on jump points of 1-d convolution curve
 
-给定指示函数，可以对输入函数施加影响，即如果给定一个卷积核（convolution kernel，指示函数的计算值），作用于一维数组（输入函数的计算值），可以变化输入数据达到预期的结果，例如可以使用一维卷积的方法由跳变点分割曲线。这里使用的卷积核为$[-1,2,-1]$。在该实验分析中，数据使用了无人驾驶城市项目（IIT）的PHMI模拟车载激光雷达导航评估值，当$PHMI> 10^{-5} $时，说明从激光雷达扫描点云中提取的特征点可以很好的导航无人车，否则存在风险。对于实验的输入数据也可以自行随机生成一维数组（一组值列表）。因为PHMI的计算最初由MatLab完成，生成了对应图表保存为.fig的MatLab图表文件，可以用scipy.io库提供的工具加载该数据，提取对应的值。
+Given the convolution kernel(value of the convolution kernel), the input function can be influenced. In other words, if a convolution kernel(value of convolution kernel) is given and applied to a one-dimensional array(value of the input function), the input data can be changed to achieve the expected result. For example, the method of one-dimensional convolution can be used to segment the curve by jumping points. The convolution kernel used here is $[-1,2,-1]$. In this experimental analysis, the data used the PHMI simulated vehicle-mounted lidar navigation evaluation of the Driverless City Project(IIT), when $PHMI> 10^{-5} $, indicating that the feature points extracted from the lidar scanning point cloud can be used for good navigation fo the unmanned-vehicle; otherwise there will be risks. The experiment's input data can also generate a one-dimensional array(a list of values) at random. Since Matlab initially completed PHMI calculation, a Matlab chart file was generated to save the corresponding chart as .fig. This data can be loaded with the tools provided by the scipy.io library to extract the corresponding value.
 
-> 注意，MatLab的图表文件.fig，可能因为操作系统不同，MatLab版本不同，提取数据的代码可能对应做出调整。下述提取.fig数据的方法不能提取所有类型的.fig文件，在无人城市项目章节中也会定义有其它提取的方法函数。
+> Note that the graph file of Matlab .fig, because of different operating and different Matlab versions, the code of data extraction may be adjusted accordingly. The .fig data extraction method cannot be extracted for all types of .fig files. Other extraction method functions are also defined in the driverless city project section.
 
 
 ```python
@@ -326,16 +326,16 @@ def read_MatLabFig_type_A(matLabFig_fp,plot=True):
     from scipy.io import loadmat
     import matplotlib.pyplot as plt
     '''
-    function - 读取MatLab的图表数据，类型-A
+    function - Read Matlab chart data, Type-A
     
     Paras:
-    matLabFig_fp - MatLab的图表数据文件路径
+    matLabFig_fp - MatLab chart data file path
     
     return:
-    fig_dic - 返回图表数据，（X,Y,Z）
+    fig_dic - Return the chart data,（X,Y,Z）
     '''
     matlab_fig=loadmat(matLabFig_fp, squeeze_me=True, struct_as_record=False)
-    fig_dic={} #提取MatLab的.fig值
+    fig_dic={} #.fig value of MatLab was extracted.
     ax1=[c for c in matlab_fig['hgS_070000'].children if c.type == 'axes']
     if(len(ax1) > 0):
         ax1 = ax1[0]
@@ -370,7 +370,7 @@ PHMI_dic=read_MatLabFig_type_A(matLabFig_fp=data_PHMI_fp)
 <a href=""><img src="./imgs/13_04.png" height="auto" width="auto" title="caDesign"></a>
 
 
-由跳变点分割曲线的基本思路是，计算卷积，获取反映跳变点变化的特征值-->由标准计分标准化卷积值，方便设置阈值-->返回满足阈值的索引值-->定义根据索引，分割列表的函数，根据满足阈值的索引值分割列表，包括分割卷积值、分割原始数据和分割索引值等-->返回分割结果，图表打印现实结果。
+The basic idea of dividing the curve from the jump point is to compute the convolution to obtain the feature reflecting the jump point's change.->The convolution value is standardized by the standard score to facilitate the setting of the threshold. -> Returns the index value that satisfies the threshold. -> Define the function of dividing the list according to the index and divide it according to the index value meeting the threshold. -> Returns the split result, and the chart prints the result.
 
 
 ```python
@@ -378,17 +378,17 @@ def curve_segmentation_1DConvolution(data,threshold=1):
     import numpy as np
     from scipy import stats
     '''
-    function - 应用一维卷积，根据跳变点分割数据
+    function - One dimensional convolution is applied to segment the data according to the jump point.
     
     Paras:
-    data - 待处理的一维度数据
+    data - One dimensional data to be processed.
     
     return:
-    data_seg - 列表分割字典，"dataIdx_jump"-分割索引值，"data_jump"-分割原始数据，"conv_jump"-分割卷积结果
+    data_seg - List segmentation dictionary,"dataIdx_jump"-Split index value, "data_jump"-Split raw data, "conv_jump"-Split convolution result
     '''
     def lst_index_split(lst, args):
         '''
-        function - 根据索引，分割列表
+        function - Split the list according to the index
         
         transfer:https://codereview.stackexchange.com/questions/47868/splitting-a-list-by-indexes/47877 
         '''
@@ -400,20 +400,20 @@ def curve_segmentation_1DConvolution(data,threshold=1):
         return seg_list
     
     data=data.tolist()
-    kernel_conv=[-1,2,-1] #定义卷积核，即指示函数
+    kernel_conv=[-1,2,-1] #Define the convolution kernel, the indicator function
     result_conv=np.convolve(data,kernel_conv,'same')
-    #标准化，方便确定阈值，根据阈值切分列表
-    z=np.abs(stats.zscore(result_conv)) #标准计分-绝对值
-    z_=stats.zscore(result_conv) #标准计分
+    #Standardized, convenient to determine the threshold,segmentation list according to the threshold 
+    z=np.abs(stats.zscore(result_conv)) #Standard score - absolute value
+    z_=stats.zscore(result_conv) #Standard score
     
     threshold=threshold
-    breakPts=np.where(z > threshold) #返回满足阈值的索引值
+    breakPts=np.where(z > threshold) #Returns the index value that satisfies the threshold
     breakPts_=np.where(z_ < -threshold)
     
-    #根据满足阈值的索引值，切分列表
-    conv_jump=lst_index_split(result_conv.tolist(), breakPts_[0].tolist()) #分割卷积结果
-    data_jump=lst_index_split(data, breakPts_[0].tolist()) #分割原始数据
-    dataIdx_jump=lst_index_split(list(range(len(data))), breakPts_[0].tolist()) #分割索引值
+    #The list is segmented according to the index value meets the threshold
+    conv_jump=lst_index_split(result_conv.tolist(), breakPts_[0].tolist()) #Split convolution result
+    data_jump=lst_index_split(data, breakPts_[0].tolist()) #Split raw data
+    dataIdx_jump=lst_index_split(list(range(len(data))), breakPts_[0].tolist()) #Split index value
     data_seg={"dataIdx_jump":dataIdx_jump,"data_jump":data_jump,"conv_jump":conv_jump}
     
     return data_seg
@@ -422,23 +422,23 @@ p_X=PHMI_dic[1][1]
 p_Y=PHMI_dic[1][2]    
 p_Y_seg=curve_segmentation_1DConvolution(p_Y)
 
-'''展平列表函数'''
+'''Flattening list function'''
 flatten_lst=lambda lst: [m for n_lst in lst for m in flatten_lst(n_lst)] if type(lst) is list else [lst]
 
-#打印分割结果
+#Print segmentation result
 import matplotlib.pyplot as plt
 plt.figure(figsize=(130, 20))
 plt.scatter(p_X, [abs(v) for v in flatten_lst(p_Y_seg["conv_jump"])],s=1) 
 
 def nestedlst_insert(nestedlst):
     '''
-    function - 嵌套列表，子列表前后插值
+    function - Nested list, sublists interpolated before and after
     
     Paras:
-    nestedlst - 嵌套列表
+    nestedlst - Nested list
     
     return:
-    nestedlst - 分割后的列表
+    nestedlst - The split list
     '''
     for idx in range(len(nestedlst)-1):
         nestedlst[idx+1].insert(0,nestedlst[idx][-1])
@@ -449,7 +449,7 @@ def uniqueish_color():
     import matplotlib.pyplot as plt
     import numpy as np
     '''
-    function - 使用matplotlib提供的方法随机返回浮点型RGB
+    function - Use the method provided by Matplotlib to return floating-point RGB randomly
     '''
     return plt.cm.gist_ncar(np.random.random())
 
@@ -472,12 +472,13 @@ plt.show()
 <a href=""><img src="./imgs/13_05.png" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.1.2 二维卷积与图像特征提取
-一维卷积是卷积核滑动，对应位置求积后计算和。二维卷积同样，此时卷积核的维度为2，通常为奇数，在二维平面上滑动，同样对应位置上求积后计算和。所使用的方法为scipy库提供的`scipy.signal import convolve2d`，其中同样有'mode'参数（'full','valid','same'），并有边界处理参数（'fill','wrap','symm'）。在下述的测试代码中，调入了一个图像，该图像RGB值中，G和B值均为0，只是变化R值，并仅有红（255）和黑（0）两类值。通过给定卷积核，计算卷积，观察前后的数据变化，确认是卷积核滑动，对应位置乘积求和替换卷积核中心对应位置的图像值。
+#### 1.1.2 2 D convolution and image feature extraction
+One dimensional convolution is the sliding of the convolution kernel and the sum of the corresponding positions after quadrature. The convolution in two dimensions is the same, where the convolution kernel has dimension two, usually odd, sliding on the two-dimensional plane, and taking the quadrature at the corresponding position and then sum it. The method `scipy.signal import convolve2d` was provided by the Scipy library, which also has 'mode' parameters('full','valid','same') and boundary processing parameters('fill','wrap','symm'). In the following test code, an image is called in. In the RGB value of the image, G and B are both 0, but R's value is changed, and there are only two values, red(255) and black(0). The convolution kernel is given, the convolution is calculated, and the data changes before and after observation are made. It is confirmed that the convolution kernel slides and the corresponding position product are summed to replace the image value of the corresponding position in the center of the convolution kernel.
+ 
 
-同样使用fashion_mnist数据集中的图像测试卷积，边缘检测卷积核也能够探测出图像变化的边界位置。
+Similarly, using images in the fashion_mnis dataset to test the convolution, the edge detection convolution kernel can also detect the image changes' boundary position.
 
-> fashion_mnist数据集是深度学习的基础数据集，可以替代已经被广泛，无数次重复使用似乎不再新鲜的MNIST手写数据集。具体查看深度学习部分章节内容。
+> The fashion_mnist dataset is a fundamental data set for deep learning and could replace the widely used, countless re-uses of the MNIST handwritten dataset that no longer seem fresh. See the deep learning section for details.
 
 
 ```python
@@ -490,7 +491,7 @@ from scipy.signal import convolve2d
 img_12Pix_fp=r'./data/12mul12Pixel.bmp'
 fig, axs=plt.subplots(1,4,figsize=(28,7))
 
-#A - 子图1，原始图像，及RGB值中的R值
+#A - Subfigure 1, the original image, and the R-value in the RGB value
 img_12Pix=io.imread(img_12Pix_fp)
 struc_square=square(12)
 axs[0].imshow(img_12Pix,cmap="Paired", vmin=0, vmax=12)
@@ -499,13 +500,13 @@ for i in range(struc_square.shape[0]):
         axs[0].text(j, i, img_12Pix[:,:,0][i,j], ha="center", va="center", color="w")
 axs[0].set_title('original img')
 
-#B -  子图2，二维卷积，卷积核可以探测边界
+#B -  Subfigure 2, two-dimensional convolution, the convolution kernel can detect the boundary
 kernel_edge=np.array([[-1,-1,-1],
                       [-1,8,-1],
-                      [-1,-1,-1]])  #边缘检测卷积核/滤波器。统一称为卷积核
+                      [-1,-1,-1]])  #Edge detection convolution kernel/filter, namely, the convolution kernel
 
-img_12Pix_int32=img_12Pix[...,0].astype(np.int32) #有时图像默认值为'int8'，如果不修改数据类型，convolve计算结果会出错
-print('Verify that the dimensions are the same:',img_12Pix_int32.shape,kernel_edge.shape) #仅计算R值
+img_12Pix_int32=img_12Pix[...,0].astype(np.int32) #Sometimes, the image's default value is 'int8', and if the data type is not modified, the convolve calculation results will be wrong.
+print('Verify that the dimensions are the same:',img_12Pix_int32.shape,kernel_edge.shape) #Just calculate the R-value
 img_12Pix_convolve2d=convolve2d(img_12Pix_int32,kernel_edge,mode='same')
 axs[1].imshow(img_12Pix_convolve2d)
 for i in range(struc_square.shape[0]):
@@ -513,15 +514,15 @@ for i in range(struc_square.shape[0]):
         axs[1].text(j, i, img_12Pix_convolve2d[i,j], ha="center", va="center", color="w")
 axs[1].set_title('2d convolution')
    
-#C- 使用 fashion_mnist数据集中的图像，实验卷积   
+#C- Using images in the fashion_mnist dataset, experimental convolution
 from tensorflow import keras   
 fashion_mnist=keras.datasets.fashion_mnist    
 (train_images, train_labels), (test_images, test_labels)=fashion_mnist.load_data() 
-fashion_mnist_img=train_images[900] #随机提取一个图像
+fashion_mnist_img=train_images[900] #Extract an image randomly
 axs[2].imshow(fashion_mnist_img)
 axs[2].set_title('fashion_mnist_img')
 
-#D-  fashion_mnist数据集中随机一个图像的卷积
+#D-  Convolution of a random image in the fashion_mnist dataset
 fashion_mnist_convolve2d=convolve2d(fashion_mnist_img,kernel_edge,mode='same')
 axs[3].imshow(fashion_mnist_convolve2d)
 axs[3].set_title('fashion_mnist_convolve2d')
@@ -536,19 +537,19 @@ plt.show()
 <a href=""><img src="./imgs/13_06.png" height="auto" width="auto" title="caDesign"></a>
 
 
-图像处理中广泛使用二维卷积处理图像达到特殊的效果，或者提取图像的特征。下述列出[图像处理主要使用的卷积核](https://lodev.org/cgtutor/filtering.html):
+Two-dimensional convolution is widely used in image processing to achieve particular effects or to extract image features. [The convolution kernel](https://lodev.org/cgtutor/filtering.html) used in image processing is listed below.
 
-1. 同一性（identity）：$\begin{bmatrix}0 & 0&0 \\0 & 1&0\\0 & 0&0 \end{bmatrix} $
+1. identity：$\begin{bmatrix}0 & 0&0 \\0 & 1&0\\0 & 0&0 \end{bmatrix} $
 
-2. 锐化（sharpen）：$\begin{bmatrix}0 & -1&0 \\-1 & 5&-1\\0 & -1&0 \end{bmatrix} $，$\begin{bmatrix}-1 & -1&-1 \\-1 & 9&-1\\-1 & -1&-1 \end{bmatrix} $，$\begin{bmatrix}1 & 1&1 \\1 & -7&1\\1 & 1&1 \end{bmatrix} $，$\begin{bmatrix}-k & -k&-k \\-k & 8k+1&-k\\-k & -k&-k \end{bmatrix} $，$\begin{bmatrix}-1&-1&-1&-1&-1 \\-1&2&2&2&-1 \\-1&2&8&2&-1 \\-1&2&2&2&-1 \\1&-1&-1&-1&-1  \end{bmatrix} $
+2. sharpen：$\begin{bmatrix}0 & -1&0 \\-1 & 5&-1\\0 & -1&0 \end{bmatrix} $，$\begin{bmatrix}-1 & -1&-1 \\-1 & 9&-1\\-1 & -1&-1 \end{bmatrix} $，$\begin{bmatrix}1 & 1&1 \\1 & -7&1\\1 & 1&1 \end{bmatrix} $，$\begin{bmatrix}-k & -k&-k \\-k & 8k+1&-k\\-k & -k&-k \end{bmatrix} $，$\begin{bmatrix}-1&-1&-1&-1&-1 \\-1&2&2&2&-1 \\-1&2&8&2&-1 \\-1&2&2&2&-1 \\1&-1&-1&-1&-1  \end{bmatrix} $
 
-3. 边缘检测（edge detection）：$\begin{bmatrix}-1 & -1&-1 \\-1 & 8&-1\\-1 & -1&-1 \end{bmatrix}$， $\begin{bmatrix}0 & 1&0 \\1 & -4&1\\0 & 1&0 \end{bmatrix}$， $\begin{bmatrix}0&0&0&0&0 \\0&0&0&0&0  \\-1&-1&2&0&0  \\0&0&0&0&0  \\0&0&0&0&0   \end{bmatrix}$， $\begin{bmatrix}0&0&-1&0&0 \\0&0&-1&0&0  \\0&0&4&0&0  \\0&0&-1&0&0  \\0&0&-1&0&0   \end{bmatrix}$， $\begin{bmatrix}-1&0&0&0&0 \\0&-2&0&0&0  \\0&0&6&0&0  \\0&0&0&-2&0  \\0&0&0&0&-1   \end{bmatrix}$
+3. edge detection：$\begin{bmatrix}-1 & -1&-1 \\-1 & 8&-1\\-1 & -1&-1 \end{bmatrix}$， $\begin{bmatrix}0 & 1&0 \\1 & -4&1\\0 & 1&0 \end{bmatrix}$， $\begin{bmatrix}0&0&0&0&0 \\0&0&0&0&0  \\-1&-1&2&0&0  \\0&0&0&0&0  \\0&0&0&0&0   \end{bmatrix}$， $\begin{bmatrix}0&0&-1&0&0 \\0&0&-1&0&0  \\0&0&4&0&0  \\0&0&-1&0&0  \\0&0&-1&0&0   \end{bmatrix}$， $\begin{bmatrix}-1&0&0&0&0 \\0&-2&0&0&0  \\0&0&6&0&0  \\0&0&0&-2&0  \\0&0&0&0&-1   \end{bmatrix}$
 
-4. 浮雕（embossing filter）:$\begin{bmatrix}-1 & -1&0 \\-1 & 0&1\\0 & 1&1 \end{bmatrix}$ ，$\begin{bmatrix}-1&-1&-1&-1&0 \\-1&-1&-1&0&1 \\-1&-1&0&1&1  \\-1&0&1&1&1  \\0&1&1&1&1   \end{bmatrix}$
+4. embossing filter:$\begin{bmatrix}-1 & -1&0 \\-1 & 0&1\\0 & 1&1 \end{bmatrix}$ ，$\begin{bmatrix}-1&-1&-1&-1&0 \\-1&-1&-1&0&1 \\-1&-1&0&1&1  \\-1&0&1&1&1  \\0&1&1&1&1   \end{bmatrix}$
 
-5. 模糊（blur）：均值模糊（box filter, averaging） $\begin{bmatrix}1 & 1&1 \\1 & 1&1\\1 & 1&1 \end{bmatrix} \times  \frac{1}{9} $， $\begin{bmatrix}0. & 0.2&0. \\0.2 & 0.&0.2\\0. & 0.2&0. \end{bmatrix} $， $\begin{bmatrix}0&0&1&0&0 \\0&1&1&1&0  \\1&1&1&1&1  \\0&1&1&1&0 \\0&0&1&0&0  \end{bmatrix}$；高斯模糊（gaussian blur,approximation）$\begin{bmatrix}1 & 2&1 \\2 & 4&2\\1 & 2&1 \end{bmatrix} \times  \frac{1}{16} $；运动模糊（motion blur）$\begin{bmatrix}1&0&0&0&0&0&0&0&0 \\0&1&0&0&0&0&0&0&0 \\0&0&1&0&0&0&0&0&0  \\0&0&0&1&0&0&0&0&0 \\0&0&0&0&1&0&0&0&0\\0&0&0&0&0&1&0&0&0\\0&0&0&0&0&0&1&0&0\\0&0&0&0&0&0&0&1&0\\0&0&0&0&0&0&0&0&1\end{bmatrix}$
+5. blur：box filter, averaging $\begin{bmatrix}1 & 1&1 \\1 & 1&1\\1 & 1&1 \end{bmatrix} \times  \frac{1}{9} $， $\begin{bmatrix}0. & 0.2&0. \\0.2 & 0.&0.2\\0. & 0.2&0. \end{bmatrix} $， $\begin{bmatrix}0&0&1&0&0 \\0&1&1&1&0  \\1&1&1&1&1  \\0&1&1&1&0 \\0&0&1&0&0  \end{bmatrix}$；gaussian blur,approximation$\begin{bmatrix}1 & 2&1 \\2 & 4&2\\1 & 2&1 \end{bmatrix} \times  \frac{1}{16} $；motion blur$\begin{bmatrix}1&0&0&0&0&0&0&0&0 \\0&1&0&0&0&0&0&0&0 \\0&0&1&0&0&0&0&0&0  \\0&0&0&1&0&0&0&0&0 \\0&0&0&0&1&0&0&0&0\\0&0&0&0&0&1&0&0&0\\0&0&0&0&0&0&1&0&0\\0&0&0&0&0&0&0&1&0\\0&0&0&0&0&0&0&0&1\end{bmatrix}$
 
-### 1.2 SIR传播模型
+### 1.2 SIR propagation model
 开始数学模型的建立，先确定自变量(independent variables)和因变量(dependent variables)。自变量为时间$t$，以天为单位。考虑两组相关的因变量。
 
 第一组因变量计算每一组（归类）中的人数，均为时间的函数。$\begin{cases}S=S(t) &易感（susceptible）人数 \\I=I(t) & 受感（infected）人数\\R=R(t) & 恢复（recovered）人数\end{cases} $。第二组因变量表示这三种类型中每一种占总人口数的比例，假设$N$为总人口数，$\begin{cases}s(t)=S(t)/N &易感（susceptible）人群比例 \\i(t)=I(t)/N & 感染（infected）人群比例\\r(t)=R(t)/N & 恢复（recovered）人群比例\end{cases} $，因此$s(t)+i(t)+r(t)=1$。使用总体计数可能看起来更自然，但是如果使用分数替代，则会是计算更简单。这两组因变量是成比例的，所以任何一组都能给我们病毒传播的相同信息。
