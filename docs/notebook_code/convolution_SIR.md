@@ -641,7 +641,7 @@ SIR_array=SIR_deriv(y_0,t,N,beta,gamma,plot=True)
 
 ### 1.3 Convolution diffusion, cost raster, and species dispersal
 #### 1.3.1 Convolution diffusion
-如果配置卷积核为$\begin{bmatrix}0.5 & 1&0.5 \\1 & -6&1\\0.5 & 1&0.5 \end{bmatrix} $，假设存在一个传播（传染）源，如下述程序配置一个栅格（.bmp图像），其值除了源为1（R值）外，其它的单元均为0。每次卷积，值都会以源为中心，向四周扩散，并且四角的值（绝对值）最小，水平垂直向边缘值（绝对值）稍大，越向内部值（绝对值）越大，形成了一个逐步扩散的趋势，并且具有强弱，即越趋向于传播源，其绝对值越大。同时，达到一定阶段后，扩散开始逐步消失，恢复为所有单元值为0的阶段。观察卷积扩散可以通过打印每次卷积后的值查看，也可以记录每次的结果最终存储为.gif文件，动态的观察图像的变化。
+If the convolution kernel is configured with $\begin{bmatrix}0.5 & 1&0.5 \\1 & -6&1\\0.5 & 1&0.5 \end{bmatrix} $, assume that there is a propagation(contagion) source, for example, the following program configured a raster(.bmp image) with a value of 0 except the source is 1(R-value). Each time, the value of convolution takes the source as the center and diffuses in all directions. The value of the four angles(absolute value) is the smaller, the value of the horizontal, vertical edge(absolute value) is slightly larger, and the value of the interior(absolute value) is larger, forming a trend of gradual diffusion and with strength, that is, the closer to the propagation source, the greater its absolute values. Simultaneously, after reaching a certain stage, the diffusion begins to disappear gradually and returns to the stage where all the units value is 0. The value after each convolution can be viewed by printing to observe the convolution diffusion, or the results of each time can be recorded and finally stored as a .gif file, dynamically observing the changes of the image. 
 
 
 ```python
@@ -650,12 +650,12 @@ def img_struc_show(img_fp,val='R',figsize=(7,7)):
     from skimage.morphology import square,rectangle
     import matplotlib.pyplot as plt
     '''
-    function - 显示图像以及颜色R值，或G,B值
+    function - Displays the image as well as the color R-value, or G, B value
     
     Paras:
-    img_fp - 输入图像文件路径
-    val - 选择显示值，R，G，或B
-    figsize - 配置图像显示大小
+    img_fp - Input the image file path
+    val - Select the display value, R, G, or B
+    figsize - Configure the image display size
     '''
     img=io.imread(img_fp)
     shape=img.shape
@@ -681,20 +681,20 @@ img_struc_show(img_fp=img_12Pix_1red_fp,val='R')
 <a href=""><img src="./imgs/13_08.png" height="auto" width="auto" title="caDesign"></a>
 
 
-扩散是一个随时间变化的动态过程，为了记录每一次扩散的结果，形成动态的变化显示，使用moviepy记录每次图像变化的结果，并存储为.gif文件，方便查看。卷积扩散主要是更新SIR变量值，其初始值配置为图像的R颜色值，除了源配置为1外，其它单元的值（R）均为0，这样可以比较清晰的观察卷积扩散的过程。卷积的计算使用scipy库提供的convolve方法。
+Diffusion is a dynamic process that changes over time. To record each diffusion's results and form a dynamic display of changes, Moviepy is used to record the results of each image change and store them as a .gif file for easy viewing. Convolution diffusion is mainly to update the value of the SIR variable, whose initial value is configured as the image's R color value, and the value(R) of all the other units is 0 except the source is configured as one so that the process of convolution diffusion can be observed more clearly. Convolve calculation uses the 'convolve' method provided by the Scipy library.
 
 
 ```python
 class convolution_diffusion_img:
     '''
-    class - 定义基于SIR模型的二维卷积扩散
+    class - 2 D convolution diffusion is defined based on the SIR model.
     
     Paras:
-    img_path - 图像文件路径
-    save_path - 保持的.gif文件路径
-    hours_per_second - 扩散时间长度
-    dt - 时间记录值，开始值
-    fps - 配置moviepy，write_gif写入GIF每秒帧数
+    img_path - Image file path
+    save_path - Path to saved .gif file
+    hours_per_second - Diffusion time length
+    dt - Time record value, start value
+    fps - Configure Moviepy, 'write_gif' write GIF frames per second.
     '''
     def __init__(self,img_path,save_path,hours_per_second,dt,fps):
         from skimage import io
@@ -704,16 +704,16 @@ class convolution_diffusion_img:
         self.dt=dt
         self.fps=fps        
         img=io.imread(img_path)
-        SIR=np.zeros((1,img.shape[0], img.shape[1]),dtype=np.int32) #在配置SIR数组时，为三维度，是为了对接后续物种散步程序对SIR的配置
-        SIR[0]=img.T[0] #将图像的RGB中R通道值赋值给SIR
+        SIR=np.zeros((1,img.shape[0], img.shape[1]),dtype=np.int32) #When the SIR array is configured, it is of three dimensions to dock with the configuration of SIR by the subsequent species dispersal program.
+        SIR[0]=img.T[0] #Assign the R channel value in the RGB of the image to SIR
         self.world={'SIR':SIR,'t':0} 
         
         self.dispersion_kernel=np.array([[0.5, 1 , 0.5],
                                         [1  , -6, 1],
-                                        [0.5, 1, 0.5]]) #SIR模型卷积核 
+                                        [0.5, 1, 0.5]]) #SIR model convolution kernel 
         
 
-    '''返回每一步卷积的数据到VideoClip中'''
+    '''Returns the convolution data for each step into 'VideoClip''''
     def make_frame(self,t):
         while self.world['t']<self.hours_per_second*t:
             self.update(self.world) 
@@ -721,30 +721,30 @@ class convolution_diffusion_img:
             print(self.world['SIR'][0])
         return self.world['SIR'][0]
 
-    '''更新数组，即基于前一步卷积结果的每一步卷积'''
+    '''Update the array, that is, each convolution based on the result of the previous convolution'''
     def update(self,world):        
         disperse=self.dispersion(world['SIR'], self.dispersion_kernel)
         world['SIR']=disperse 
-        world['t']+=dt  #记录时间，用于循环终止条件
+        world['t']+=dt  #Record time for loop termination conditions
 
-    '''卷积扩散'''
+    '''Convolution diffusion'''
     def dispersion(self,SIR,dispersion_kernel):
         import numpy as np
         from scipy.ndimage.filters import convolve
-        return np.array([convolve(SIR[0],self.dispersion_kernel,mode='constant',cval=0.0)]) #注意卷积核与待卷积数组的维度
+        return np.array([convolve(SIR[0],self.dispersion_kernel,mode='constant',cval=0.0)]) #Notice the dimensions of the convolution kernel and the array to be convolved
     
-    '''执行程序'''
+    '''Execute the code'''
     def execute_(self):        
         import moviepy.editor as mpy
         self.animation=mpy.VideoClip(self.make_frame,duration=1) #duration=1
         self.animation.write_gif(self.save_path,self.fps)    
         
 
-img_12Pix_fp=r'./data/12mul12Pixel_1red.bmp' #图像文件路径
+img_12Pix_fp=r'./data/12mul12Pixel_1red.bmp' #Image file path
 SIRSave_fp=r'./data/12mul12Pixel_1red_SIR.gif'
 hours_per_second=20
-dt=1 #时间记录值，开始值
-fps=15 # 配置moviepy，write_gif写入GIF每秒帧数
+dt=1 #Time record value, start value
+fps=15 # Configure Moviepy, 'write_gif' write GIF frames per second
 convDiff_img=convolution_diffusion_img(img_path=img_12Pix_fp,save_path=SIRSave_fp,hours_per_second=hours_per_second,dt=dt,fps=fps)
 convDiff_img.execute_()
 ```
@@ -816,7 +816,7 @@ convDiff_img.execute_()
 
     
 
-为了方便查看动态变化的.gif文件，定义`animated_gif_show`函数。对图像的读取和处理使用了[Pillow库](https://pillow.readthedocs.io/en/stable/)。
+To view a dynamic .gif file, define the `animated_gif_show` function. The reading and processing of the image use the [Pillow library](https://pillow.readthedocs.io/en/stable/)。
 
 
 ```python
@@ -827,11 +827,11 @@ def animated_gif_show(gif_fp,figsize=(8,8)):
     import matplotlib.animation as animation
     from IPython.display import HTML
     '''
-    function - 读入.gif，并动态显示
+    function - Read in .gif and display dynamically
     
     Paras:
-    gif_fp - GIF文件路径
-    figsize - 图表大小
+    gif_fp - GIF file path
+    figsize - Figure size
     '''
     gif=Image.open(gif_fp,'r')
     frames=[np.array(frame.getdata(),dtype=np.uint8).reshape(gif.size[0],gif.size[1]) for frame in ImageSequence.Iterator(gif)]
@@ -853,20 +853,20 @@ animated_gif_show(gif_fp,figsize=(8,8))
 <a href=""><img src="./imgs/13_09.gif" height="auto" width="auto" title="caDesign"></a>
 
 
-#### 1.3.2 成本栅格与物种散布，SIR的空间传播模型
-SIR传播模型是给定了总体人口数N，以及S,I,R的初始值，和$\beta , \gamma$转换系数，计算S,I,R人口数量的变化。SIR传播模型不具有空间属性，因此引入了卷积扩散，可以实现一个源向四周扩散的变化过程，并且始终以源的空间位置强度最大，并向四周逐步减弱。这样通过结合SIR模型和卷积扩散，可以实现SIR的空间传播模型。
+#### 1.3.2 Cost raster, species dispersal, SIR spatial propagation model
+The SIR propagation model is given the total population N, and the initial values of S, I, R, and the conversion coefficient of $\beta , \gamma$, and calculate the changes of the S, I, R population. The SIR propagation model has no spatial attribute, so convolution diffusion is introduced, realizing the change process of a source diffusing to all directions. The intensity always reaches the maximum at the source's spatial position and gradually weakens to all directions. In this way, SIR's space propagation model can be realized by combining the SIR model and convolution diffusion.
 
-可以这样理解SIR空间传播模型的过程，对于空间分布（即栅格，每个栅格单元有一个值或多个值，即存在多层栅格）配置有三个对应的栅格层（'SIR'），分别对应S，I和R值的空间分布，例如对于S而言，其初始值对应了用地类型对于物种散步的影响，即成本栅格或者是空间阻力值，如物种容易在林地、农田中迁移散步，而建筑和道路则会阻挡其散步，通过配置不同大小的值可以反映物种能够散步的强度（注意，有时可以用大的值表示阻力值小，而小的值表示阻力值大，具体需要根据算法的方式确定，或调整为符合习惯的数值大小表达）；对于对应的I层栅格而言，初始值需要设定源，可以为一个或者多个，多个源可以是分散的，也可以是聚集为片区的，源也可以根据源自身的强度配置代表不同强度的值，但是除了源之外的所有值均为0；对于对应的R层，因为在开始时间点，并没有恢复者（或死亡）案例，因此所有值设置为0。
+The process of the SIR spatial propagation model can be understood in this way. For the spatial distribution(i.e., raster, where each raster cell has one value or more values, i.e., multi-layered raster), there are three corresponding raster layers('SIR'), which correspond to the spatial distribution of S, I, and R values respectively. For example, for S, its initial value corresponds to the impact of land type on species dispersal, namely, the cost raster or the spatial resistance value. For example, species tend to migrate and walk-in woodland and farmland, while buildings and roads prevent them from walking. Values of different sizes can be configured to reflect how strongly a species can walk(note that large values can sometimes represent small resistance values and small values represent large resistance values, depending on the algorithmic approach or adjusted to the customary numerical expression). The initial value needs to be set as one or more sources for the corresponding I-layer raster, which can be scattered or clustered into blocks. The source can also be configured to represent different strength values based on the source's strength, but all values except the source are 0. For the corresponding R-layer, since there are no recovered people(or death) at the start time, all values are set to 0.
 
-配置好SIR空间分布的栅格层后，计算可以理解为纵向的SIR模型传播，以及水平向的卷积扩散过程的结合。在纵向上，每一个空间点（即一个位置的单元栅格，每个位置有S，I和R３个层的栅格）都有一定数量的人口数（即空间阻力值），每一个位置对应的S，I和R单元栅格的SIR传播模型计算过程与上述解释的SIR模型传播过程是相同的，只是在一开始的时候，只有I层对应源的位置有非0值，因此源的栅格位置是有纵向（S-->I-->R）的传播，但是为0的位置，SIR模型计算公式变化结果为0，即没有纵向上的传播；除了纵向SIR传播，各层的水平向发生着卷积扩散，对于S ,I和R三个栅格层，水平向的扩散速度是不同的，通过变量'dispersion_rates'扩散系数确定强度，三个值分别对应S，I和R的3个栅格层。因为I层是给了值非0的源，因此会发生水平扩散，新扩散的区域在SIR模型计算时，纵向上就会发生传播变化。而在配置扩散系数时，对应的S层的扩散系数为0，即S栅格层水平向上并不会发生卷积扩散，卷积扩散仅发生在I和R层，这与S层为“易感人群”但并传播，而I层“受感人群”和R层“恢复人群或死亡”是病毒携带者是可以传染扩散的过程相一致。每一时间步，由纵向SIR传播和水平向卷积扩散共同作用，因此每一时刻的SIR空间栅格值变化为`world['SIR'] += dt*(deriv_infect+disperse)`，其中'deriv_infect'为纵向SIR的传播结果，'disperse'为水平向的扩散结果，通过求和作为二者共同作用的结果。同时，乘以'dt'时间参数，开始时，时间参数比较小，而随时间的流逝，时间参数的值越来越大，那么各层的绝对值大小也会增加的更快，即传播强度会增加。
+After the raster layer of the SIR spatial distribution is configured, the calculation can be understood as combining the vertical SIR model propagation and the horizontal convolution diffusion process. On the vertical direction, each space point(i.e., a location unit raster, each position has S, I, R three layers raster) has a specific population(that is, the resistance value). Each location corresponding to the SIR propagation model's calculation process corresponding to S, I, and R unit raster and the explanations of the SIR model's spread is the same.  It is only at the beginning that the I-layer's position corresponding to the source has a non-zero value, so the raster position of the source is vertical propagation(S-->I-->R). Nevertheless, for the 0 positions, the change result of the SIR model calculation formula is 0; that is, there is no vertical propagation. Besides the vertical SIR propagation, the horizontal convolution diffusion occurs at each layer. For the S, I, and R raster layer, the horizontal diffusion speed is different, and the strength is determined through the variable 'dispersion_rates' diffusion coefficient, and the three values correspond to the three rasters of S, I, and R, respectively. Because I-layer is a source given a value other than 0, horizontal diffusion occurs, and the newly diffused region will undergo vertical propagation changes when the SIR model is calculated. When the diffusion coefficient is configured, the corresponding S-layer's diffusion coefficient is 0; that is, the horizontal upward convolution diffusion does not occur in the S raster layer. Convolution diffusion only occurs at the I and R layers, which is consistent with the fact that the S-layer is a 'susceptible population' but does not spread, while the I-layer is an 'infected population' and the R-layer is a 'recovered for death population' that is a carrier of the virus and can be spread. At each time step, vertical SIR propagation and horizontal convolution diffusion work together. Therefore, the value of the SIR space raster at every moment is `world['SIR'] += dt*(deriv_infect+disperse)`, where 'deriv_infect' is the result of the SIR vertical propagation, and  'disperse' is the result of horizontal diffusion, and by summation as a result of the interaction of the two. Simultaneously, multiply the time parameter 'dt', in the beginning, the time parameter is relatively small, but the value of the time parameter becomes larger and larger over time, so the absolute value of each layer will also increase faster, that is, the propagation intensity will increase.
 
-同样应用moviepy库记录每一时刻的变化。
+Also, use the Moviepy library to track changes at every moment.
 
-* 确定源的位置
+* Determine the location of the source
 
-首先读取分类数据，因为不同分类数据的标识各异，通常无法正常显示为颜色方便地物的辨别，因此建立'las_classi_colorName'分类值到颜色的映射字典，将其转换为不同颜色的表达，从而根据颜色辨别地物，并方便观察位置信息。位置信息的获取是使用skimage库提供的ImageViewer方法。
+Firstly, the classified data is read because identifying different classified data is different and can not be generally displayed as color to facilitate the discrimination of ground objects. Therefore, a mapping dictionary of 'las_classi_colorName' classification value to color is established and converted into expressions of different colors to identify ground objects based on color and conveniently observe location information. The location information is obtained using the 'ImageViewer' method provided by the Skimage library.
 
-分类数据为点云数据处理部分的分类数据，因为SIR的空间传播模型计算中，卷积扩散计算过程比较耗时，因此需要压缩数据量，并确保分类值正确。压缩数据时，skimage.transform提供了rescale,resize，和downscale_local_mean等方法，但是没有提供给定一个区域（block），返回区域内频数最大的值的方式；skimage.measure中的block_reduce方法，仅有numpy.sum, numpy.min, numpy.max, numpy.mean 和 numpy.median返回值，因此自定义函数`downsampling_blockFreqency`，实现给定二维数组，和区域大小，以区域内出现次数最多的值为该区域的返回值，实现降采样。
+The classified data is the classified data of the processing of point cloud data section because the convolution diffusion calculation process is time-consuming in calculating the SIR spatial propagation model, so it is necessary to compress the data amount and ensure the classification value is correct. When data is compressed, 'skimage.transform' provides methods such as rescale, resize, and downscale_local_mean, but does not provide a way to return the values with the highest frequency within a region(block) given. In the 'block_reduce' method of 'skimage.measure', there are only numpy.sum, numpy.min, numpy.max, numpy.mean and numpy.median return values, so the custom function `downsampling_blockFreqency is defined. Given a two-dimensional array and the region's size, the value that occurs most times in the region is the region's return value to realize down-sampling. 
 
 
 ```python
@@ -874,21 +874,21 @@ def downsampling_blockFreqency(array_2d,blocksize=[10,10]):
     import numpy as np
     from statistics import multimode
     from tqdm import tqdm
-    #flatten_lst=lambda lst: [m for n_lst in lst for m in flatten_lst(n_lst)] if type(lst) is list else [lst] #展平列表函数
+    #flatten_lst=lambda lst: [m for n_lst in lst for m in flatten_lst(n_lst)] if type(lst) is list else [lst] #Flattening list function
     '''
-    fuction - 降采样二维数组，根据每一block内值得频数最大值，即最多出现得值为每一block的采样值
+    fuction - Down-sampling a two-dimensional array, according to the maximum value of the value frequency in each block, the value appearing at most is the sampling value of each block.
     
     Paras:
-    array_2d - 待降采样的二维数组
-    blocksize - block大小，即每一采用的范围
+    array_2d - A two-dimensional array to be down-sampled
+    blocksize - Block size, which is the range of each sample
     '''
     
     shape=array_2d.shape
     row,col=blocksize
-    row_p,row_overlap=divmod(shape[1],row)  #divmod(a,b)方法为除法取整，以及a对b的余数
+    row_p,row_overlap=divmod(shape[1],row)  #The 'divmod(a,b)' method takes the integer of the division and the remainder of a to b
     col_p,col_overlap=divmod(shape[0],col)
     print("row_num:",row_p,"col_num:",col_p)
-    array_extraction=array_2d[:col_p*col,:row_p*row]  #移除多余部分，规范数组，使其正好切分均匀
+    array_extraction=array_2d[:col_p*col,:row_p*row]  #Remove the excess and normalize the array so that it is precisely sharded evenly
     print("array extraction shape:",array_extraction.shape,"original array shape:",array_2d.shape)  
     
     h_splitArray=np.hsplit(array_extraction,row_p)
@@ -954,69 +954,69 @@ viewer.show()
 
 <a href=""><img src="./imgs/13_10.png" height="auto" width="auto" title="caDesign"></a>
 
-* 定义SIR的空间传播模型类
+* Defines the spatial propagation model class
 
 
 ```python
 class SIR_spatialPropagating:
     '''
-    funciton - SIR的空间传播模型
+    funciton - the SIR spatial propagation model
     
     Paras:
-    classi_array - 分类数据（.tif，或者其它图像类型），或者其它可用于成本计算的数据类型
-    cost_mapping - 分类数据对应的成本值映射字典
-    beta - beta值，确定S-->I的转换率
-    gamma - gamma值，确定I-->R的转换率
-    dispersion_rates - SIR三层栅格各自对应的卷积扩散率
-    dt - 时间更新速度
-    hours_per_second - 扩散时间长度/终止值(条件)
-    duration - moviepy参数配置，持续时长
-    fps - moviepy参数配置，每秒帧数
-    SIR_gif_savePath - SIR空间传播计算结果.gif文件保存路径
+    classi_array - Classified data(.tif, or other image types), or other data types that can be used for costing
+    cost_mapping - The mapping dictionary of cost value  corresponding to the classification data
+    beta - beta value，Determine the conversion rate of S-->I
+    gamma - gamma value，Determine the conversion rate of I-->R
+    dispersion_rates - Converlution diffusivity corresponding to SIR three-layer raster
+    dt - Time update rate
+    hours_per_second - Diffusion time length/termination value(condition)
+    duration - moviepy parameter configuration, duration
+    fps - moviepy parameter configuration, frames per second
+    SIR_gif_savePath - The SIR spatial propagation calculation results .gif save path
     '''
     def __init__(self,classi_array,cost_mapping,start_pt=[10,10],beta=0.3,gamma=0.1,dispersion_rates=[0, 0.07, 0.03],dt=1.0,hours_per_second=7*24,duration=12,fps=15,SIR_gif_savePath=r'./SIR_sp.gif'):
         from sklearn.preprocessing import MinMaxScaler
                 
-        #将分类栅格，按照成本映射字典，转换为成本栅格(配置空间阻力)
+        #Convert the classification raster, in terms of the cost mapping dictionary, to the cost raster(configuring spatial resistance)
         for idx,(identity,cost_value) in enumerate(cost_mapping.items()):
             classi_array[classi_array==cost_value[0]]=cost_value[1]
         self.mms=MinMaxScaler()
-        normalize_costArray=self.mms.fit_transform(classi_array) #标准化成本栅格
+        normalize_costArray=self.mms.fit_transform(classi_array) #Standardize cost raster
 
-        #配置SIR模型初始值，将S设置为空间阻力值
+        #Configure the SIR model initial value and set S to the spatial resistance value
         SIR=np.zeros((3,normalize_costArray.shape[0], normalize_costArray.shape[1]),dtype=float)        
         SIR[0]=normalize_costArray
         
-        #配置SIR模型中I的初始值。1，可以从设置的1个或多个点开始；2，可以将森林部分直接设置为I有值，而其它部分保持0。
-        #start_pt=int(0.7*normalize_costArray.shape[0]), int(0.2*normalize_costArray.shape[1])  #根据行列拾取点位置
-        #print("起始点:",start_pt)
+        #Configure the initial value of I in the SIR model. 1, can be set from 1 or more points. 2, The forest part can be directly set to have a value of I, while the other parts remain 0.
+        #start_pt=int(0.7*normalize_costArray.shape[0]), int(0.2*normalize_costArray.shape[1])  #Pick up point positions according to rows and columns.
+        #print("The starting point:",start_pt)
         start_pt=start_pt
-        SIR[1,start_pt[0],start_pt[1]]=0.8  #配置起始点位置值
+        SIR[1,start_pt[0],start_pt[1]]=0.8  #Configure the starting point location value
 
-        #配置转换系数，以及卷积核
-        self.beta=beta #β值
-        self.gamma=gamma #γ值
-        self.dispersion_rates=dispersion_rates  #扩散系数
+        #Configure the conversion coefficients and the convolution kernel
+        self.beta=beta #β value
+        self.gamma=gamma #γ value
+        self.dispersion_rates=dispersion_rates  #Diffusion coefficient
         dispersion_kernelA=np.array([[0.5, 1 , 0.5],
                                      [1  , -6, 1],
-                                     [0.5, 1, 0.5]])  #卷积核_类型A    
+                                     [0.5, 1, 0.5]])  #Convolution kernel - type A    
         dispersion_kernelB=np.array([[0, 1 , 0],
                                      [1 ,1, 1],
-                                     [0, 1, 0]])  #卷积核_类型B  
+                                     [0, 1, 0]])  #Convolution kernel - type B  
 
-        self.dispersion_kernel=dispersion_kernelA #卷积核
-        self.dt=dt  #时间记录值，开始值
-        self.hours_per_second=hours_per_second  #终止值(条件) 
-        self.world={'SIR':SIR,'t':0} #建立字典，方便数据更新
+        self.dispersion_kernel=dispersion_kernelA #Convolution kernel
+        self.dt=dt  #Time record value, start value
+        self.hours_per_second=hours_per_second  #Termination value(condition)
+        self.world={'SIR':SIR,'t':0} #Create a dictionary to update the data
         
-        #moviepy配置
+        #moviepy configuration
         self.duration=duration
         self.fps=fps        
                  
-        #保存路径
+        #Save path
         self.SIR_gif_savePath=SIR_gif_savePath
 
-    '''SIR模型'''
+    '''SIR model'''
     def deriv(self,SIR,beta,gamma):
         S,I,R=SIR
         dSdt=-1*beta*I*S  
@@ -1024,47 +1024,47 @@ class SIR_spatialPropagating:
         dIdt=beta*I*S-gamma*I
         return np.array([dSdt, dIdt, dRdt])
 
-    '''卷积扩散'''
+    '''Convolution diffusion'''
     def dispersion(self,SIR,dispersion_kernel,dispersion_rates):
         from scipy.ndimage.filters import convolve
         return np.array([convolve(e,dispersion_kernel,cval=0)*r for (e,r) in zip(SIR,dispersion_rates)])
 
-    '''执行SIR模型和卷积，更新world字典'''
+    '''Perform SIR model and convolution, update 'world' dictionary'''
     def update(self,world):
         deriv_infect=self.deriv(world['SIR'],self.beta,self.gamma)
         disperse=self.dispersion(world['SIR'], self.dispersion_kernel, self.dispersion_rates)
         world['SIR'] += self.dt*(deriv_infect+disperse)    
         world['t'] += self.dt
 
-    '''将模拟计算的值转换到[0,255]RGB色域空间'''
+    '''Converts simulated values to the [0,255] RGB gamut space'''
     def world_to_npimage(self,world):
         coefs=np.array([2,20,25]).reshape((3,1,1))
         SIR_coefs=coefs*world['SIR']
         accentuated_world=255*SIR_coefs
-        image=accentuated_world[::-1].swapaxes(0,2).swapaxes(0,1) #调整数组格式为用于图片显示的（x,y,3）形式
+        image=accentuated_world[::-1].swapaxes(0,2).swapaxes(0,1) #Adjust the array format to (x,y,3) for image display
         return np.minimum(255, image)
 
-    '''返回每一步的SIR和卷积综合蔓延结果'''
+    '''Returns the results of the SIR and convolution generalization propagation for each step'''
     def make_frame(self,t):
         while self.world['t']<self.hours_per_second*t:
             self.update(self.world)     
         return self.world_to_npimage(self.world)    
 
-    '''执行程序'''
+    '''Execute the program'''
     def execute(self):
         import moviepy.editor as mpy
         animation=mpy.VideoClip(self.make_frame,duration=self.duration)  #12
         animation.write_gif(self.SIR_gif_savePath, fps=self.fps) #15
 ```
 
-空间阻力值的配置，需要根据具体的研究对象做出调整。也可以增加新的多个条件，通过栅格计算后作为输入的一个条件栅格。`cost_mapping`成本映射字典，键为文字标识，值为一个元组，第一个值为分类值，第二个值为空间阻力值。
+The configuration of spatial resistance value needs to be adjusted according to the specific research object. It is also possible to add a new number of conditions through the raster calculation as an input to the conditional raster. For the `cost_mapping` cost mapping dictionary, the key is a literal identifier, the value is a tuple, the first value is a classification value, and the second value is a spatial resistance value.
 
 
 ```python
-#成本栅格（数组）
+#cost raster (array)
 classi_array=mosaic_classi_array_rescaled    
 
-#配置用地类型的成本值（空间阻力值）
+#Configure cost value of land types(spatial resistance value)
 cost_H=250
 cost_M=125
 cost_L=50
@@ -1094,11 +1094,11 @@ cost_mapping={
 
 import util
 s_t=util.start_time()
-#参数配置
+#parameter cofiguration
 start_pt=[418,640]  #[3724,3415]
 beta=0.3
 gamma=0.1
-dispersion_rates=[0, 0.07, 0.03]  #S层卷积扩散为0，I层卷积扩散为0.07，R层卷积扩散为0.03
+dispersion_rates=[0, 0.07, 0.03]  #The convolution diffusion of S-layer is 0, I-layer is 0.07, and R-layer is 0.03
 dt=1.0
 hours_per_second=30*24 #7*24
 duration=12 #12
@@ -1130,52 +1130,52 @@ util.duration(s_t)
 
 <a href=""><img src="./imgs/13_11.gif" height="auto" width="auto" title="caDesign"></a>
 
-### 1.4 要点
-#### 1.4.1 数据处理计数
+### 1.4 key point
+#### 1.4.1 data processing technique
 
-* 使用sympy库的Piecewise方法建立分段函数
+* The Piecewise method based on the Sympy library was used to construct segmentation functions.
 
-* 使用matplotlib库的animation方法实习动态图表
+* Use the 'animation' method of the Matplotlib library to practice dynamic diagrams.
 
-* 使用scipy库提供的odeint方法，组合多个常微分方程
+* Combine multiple ordinary differential equations using the 'odeint' method provided by the Scipy library.
 
-#### 1.4.2 新建立的函数
+#### 1.4.2 The newly created function tool
 
-* class - 一维卷积动画解析，可以自定义系统函数和信号函数，`class dim1_convolution_SubplotAnimation(animation.TimedAnimation)`
+* class - One dimensional convolution animation analysis to customize the system function and signal function, `class dim1_convolution_SubplotAnimation(animation.TimedAnimation)`
 
-* function - 定义系统响应函数.类型-1， `G_T_type_1()`
+* function - Define system response functions. Type-1, `G_T_type_1()`
 
-* function - 定义输入信号函数，类型-1， `F_T_type_1(timing)`
+* function - Define the input signal function. Type-1, `F_T_type_1(timing)`
 
-* function - 定义系统响应函数.类型-2，`G_T_type_2()`
+* function - Define system response functions. Type-2, `G_T_type_2()`
 
-* function - 定义输入信号函数，类型-2， `F_T_type_2(timing)`
+* function - Define the input signal function. Type-2, `F_T_type_2(timing)`
 
-* function - 读取MatLab的图表数据，类型-A， `read_MatLabFig_type_A(matLabFig_fp,plot=True)`
+* function - Read Matlab chart data, Type-A,  `read_MatLabFig_type_A(matLabFig_fp,plot=True)`
 
-* function - 应用一维卷积，根据跳变点分割数据， `curve_segmentation_1DConvolution(data,threshold=1)`
+* function - One dimensional convolution is applied to segment the data according to the jump point. `curve_segmentation_1DConvolution(data,threshold=1)`
 
-* function - 根据索引，分割列表，`lst_index_split(lst, args)`
+* function - Split the list according to the index,`lst_index_split(lst, args)`
 
-* function - 展平列表函数， `flatten_lst=lambda lst: [m for n_lst in lst for m in flatten_lst(n_lst)] if type(lst) is list else [lst]`
+* function - 'Flattening list function,  `flatten_lst=lambda lst: [m for n_lst in lst for m in flatten_lst(n_lst)] if type(lst) is list else [lst]`
 
-* function - 嵌套列表，子列表前后插值，`nestedlst_insert(nestedlst)`
+* function - Nested list, sublists interpolated before and after, `nestedlst_insert(nestedlst)`
 
-* function - 使用matplotlib提供的方法随机返回浮点型RGB， `uniqueish_color()`
+* function - Use the method provided by Matplotlib to return floating-point RGB randomly, `uniqueish_color()`
 
-* function - 定义SIR传播模型微分方程， `SIR_deriv(y,t,N,beta,gamma,plot=False)`
+* function - Define the SIR model, the differential function,  `SIR_deriv(y,t,N,beta,gamma,plot=False)`
 
-* function - 显示图像以及颜色R值，或G,B值，`img_struc_show(img_fp,val='R',figsize=(7,7))`
+* function - Displays the image as well as the color R-value, or G, B value, `img_struc_show(img_fp,val='R',figsize=(7,7))`
 
-* class - 定义基于SIR模型的二维卷积扩散，`class convolution_diffusion_img`
+* class - 2 D convolution diffusion is defined based on the SIR model.`class convolution_diffusion_img`
 
-* function - 读入.gif，并动态显示，`animated_gif_show(gif_fp,figsize=(8,8))`
+* function - Read in .gif and display dynamically, `animated_gif_show(gif_fp,figsize=(8,8))`
 
-* fuction - 降采样二维数组，根据每一block内值得频数最大值，即最多出现得值为每一block的采样值，`downsampling_blockFreqency(array_2d,blocksize=[10,10])`
+* fuction - Down-sampling a two-dimensional array, according to the maximum value of the value frequency in each block, the value appearing at most is the sampling value of each block., `downsampling_blockFreqency(array_2d,blocksize=[10,10])`
 
-* class - SIR的空间传播模型， `SIR_spatialPropagating`
+* class - the SIR spatial propagation model, `SIR_spatialPropagating`
 
-#### 1.4.3 所调用的库
+#### 1.4.3 The python libraries that are being imported
 
 
 ```python
@@ -1215,5 +1215,5 @@ from tqdm import tqdm
 from sklearn.preprocessing import MinMaxScaler
 ```
 
-#### 1.4.4 参考文献
-1. Robert E.Ricklefs著. 孙儒泳等译.生态学/The economy of nature[M].高度教育出版社.北京.2004.7 第5版. ------非常值得推荐的读物(教材)，图文并茂
+#### 1.4.4 Reference
+1. Robert E.Ricklefs.The economy of nature[M].W. H. Freeman; 6th Edition (December 17, 2008)

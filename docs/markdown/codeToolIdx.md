@@ -1,84 +1,100 @@
-# 代码工具索引
-> 本书的目的不仅在于一般意义上的教材，以及专业上相关实验的阐述，同时，使大量实验所编写代码片段形成一个个可以方便迁移使用的工具，形成工具包。
+# Code tool index
+> This book's purpose is not only the textbook in the general sense but also the description of relevant experiments in the specialty. Simultaneously, many code fragments compiled by experiments can form a tool that can be easily transferred and used to form a toolkit.
 
-# 代码工具索引
-> 本书的目的不仅在于一般意义上的教材，以及专业上相关实验的阐述，同时，使大量实验所编写代码片段形成一个个可以方便迁移使用的工具，形成工具包。
+## 1. Baidu Map POI data crawler and geospatial point map
+1. function-Baidu map open platform POI data crawler, `baiduPOI_dataCrawler(query_dic,bound_coordinate,partition,page_num_range,poi_fn_list=False)`;
+2. function-Convert .csv format of POI data to DataFrame of pandas, `csv2df(poi_fn_csv)`；
 
-## 1. 单个分类POI数据爬取与地理空间点地图
-1. function-百度地图开放平台POI数据爬取，baiduPOI_dataCrawler(query_dic,bound_coordinate,partition,page_num_range,poi_fn_list=False);
-2. function-转换.csv格式的POI数据为pandas的DataFrame,csv2df(poi_fn_csv)；
+## 2. Multiple classification POI data crawling and Descriptive statistics
+3. function-Baidu Map open platform POI data mass crawling，`baiduPOI_batchCrawler(poi_config_para)`。need to call the single POI classification crawler function. `baiduPOI_dataCrawler(query_dic,bound_coordinate,partition,page_num_range,poi_fn_list=False)`
+4. funciton-With the folder path as the key, the value is a list of all filenames under the folder. File types can be specified.  `filePath_extraction(dirpath,fileType)`
+5. funciton-.csv format POI data is converted to GeoDataFrame in batch，`poi_csv2GeoDF_batch(poi_paths,fields_extraction,save_path)`。which needs to call .csv to DataFrame data format provided by pandas function  `csv2df(poi_fn_csv)`
+6. funciton-use Plotly to display data in DataFrame format as a table, `ployly_table(df,column_extraction)`
+7. function-frequency calculation，`frequency_bins(df,bins)`
 
-## 2. 多个分类POI数据爬取与描述性统计
-3. function-百度地图开放平台POI数据批量爬取，baiduPOI_batchCrawler(poi_config_para)。需要调用单个分类POI爬取函数baiduPOI_dataCrawler(query_dic,4.bound_coordinate,partition,page_num_range,poi_fn_list=False)'
-4. funciton-以所在文件夹路径为键，值为包含该文件夹下所有文件名的列表。文件类型可以自行定义 filePath_extraction(dirpath,fileType)
-5. funciton-.csv格式POI数据批量转换为GeoDataFrame，poi_csv2GeoDF_batch(poi_paths,fields_extraction,save_path)。需要调用转换.csv格式的POI数据为pandas的DataFrame函数csv2df(poi_fn_csv)
-6. funciton-使用plotly以表格形式显示DataFrame格式数据,ployly_table(df,column_extraction)
-7. function-频数分布计算，frequency_bins(df,bins)
+## 3. Normal distribution and probability density function, outlier handling
+8. funciton-dataset(observed/empirical data) compared with the standard normal distribution(theoretical set)，`comparisonOFdistribution(df,field,bins=100)`
+9. function-Judge outliers，`is_outlier(data,threshold=3.5)`
 
-## 3. 正态分布与概率密度函数，异常值处理
-8. funciton-数据集z-score概率密度函数分布曲线(即观察值/实验值 observed/empirical data)与标准正态分布(即理论值 theoretical set)比较，comparisonOFdistribution(df,field,bins=100)
-9. function-判断异常值，is_outlier(data,threshold=3.5)
+## 4. OpenStreetMap（OSM）data processing
+10. function-Convert the polygon of the shape to the polygon data format of osmium (.txt) for cropping the .osm map data.`shpPolygon2OsmosisTxt(shape_polygon_fp,osmosis_txt_fp)`
+11. class-Read the .osm data by inheriting the osmium class osmium.SimpleHandler, `osmHandler(osm.SimpleHandler)`
+12. function-Save the OSM data one by one, depending on the condition.（node, way and area）,`save_osm(osm_handler,osm_type,save_path=r"./data/",fileType="GPKG")`
+13. function-Calculate the current time, `start_time()`
+14. function-Calculate the duration, `duration(start_time)`
 
-## 4. OpenStreetMap（OSM）数据处理
-10. function-转换shape的polygon为osmium的polygon数据格式（.txt），用于.osm地图数据的裁切，shpPolygon2OsmosisTxt(shape_polygon_fp,osmosis_txt_fp)
-11. class-通过继承osmium类 class osmium.SimpleHandler读取.osm数据, osmHandler(osm.SimpleHandler)
-12. function-根据条件逐个保存读取的osm数据（node, way and area）,save_osm(osm_handler,osm_type,save_path=r"./data/",fileType="GPKG")
-13. function-计算当前时间，start_time()
-14. function-计算持续时间, duration(start_time)
+## 5.Kernel density estimation and geospatial point density distribution
+15. function - Convert point data in .shp format to .tif raster, `pts2raster(pts_shp,raster_path,cellSize,field_name=False)`
+16. function -  Convert point data in GeoDaraFrame format to raster data, `pts_geoDF2raster(pts_geoDF,raster_path,cellSize,scale)`
 
-## 5.核密度估计与地理空间点密度分布
-15. function - 将.shp格式的点数据转换为.tif栅格(raster)，pts2raster(pts_shp,raster_path,cellSize,field_name=False)
-16. function - 将GeoDaraFrame格式的点数据转换为栅格数据， pts_geoDF2raster(pts_geoDF,raster_path,cellSize,scale)
+## 6.Standard error, central limit theorem, Student's t-distribution, statistical significance, effect size, confidence interval; Geospatial distribution and correlation analysis of public health data
+17. function -  Print DataFrame format data in Jupyter as HTML, `print_html(df,row_numbers=5`
+18. function - Generate a color list or dictionary,  `generate_colors()`
 
-## 6.标准误，中心极限定理，t分布，统计显著性，效应量，置信区间；公共健康数据的地理空间分布与相关性分析
-17. function - 在Jupyter中打印DataFrame格式数据为HTML, print_html(df,row_numbers=5
-18. function - 生成颜色列表或者字典， generate_colors()
+## 7.Simple regression, multiple regression
+19. function - Draw the connection line in the subgraph of the Matplotlib, `demo_con_style(a_coordi,b_coordi,ax,connectionstyle)`
+20. function - The determination coefficient of the regression equation, `coefficient_of_determination(observed_vals,predicted_vals)`
+21. function - Simple linear regression equation - regression significance test(regression coefficient test), `ANOVA(observed_vals,predicted_vals,df_reg,df_res)`
+22. function - The simple linear regression confidence interval estimation, and the predicted interval, `confidenceInterval_estimator_LR(x,sample_num,X,y,model,confidence=0.05)`
+23. function - DataFrame format data, group calculated the Pearson correlation coefficient,`correlationAnalysis_multivarialbe(df)`
+24. function - The non-modified degree determination coefficient of the regression equation, `coefficient_of_determination_correction(observed_vals,predicted_vals,independent_variable_n)`
+25. function - Multiple linear regression equation - regression significance test(regression coefficient test), the population test of all regression coefficient, and single regression coefficient tests, `ANOVA_multivarialbe(observed_vals,predicted_vals,independent_variable_n,a_i,X)`
+26. function - Multiple linear regression confidence interval estimation, and predicted interval, `confidenceInterval_estimator_LR_multivariable(X,y,model,confidence=0.05)`
 
-## 7.简单回归，多元回归
-19. function - 在matplotlib的子图中绘制连接线，demo_con_style(a_coordi,b_coordi,ax,connectionstyle)
-20. function - 回归方程的判定系数， coefficient_of_determination(observed_vals,predicted_vals)
-21. function - 简单线性回归方程-回归显著性检验（回归系数检验）， ANOVA(observed_vals,predicted_vals,df_reg,df_res)
-22. function - 简单线性回归置信区间估计，以及预测区间， confidenceInterval_estimator_LR(x,sample_num,X,y,model,confidence=0.05)
-23. function - DataFrame数据格式，成组计算pearsonr相关系数，correlationAnalysis_multivarialbe(df)
-24. function - 回归方程的修正自由度的判定系数， coefficient_of_determination_correction(observed_vals,predicted_vals,independent_variable_n)
-25. function - 多元线性回归方程-回归显著性检验（回归系数检验），全部回归系数的总体检验，以及单个回归系数的检验， ANOVA_multivarialbe(observed_vals,predicted_vals,independent_variable_n,a_i,X)
-26. function - 多元线性回归置信区间估计，以及预测区间， confidenceInterval_estimator_LR_multivariable(X,y,model,confidence=0.05)
+## 8. Regression of public health data, with gradient descent method
+27. function - Returns the nearest point coordinates for a specified number of neighbors,`k_neighbors_entire(xy,k=3)`
+28. function - Polynomial regression degree selection and regularization, `PolynomialFeatures_regularization(X,y,regularization='linear')`
+29. Gradient descent method - define the model, define the loss function, define the gradient descent function, define the training model function
 
-## 8. 回归公共健康数据，与梯度下降法
-27. function - 返回指定邻近数目的最近点坐标，k_neighbors_entire(xy,k=3)
-28. function - 多项式回归degree次数选择，及正则化, PolynomialFeatures_regularization(X,y,regularization='linear')
-29. 梯度下降法 - 定义模型，定义损失函数，定义梯度下降函数，定义训练模型函数
+## 9. A code representation of the linear algebra basis
+30. funciton - Transform vector and Matrix data formats in Sympy to Matplotlib printable  data formats, `vector_plot_3d(ax_3d,C,origin_vector,vector,color='r',label='vector',arrow_length_ratio=0.1)`
+31. function - Given the vector and the corresponding coefficient, draw along the vector, `move_alongVectors(vector_list,coeffi_list,C,ax,)`
+32. function - The vector set is converted to a vector matrix, and the reduced row echelon form matrix is calculated,`vector2matrix_rref(v_list,C)`
 
-## 9. 线性代数基础的代码表述
-30. funciton - 转换SymPy的vector及Matrix数据格式为matplotlib可以打印的数据格式，vector_plot_3d(ax_3d,C,origin_vector,vector,color='r',label='vector',arrow_length_ratio=0.1)
-31. function - 给定向量，及对应系数，延向量绘制，move_alongVectors(vector_list,coeffi_list,C,ax,)
-32. function - 将向量集合转换为向量矩阵，并计算简化的行阶梯形矩阵，vector2matrix_rref(v_list,C)
+## 10. Landsat remote sensing image processing, digital elevation, principal component analysis
+33. function - Sort the list of files by the number in the file name, `fp_sort(fp_list,str_pattern,prefix="")`
+34. function - Read 'landsat *_MTL.txt' file and extract the required information. `LandsatMTL_info(fp)`
+35. funciton - Transform vector and matrix data formats in Sympy to Matplotlib printable data formats, `vector_plot_2d(ax_2d,C,origin_vector,vector,color='r',label='vector',width=0.022)`
+36. function - Given the center of the circle, the radius, the division number, and calculate the head and tail coordinates of all diameters. `circle_lines(center,radius,division)`
+37. function - Calculate the projection of a point in two dimensions onto a line, `point_Proj2Line(line_endpts,point)`
+38. function -  Calculate the NDVI index, `NDVI(RED_band,NIR_band)`
 
-## 10. Landsat遥感影像处理，数字高程，主成成分分析
-33. function - 按照文件名中的数字排序文件列表， fp_sort(fp_list,str_pattern,prefix="")
-34. function - 读取landsat *_MTL.txt文件，提取需要的信息，LandsatMTL_info(fp)
-35. funciton - 转换SymPy的vector及Matrix数据格式为matplotlib可以打印的数据格式， vector_plot_2d(ax_2d,C,origin_vector,vector,color='r',label='vector',width=0.022)
-36. function - 给定圆心，半径，划分份数，计算所有直径的首尾坐标， circle_lines(center,radius,division)
-37. function - 计算二维点到直线上的投影，point_Proj2Line(line_endpts,point)
-38. function - 计算NDVI指数， NDVI(RED_band,NIR_band)
+## 11.Remote sensing image interpretation (based on NDVI), the establishment of sampling tool(GUI_tkinter), confusion matrix
+39. function - Given cutting boundaries, batch cropping raster data, `raster_clip(raster_fp,clip_boundary_fp,save_path)`
+40. function - Specify the band and display multiple remote sensing images at the same time, `bands_show(img_stack_list,band_num)`
+41. function -Converts a variable name to a string,  `variable_name(var)`
+42. function - contract stretching images,`image_exposure(img_bands,percentile=(2,98))`
+43. function - Divide the data by a given percentile and give a fixed value, integer, or RGB color value,`data_division(data,division,right=True)`
+44. function - Multiple raster data, given percentile, observe changes, `percentile_slider(season_dic)`
+45. Based on Tkinter, an interactive GUI sampling tool is developed
 
-## 11.遥感影像解译（基于NDVI），建立采样工具（GUI_tkinter），混淆矩阵
-39. function - 给定裁切边界，批量裁切栅格数据，raster_clip(raster_fp,clip_boundary_fp,save_path)
-40. function - 指定波段，同时显示多个遥感影像，w_180310_array(img_stack_list,band_num)
-41. function - 将变量名转换为字符串， variable_name(var)
-42. function - 拉伸图像 contract stretching，image_exposure(img_bands,percentile=(2,98))
-43. function - 将数据按照给定的百分数划分，并给定固定的值,整数值或RGB色彩值，data_division(data,division,right=True)
-44. function - 多个栅格数据，给定百分比，变化观察，percentile_slider(season_dic)
-45. 基于tkinter，开发交互式GUI采样工具
+## 12. Point cloud data(Lidar) processing——classified data, DSM, building height extraction, interpolation
+46. function - Convert single .las point cloud data into classification raster data and DSM raster data, etc, `las_info_extraction(las_fp,json_combo)`
+47. function - Displays the classification raster file generated by the .las file and displays the legend, `las_classification_plotWithLegend(las_fp)`
+48. function - Batch conversion .las point cloud data into DSM and classification raster, `las_info_extraction_combo(las_dirPath,json_combo_)`
+49. function - Merge multiple rasters into one, `raster_mosaic(dir_path,out_fp,)`
+50. function - Transfer the function provided by Rasterio that defines the data type with the minimum array size, `get_minimum_int_dtype(values)`
+51. function -  Gets the projected coordinates of the given raster-crs, `get_crs_raster(raster_fp)`
+52. function - Transform raster projection,`raster_reprojection(raster_fp,dst_crs,save_path)`
+53. function - Crop data in .shp format to the extent of a given raster and define a projection as the same as the raster, `clip_shp_withRasterExtent(vector_shp_fp,reference_raster_fp,save_path)`
+54. function - The interpolation method 'rasterio.fill' is used to complete the missing data,`rasters_interpolation(raster_path,save_path,max_search_distance=400,smoothing_iteration=0)`
+55. function - Display remote sensing images(one band) using the Earthpy library,`raster_show(raster_fp,title='raster',vmin_vmax=[0.25,0.95],cmap="turbo")`
 
-## 12. 点云数据（激光雷达）处理——分类数据，DSM，建筑高度提取，插值
-46. function - 转换单个.las点云数据为分类栅格数据，和DSM栅格数据等
-47. function - 显示由.las文件生成的分类栅格文件，并显示图例
-48. function - 批量转换.las点云数据为DSM和分类栅格
-49. function - 合并多个栅格为一个
-50. function - 迁移rasterio提供的定义数组最小数据类型的函数
-51. function - 获取给定栅格的投影坐标-crs
-52. function - 转换栅格投影
-53. function - 根据给定栅格的范围，裁切.shp格式数据，并定义投影同给定栅格
-54. function - 使用rasterio.fill的插值方法，补全缺失的数据
-55. function - 使用earthpy库显示遥感影像（一个波段）
+## 13. Convolution, SIR propagation model, cost raster and species dispersal, SIR spatial propagation model
+56. class - One dimensional convolution animation analysis to customize the system function and signal function, `class dim1_convolution_SubplotAnimation(animation.TimedAnimation)`
+57. function - Define system response functions. Type-1, `G_T_type_1()`
+58. function - Define the input signal function. Type-1, `F_T_type_1(timing)`
+59. function - Define system response functions. Type-2, `G_T_type_2()`
+60. function - Define the input signal function. Type-2, `F_T_type_2(timing)`
+61. function - Read Matlab chart data, Type-A,  `read_MatLabFig_type_A(matLabFig_fp,plot=True)`
+62. function - One dimensional convolution is applied to segment the data according to the jump point. `curve_segmentation_1DConvolution(data,threshold=1)`
+63. function - Split the list according to the index,`lst_index_split(lst, args)`
+64. function - 'Flattening list function,  `flatten_lst=lambda lst: [m for n_lst in lst for m in flatten_lst(n_lst)] if type(lst) is list else [lst]`
+65. function - Nested list, sublists interpolated before and after, `nestedlst_insert(nestedlst)`
+66. function - Use the method provided by Matplotlib to return floating-point RGB randomly, `uniqueish_color()`
+67. function - Define the SIR model, the differential function,  `SIR_deriv(y,t,N,beta,gamma,plot=False)`
+68. function - Displays the image as well as the color R-value, or G, B value, `img_struc_show(img_fp,val='R',figsize=(7,7))`
+69. class - 2 D convolution diffusion is defined based on the SIR model.`class convolution_diffusion_img`
+70. function - Read in .gif and display dynamically, `animated_gif_show(gif_fp,figsize=(8,8))`
+71. fuction - Down-sampling a two-dimensional array, according to the maximum value of the value frequency in each block, the value appearing at most is the sampling value of each block., `downsampling_blockFreqency(array_2d,blocksize=[10,10])`
+72. class - the SIR spatial propagation model, `SIR_spatialPropagating`

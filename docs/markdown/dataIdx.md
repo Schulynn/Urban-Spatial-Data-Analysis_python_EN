@@ -1,7 +1,7 @@
-# 数据索引
-> 汇总本书所使用的所有数据，包括数据名称、类型、数据源、数据解释、对应实验等。
+# Data index
+> Summarize all data used in this book, including data-name, type, data source, data interpretation, corresponding experiment, etc.
 
-序号 |数据名称|数据类型|数据源|解释|对应实验|
+IDX |data name| data type|data source|data interpretation|corresponding experiment|
 ------------ |:-------------|:-------------|:-------------|:-------------|:-------------
 1 | 
 2 | 
