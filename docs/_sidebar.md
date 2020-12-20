@@ -18,6 +18,11 @@
     * [2.11 Remote sensing image interpretation (based on NDVI), the establishment of sampling tool(GUI_tkinter), confusion matrix](./notebook_code/interpretation_GUI.md)
     * [2.12 Point cloud data(Lidar) processing——classified data, DSM, building height extraction, interpolation](./notebook_code/lidarData.md)
     * [2.13 Convolution, SIR propagation model,  cost raster and species dispersal, SIR spatial propagation model](./notebook_code/convolution_SIR.md)
+    * [2.14 微积分基础的代码表述](./notebook_code/calculus_code_graph.md)
+    * [2.15 聚类与城市色彩](./notebook_code/clustering_cityColor.md)
+    * [2.16 城市生活圈，DBSCAN连续距离聚类，卡方分布及独立性检验，协方差估计，信息熵与均衡度](./notebook_code/urban_lifeCircle.md)
+    * [2.17 openCV-计算机视觉，特征提取，尺度空间（scale space），动态街景视觉感知](./notebook_code/openCV.md)
+    * [2.18 SQLite数据库，Flask构建实验用网络应用平台，逆向工程](./notebook_code/sqlite.md)
 
 * index
     * [code tool index](./markdown/codeToolIdx.md)
