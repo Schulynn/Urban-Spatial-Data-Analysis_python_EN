@@ -23,6 +23,13 @@
     * [2.16 城市生活圈，DBSCAN连续距离聚类，卡方分布及独立性检验，协方差估计，信息熵与均衡度](./notebook_code/urban_lifeCircle.md)
     * [2.17 openCV-计算机视觉，特征提取，尺度空间（scale space），动态街景视觉感知](./notebook_code/openCV.md)
     * [2.18 SQLite数据库，Flask构建实验用网络应用平台，逆向工程](./notebook_code/sqlite.md)
+    * [2.19 视觉词袋（BOW），决策树（Decision trees）->随机森林（Random forests），交叉验证 cross_val_score，视觉感知-图像分类_识别器，网络实验平台服务器端部署](./notebook_code/bow_decisionTrees.md)
+    * [2.20 从解析解(analytical solution)-->到数值解(numerical solution) | 从机器学习scikit-learn-->到深度学习pytorch](./notebook_code/pytorch.md)
+    * [2.21 伯努利分布(Bernouli distribution)，似然函数，最大/极大似然估计(Maximum Likelihood Estimation, MLE)，逻辑回归(Logistic Regression, LR)二分类，SoftMax回归多分类](./notebook_code/softmax.md)
+    * [2.22 卷积神经网络，可视化卷积层/卷积核,tensorboard,torchvision.models与VGG网络](./notebook_code/CNN.md)
+    * [2.23 对象检测(Mask R-CNN)与人流量估算；图像分割（torchvision.models）与城市空间内容统计，及关联网络结构](./notebook_code/R_CNN.md)
+    * [2.24 开放神经网络交换-ONNX(Open Neural Network,Exchage)，ONNX，Cityscapes数据集，DUC(Dense Upsampling Convolution)图像分割与城市空间要素组成，时空量度，绿视率](./notebook_code/DUC.md)
+    * [2.25 Sentinel-2，(聚类)土地分类，VGG16，SegNet遥感影像语义分割/解译，超像素级分割(superpixels-segmentation)，高空分辨率特征尺度界定，及尺度的深度流动线/特征区域的延申](./notebook_code/segnet.md)
 
 * index
     * [code tool index](./markdown/codeToolIdx.md)
@@ -32,5 +39,9 @@
     * [experiment index](./markdown/experimentIdx.md)
     * [abbreviation](./markdown/abbreviation.md)
     * [note](./markdown/note.md)
+
+* workshop-LA-UP_IIT
+    * [Guide to the knowledge structure of th digital LA|UP|Archi design](./workshop-LA-UP_IIT/guide.md)
+    
 
 
