@@ -1,6 +1,6 @@
 > Created on Sun Jan 17 09\46\23 2021 @author: Richie Bao-Chicago.IIT
 
-# [Guide to the knowledge structure of th digital LA|UP|Archi design](https://github.com/richieBao/guide_to_digitalDesign_of_LAUPArhi_knowledgeStruc)
+# [Guide to the knowledge structure of the digital LA|UP|Archi design](https://github.com/richieBao/guide_to_digitalDesign_of_LAUPArhi_knowledgeStruc)
 
 The rapid rise of parametric design in landscape architecture in 2007 was attributed to the visualization programming tool Grasshopper(GH) conceived by David Rutten in Robert  McNeel and Associates ( Rhino 3D design model software creators). It is based on a Graphical User Interface(GUI) scripting engine that uses drag-and-drop data blocks and functions (called components) wired together. And it allows users who do not understand text programming to manipulate the Rhino tool using computational logic and generate highly complex 3-dimensional models. In the landscape architecture field, GH is used not only for design projects but also for academic projects. For example, Fletcher Studio used GH simulation environments extensively and created concept programming packages and construction documentation for a 2.8 million dollars renovation project in San Francisco's South Park. Influenced by GH, to simplify the AEC(Architecture, Engineering, and Construction) workflow in Revit software used for Building Information Modeling(BIM) construction, visual programming tool Dynamo was developed in 2013 to realize the integration of parameterization in BIM software.
 
