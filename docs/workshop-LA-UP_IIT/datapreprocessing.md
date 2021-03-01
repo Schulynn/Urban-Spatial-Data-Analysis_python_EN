@@ -2725,3 +2725,7 @@ raster2postSQL(ndvi_fn,table_name='ndvi',myusername='postgres',mypassword='12345
     __________________________________________________
     The raster has been loaded into PostSQL...
     
+
+
+
+> [workshop_LAUP_IIT_database.sql download link](https://github.com/richieBao/guide_to_digitalDesign_of_LAUPArhi_knowledgeStruc/tree/main/database)
