@@ -388,7 +388,7 @@ nx.draw_networkx_edges(G_bus_transfer,pos=pos_edge,edgelist=G_bus_transfer.edges
     
 
 
-#### 1.1.3 Calculate the shortest distance between the stops adjacent to the site and all sites.
+#### 1.1.3 Calculate the shortest distance between the stops adjacent to the site and all stations.
 
 
 ```python
