@@ -45,6 +45,7 @@
     * [Research and Develop Project Scenarios Using the Urban Spatial Data Analysis Method](./workshop-LA-UP_IIT/USDA_report_Tsinghua_arhicLA.md)
     * [data summarization](./workshop-LA-UP_IIT/dataSummarization.md)
     * [Data Preprocessing](./workshop-LA-UP_IIT/datapreprocessing.md)
+    * [composite public transport network structure](./workshop-LA-UP_IIT/publicNetwork.md)
     
     
 
